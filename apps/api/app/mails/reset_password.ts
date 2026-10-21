@@ -1,54 +1,40 @@
 import { PRODUCT_NAME } from '#brand'
-import { emailLayout } from '#mails/layout'
 import type User from '#models/user'
 import env from '#start/env'
-import i18nManager from '@adonisjs/i18n/services/main'
-import { BaseMail } from '@adonisjs/mail'
+import AppMail from '#mails/app_mail'
 
 /**
  * The email that carries the single-use password reset link.
  */
-export default class ResetPassword extends BaseMail {
-  /**
-   * The user that receives the email.
-   */
-  private user: User
+export default class ResetPassword extends AppMail {
   /**
    * The single-use link that opens the reset form.
    */
   readonly link: string
-  /**
-   * The language of the email.
-   */
-  private locale: string
+
+  private user: User
 
   constructor(user: User, link: string, locale: string) {
-    super()
+    super(locale)
 
     this.user = user
     this.link = link
-    this.locale = locale
-
-    const i18n = i18nManager.locale(locale)
     this.from = env.get('MAIL_FROM')
-    this.subject = i18n.t('mail.reset_password.subject')
+    this.subject = this.t('mail.reset_password.subject')
   }
 
   prepare() {
-    const i18n = i18nManager.locale(this.locale)
-    const { html, text } = emailLayout({
-      title: i18n.t('mail.reset_password.title'),
-      paragraphs: [
-        i18n.t('mail.reset_password.greeting', { name: this.user.fullName }),
-        i18n.t('mail.reset_password.intro', { app: PRODUCT_NAME }),
-        i18n.t('mail.reset_password.expiry'),
-      ],
-      cta: { label: i18n.t('mail.reset_password.cta'), url: this.link },
-      footer: i18n.t('mail.reset_password.footer'),
-    })
-
     this.message.to(this.user.email, this.user.fullName)
-    this.message.html(html)
-    this.message.text(text)
+
+    this.render({
+      title: this.t('mail.reset_password.title'),
+      paragraphs: [
+        this.t('mail.reset_password.greeting', { name: this.user.fullName }),
+        this.t('mail.reset_password.intro', { app: PRODUCT_NAME }),
+        this.t('mail.reset_password.expiry'),
+      ],
+      cta: { label: this.t('mail.reset_password.cta'), url: this.link },
+      footnote: this.t('mail.reset_password.footnote'),
+    })
   }
 }

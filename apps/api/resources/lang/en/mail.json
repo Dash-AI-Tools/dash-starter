@@ -1,4 +1,10 @@
 {
+  "layout": {
+    "sent_by": "Sent by {app}",
+    "support": "Need help? Write to {email}.",
+    "legal": "Legal address: {address}",
+    "automated": "This is an automated email, please do not reply."
+  },
   "verify_email": {
     "subject": "Verify your email address",
     "title": "Verify your email address",
@@ -6,7 +12,16 @@
     "intro": "Please confirm your email address to activate your {app} account.",
     "cta": "Verify my email",
     "expiry": "This link expires in 24 hours.",
-    "footer": "If you did not create an account, you can safely ignore this email."
+    "footnote": "If you did not create an account, you can safely ignore this email."
+  },
+  "email_change": {
+    "subject": "Confirm your new email address",
+    "title": "Confirm your new email address",
+    "greeting": "Hi {name},",
+    "intro": "We received a request to change the email address of your {app} account to {email}.",
+    "cta": "Confirm the new address",
+    "expiry": "This link expires in 24 hours.",
+    "footnote": "If you did not request the change, you can safely ignore this email."
   },
   "reset_password": {
     "subject": "Reset your password",
@@ -15,6 +30,75 @@
     "intro": "We received a request to reset the password of your {app} account.",
     "cta": "Choose a new password",
     "expiry": "This link expires in 60 minutes.",
-    "footer": "If you did not request a new password, you can safely ignore this email."
+    "footnote": "If you did not request a new password, you can safely ignore this email."
+  },
+  "password_changed": {
+    "subject": "Your password was changed",
+    "title": "Your password was changed",
+    "greeting": "Hi {name},",
+    "intro": "The password of your {app} account was changed and the other sessions were closed.",
+    "changed_label": "Changed on",
+    "footnote": "If this was not you, reset your password right away and contact the support."
+  },
+  "organization_invitation": {
+    "subject": "{inviter} invited you to {organization}",
+    "title": "Join {organization}",
+    "greeting": "Hi {name},",
+    "intro": "{inviter} invited you to join {organization} on {app}.",
+    "organization_label": "Organization",
+    "inviter_label": "Invited by",
+    "cta": "Accept the invitation",
+    "expiry": "This invitation expires on {expiresAt}.",
+    "footnote": "If you were not expecting this invitation, you can safely ignore this email."
+  },
+  "welcome": {
+    "subject": "Welcome to {app}",
+    "title": "Welcome to {app}",
+    "greeting": "Hi {name},",
+    "intro": "Your {app} account is ready. These are the next steps to get the most out of it.",
+    "cta": "Open the dashboard",
+    "footnote": "You can change the language and the appearance of the product from your profile."
+  },
+  "subscription_started": {
+    "subject": "Your {plan} subscription started",
+    "title": "Your {plan} plan is active",
+    "greeting": "Hi {name},",
+    "intro": "The payment of your {app} subscription was accepted and the plan is already active.",
+    "plan_label": "Plan",
+    "amount_label": "Amount",
+    "renewal_label": "Next renewal",
+    "cta": "Manage the subscription",
+    "footnote": "The subscription renews automatically until you cancel it."
+  },
+  "payment_failed": {
+    "subject": "The payment of your subscription failed",
+    "title": "We could not charge your payment method",
+    "greeting": "Hi {name},",
+    "intro": "The last payment of your {app} subscription could not be charged.",
+    "plan_label": "Plan",
+    "amount_label": "Amount due",
+    "cta": "Update the payment method",
+    "footnote": "We retry the payment during the next 7 days. Update the payment method to keep the plan."
+  },
+  "subscription_canceled": {
+    "subject": "Your subscription was canceled",
+    "title": "Your subscription was canceled",
+    "greeting": "Hi {name},",
+    "intro": "The subscription of your {app} account was canceled and the plan is no longer active.",
+    "plan_label": "Plan",
+    "cta": "See the plans",
+    "footnote": "You can start a new subscription at any moment."
+  },
+  "quota": {
+    "warning_subject": "You have used {percent}% of your {scope} quota",
+    "exceeded_subject": "You have used all your {scope} credits",
+    "warning_title": "You are close to the limit of your {scope} quota",
+    "exceeded_title": "You have used all your {scope} credits",
+    "greeting": "Hi {name},",
+    "body": "Your organization has used {used} of {limit} {scope} credits of the current period.",
+    "used_label": "Used",
+    "limit_label": "Limit",
+    "cta": "See the usage",
+    "footnote": "The quota is renewed at the beginning of every billing period."
   }
 }

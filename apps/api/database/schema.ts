@@ -47,7 +47,21 @@ export class SessionSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'createdAt', 'email', 'emailVerifiedAt', 'fullName', 'id', 'lastOrganizationId', 'locale', 'password', 'termsAcceptedAt', 'termsVersion', 'theme', 'updatedAt'] as const
+  static $columns = [
+    'avatarPath',
+    'createdAt',
+    'email',
+    'emailVerifiedAt',
+    'fullName',
+    'id',
+    'lastOrganizationId',
+    'locale',
+    'password',
+    'termsAcceptedAt',
+    'termsVersion',
+    'theme',
+    'updatedAt',
+  ] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null

@@ -1,4 +1,10 @@
 {
+  "layout": {
+    "sent_by": "Enviado por {app}",
+    "support": "¿Necesitas ayuda? Escribe a {email}.",
+    "legal": "Dirección legal: {address}",
+    "automated": "Este es un correo automático, por favor no respondas."
+  },
   "verify_email": {
     "subject": "Verifica tu correo electrónico",
     "title": "Verifica tu correo electrónico",
@@ -6,7 +12,16 @@
     "intro": "Confirma tu correo electrónico para activar tu cuenta de {app}.",
     "cta": "Verificar mi correo",
     "expiry": "Este enlace caduca en 24 horas.",
-    "footer": "Si no creaste una cuenta, puedes ignorar este correo."
+    "footnote": "Si no creaste una cuenta, puedes ignorar este correo."
+  },
+  "email_change": {
+    "subject": "Confirma tu nuevo correo electrónico",
+    "title": "Confirma tu nuevo correo electrónico",
+    "greeting": "Hola {name}:",
+    "intro": "Recibimos una solicitud para cambiar el correo electrónico de tu cuenta de {app} a {email}.",
+    "cta": "Confirmar la nueva dirección",
+    "expiry": "Este enlace caduca en 24 horas.",
+    "footnote": "Si no solicitaste el cambio, puedes ignorar este correo."
   },
   "reset_password": {
     "subject": "Restablece tu contraseña",
@@ -15,6 +30,75 @@
     "intro": "Recibimos una solicitud para restablecer la contraseña de tu cuenta de {app}.",
     "cta": "Elegir una nueva contraseña",
     "expiry": "Este enlace caduca en 60 minutos.",
-    "footer": "Si no solicitaste una nueva contraseña, puedes ignorar este correo."
+    "footnote": "Si no solicitaste una nueva contraseña, puedes ignorar este correo."
+  },
+  "password_changed": {
+    "subject": "Tu contraseña ha cambiado",
+    "title": "Tu contraseña ha cambiado",
+    "greeting": "Hola {name}:",
+    "intro": "La contraseña de tu cuenta de {app} ha cambiado y el resto de sesiones se han cerrado.",
+    "changed_label": "Cambiada el",
+    "footnote": "Si no fuiste tú, restablece tu contraseña cuanto antes y contacta con el soporte."
+  },
+  "organization_invitation": {
+    "subject": "{inviter} te ha invitado a {organization}",
+    "title": "Únete a {organization}",
+    "greeting": "Hola {name}:",
+    "intro": "{inviter} te ha invitado a unirte a {organization} en {app}.",
+    "organization_label": "Organización",
+    "inviter_label": "Invitado por",
+    "cta": "Aceptar la invitación",
+    "expiry": "Esta invitación caduca el {expiresAt}.",
+    "footnote": "Si no esperabas esta invitación, puedes ignorar este correo."
+  },
+  "welcome": {
+    "subject": "Te damos la bienvenida a {app}",
+    "title": "Te damos la bienvenida a {app}",
+    "greeting": "Hola {name}:",
+    "intro": "Tu cuenta de {app} está lista. Estos son los siguientes pasos para sacarle partido.",
+    "cta": "Abrir el panel",
+    "footnote": "Puedes cambiar el idioma y el aspecto del producto desde tu perfil."
+  },
+  "subscription_started": {
+    "subject": "Tu suscripción {plan} ha comenzado",
+    "title": "Tu plan {plan} ya está activo",
+    "greeting": "Hola {name}:",
+    "intro": "El pago de tu suscripción de {app} se ha aceptado y el plan ya está activo.",
+    "plan_label": "Plan",
+    "amount_label": "Importe",
+    "renewal_label": "Próxima renovación",
+    "cta": "Gestionar la suscripción",
+    "footnote": "La suscripción se renueva automáticamente hasta que la canceles."
+  },
+  "payment_failed": {
+    "subject": "El pago de tu suscripción ha fallado",
+    "title": "No hemos podido cobrar tu método de pago",
+    "greeting": "Hola {name}:",
+    "intro": "No hemos podido cobrar el último pago de tu suscripción de {app}.",
+    "plan_label": "Plan",
+    "amount_label": "Importe pendiente",
+    "cta": "Actualizar el método de pago",
+    "footnote": "Reintentamos el pago durante los próximos 7 días. Actualiza el método de pago para mantener el plan."
+  },
+  "subscription_canceled": {
+    "subject": "Tu suscripción ha sido cancelada",
+    "title": "Tu suscripción ha sido cancelada",
+    "greeting": "Hola {name}:",
+    "intro": "La suscripción de tu cuenta de {app} ha sido cancelada y el plan ya no está activo.",
+    "plan_label": "Plan",
+    "cta": "Ver los planes",
+    "footnote": "Puedes empezar una nueva suscripción cuando quieras."
+  },
+  "quota": {
+    "warning_subject": "Has usado el {percent}% de tu cuota de {scope}",
+    "exceeded_subject": "Has usado todos tus créditos de {scope}",
+    "warning_title": "Estás cerca del límite de tu cuota de {scope}",
+    "exceeded_title": "Has usado todos tus créditos de {scope}",
+    "greeting": "Hola {name}:",
+    "body": "Tu organización ha usado {used} de {limit} créditos de {scope} del periodo actual.",
+    "used_label": "Usados",
+    "limit_label": "Límite",
+    "cta": "Ver el consumo",
+    "footnote": "La cuota se renueva al comienzo de cada periodo de facturación."
   }
 }

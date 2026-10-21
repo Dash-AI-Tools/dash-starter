@@ -47,9 +47,9 @@
 
 ## 6. Transactional email
 
-- [ ] 6.1 Install `@adonisjs/mail`; configure Brevo transport (prod), SMTP Mailpit (dev), fake (tests); retry wrapper with logging; unit test retry on transient error
-- [ ] 6.2 Shared responsive Edge layout with i18n, plain-text alternative, product name/logo/footer placeholders
-- [ ] 6.3 Mail classes for the full catalog in the `transactional-email` spec, each rendered in recipient locale and sent with `sendLater`; functional tests using `mail.fake()` asserting subject locale for `en` and `es`
+- [x] 6.1 Install `@adonisjs/mail`; configure Brevo transport (prod), SMTP Mailpit (dev), fake (tests); retry wrapper with logging; unit test retry on transient error
+- [x] 6.2 Shared responsive Edge layout with i18n, plain-text alternative, product name/logo/footer placeholders
+- [x] 6.3 Mail classes for the full catalog in the `transactional-email` spec, each rendered in recipient locale and sent with `sendLater`; functional tests using `mail.fake()` asserting subject locale for `en` and `es`
 
 ## 7. Organizations and tenancy
 

@@ -1,0 +1,28 @@
+{{-- Plain text is not HTML: output is raw so that links keep their query string --}}
+{{{ productName }}}
+
+{{{ title }}}
+
+@each(paragraph in paragraphs)
+{{{ paragraph }}}
+
+@endeach
+@if(details)
+@each(detail in details)
+{{{ detail.label }}}: {{{ detail.value }}}
+@endeach
+
+@endif
+@if(cta)
+{{{ cta.label }}}: {{{ cta.url }}}
+
+@endif
+@if(footnote)
+{{{ footnote }}}
+
+@endif
+--
+{{{ sentBy }}}
+{{{ support }}}
+{{{ legal }}}
+{{{ automated }}}
