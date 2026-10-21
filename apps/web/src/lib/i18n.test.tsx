@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { en } from '@/locales/en'
-import { es } from '@/locales/es'
+import { en, catalogs } from '@/locales/en'
+import { es, catalogs as esCatalogs } from '@/locales/es'
 import {
   DEFAULT_LOCALE,
   detectLocale,
@@ -92,6 +92,32 @@ describe('catalogs', () => {
 
   it('keeps the same keys in both catalogs', () => {
     expect(Object.keys(es).sort()).toEqual(Object.keys(en).sort())
+  })
+
+  it('keeps a key out of two namespaces unless both say the same', () => {
+    /**
+     * The catalog is flat, so a key defined in two namespaces would be
+     * overridden by the one merged last, and the page would show a string
+     * that belongs to another one.
+     */
+    for (const locale of [catalogs, esCatalogs]) {
+      const conflicts: string[] = []
+
+      for (const [namespace, messages] of Object.entries(locale)) {
+        for (const [key, value] of Object.entries(messages)) {
+          for (const [other, otherMessages] of Object.entries(locale)) {
+            if (other === namespace) continue
+
+            const otherValue = (otherMessages as Record<string, string>)[key]
+            if (otherValue !== undefined && otherValue !== value) {
+              conflicts.push(`${namespace}.${key} and ${other}.${key}`)
+            }
+          }
+        }
+      }
+
+      expect(conflicts).toEqual([])
+    }
   })
 })
 

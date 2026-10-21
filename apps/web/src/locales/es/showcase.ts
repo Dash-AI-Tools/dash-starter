@@ -1,6 +1,6 @@
 export const showcase = {
-  title: 'Galería de componentes',
-  subtitle: 'Todos los componentes del kit con sus variantes principales.',
+  showcaseTitle: 'Galería de componentes',
+  showcaseSubtitle: 'Todos los componentes del kit con sus variantes principales.',
   buttons: 'Botones',
   buttonsDescription: 'Variantes, tamaños y el estado de carga.',
   inputs: 'Entradas',
@@ -16,5 +16,5 @@ export const showcase = {
   command: 'Comandos',
   commandDescription: 'Paleta de comandos y campo de búsqueda.',
   variant: 'Variante',
-  loading: 'Cargando',
+  showcaseLoading: 'Cargando',
 } as const

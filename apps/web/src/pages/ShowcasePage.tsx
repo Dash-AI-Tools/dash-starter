@@ -130,7 +130,7 @@ export default function ShowcasePage() {
   return (
     <TooltipProvider>
       <div className="space-y-10 p-6">
-        <PageHeader title={t('title')} description={t('subtitle')} />
+        <PageHeader title={t('showcaseTitle')} description={t('showcaseSubtitle')} />
 
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">{t('buttons')}</h2>
@@ -154,7 +154,7 @@ export default function ShowcasePage() {
             <Button disabled>Disabled</Button>
             <Button disabled>
               <Loader2Icon className="animate-spin" />
-              {t('loading')}
+              {t('showcaseLoading')}
             </Button>
           </div>
         </section>

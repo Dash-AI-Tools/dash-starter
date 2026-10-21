@@ -1,6 +1,6 @@
 export const billing = {
-  title: 'Facturación',
-  subtitle: 'Tu plan, tu uso y tus facturas.',
+  billingTitle: 'Facturación',
+  billingSubtitle: 'Tu plan, tu uso y tus facturas.',
   currentPlan: 'Plan actual',
   status: 'Estado',
   statusActive: 'Activo',
@@ -30,7 +30,7 @@ export const billing = {
   processingBody:
     'Estamos esperando a que el proveedor de pagos confirme tu suscripción. Esta página se actualiza sola.',
   upgradeRequired: 'Sube de plan para desbloquear esta función.',
-  pastDueBanner: 'El pago falló. El acceso continúa durante los 7 días de gracia.',
+  billingPastDueBanner: 'El pago falló. El acceso continúa durante los 7 días de gracia.',
   intervalUnavailable: 'No disponible con facturación anual',
   yearlySavings: 'Ahorra un {percent}%',
   perMonth: '/mes',

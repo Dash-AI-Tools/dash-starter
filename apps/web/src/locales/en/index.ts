@@ -13,6 +13,27 @@ import { consent } from './consent'
 import { showcase } from './showcase'
 
 /**
+ * The catalogs of every namespace, in the order they are merged. The flat
+ * dictionary below is built from them, so a key shared by two namespaces
+ * always means the same string in every page.
+ */
+export const catalogs = {
+  common,
+  auth,
+  publicSite,
+  legal,
+  dashboard,
+  organizations,
+  onboarding,
+  billing,
+  chat,
+  apiKeys,
+  profile,
+  consent,
+  showcase,
+}
+
+/**
  * The English catalog. Every other locale is checked against this shape, so a
  * missing translation is a type error.
  */

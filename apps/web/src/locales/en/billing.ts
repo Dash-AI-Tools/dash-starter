@@ -1,6 +1,6 @@
 export const billing = {
-  title: 'Billing',
-  subtitle: 'Your plan, usage and invoices.',
+  billingTitle: 'Billing',
+  billingSubtitle: 'Your plan, usage and invoices.',
   currentPlan: 'Current plan',
   status: 'Status',
   statusActive: 'Active',
@@ -30,7 +30,7 @@ export const billing = {
   processingBody:
     'We are waiting for the payment provider to confirm your subscription. This page updates automatically.',
   upgradeRequired: 'Upgrade to unlock this feature.',
-  pastDueBanner: 'Payment failed. Access continues during the 7 day grace period.',
+  billingPastDueBanner: 'Payment failed. Access continues during the 7 day grace period.',
   intervalUnavailable: 'Not available with yearly billing',
   yearlySavings: 'Save {percent}%',
   perMonth: '/month',

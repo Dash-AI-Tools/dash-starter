@@ -14,6 +14,25 @@ import { showcase } from './showcase'
 import type { Messages } from '../en'
 
 /**
+ * The Spanish catalogs, in the same order as the English ones.
+ */
+export const catalogs = {
+  common,
+  auth,
+  publicSite,
+  legal,
+  dashboard,
+  organizations,
+  onboarding,
+  billing,
+  chat,
+  apiKeys,
+  profile,
+  consent,
+  showcase,
+}
+
+/**
  * The Spanish catalog. `satisfies Messages` makes a missing or extra key a
  * type error, so the build fails when a translation goes missing.
  */

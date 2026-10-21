@@ -1,5 +1,5 @@
 export const onboarding = {
-  title: 'Configura tu espacio de trabajo',
+  onboardingTitle: 'Configura tu espacio de trabajo',
   stepDetails: 'Organización',
   stepUseCase: 'Cómo lo vas a usar',
   stepInvites: 'Invitar al equipo',
