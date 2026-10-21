@@ -1,0 +1,21 @@
+export const consent = {
+  bannerTitle: 'Usamos cookies',
+  bannerBody:
+    'Usamos cookies necesarias para que el producto funcione. Con tu permiso también usamos cookies analíticas y de marketing.',
+  acceptAll: 'Aceptar todo',
+  rejectNonEssential: 'Rechazar las no necesarias',
+  customize: 'Personalizar',
+  preferencesTitle: 'Preferencias de cookies',
+  preferencesBody: 'Elige qué categorías de cookies permites.',
+  preferencesSave: 'Guardar preferencias',
+  necessary: 'Necesarias',
+  necessaryDescription: 'Siempre activas. Imprescindibles para el acceso, la seguridad y tus preferencias.',
+  analytics: 'Analíticas',
+  analyticsDescription: 'Medición anónima del uso del producto.',
+  marketing: 'Marketing',
+  marketingDescription: 'Medición de campañas y contenido relevante.',
+  alwaysOn: 'Siempre activas',
+  granted: 'Concedido',
+  denied: 'Denegado',
+  open: 'Preferencias de cookies',
+} as const

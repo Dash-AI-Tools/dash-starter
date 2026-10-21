@@ -1,0 +1,15 @@
+.env
+.env.local
+.env.*.local
+node_modules
+dist
+build
+.DS_Store
+*.log
+.claude/
+.claude/.headroom_wrap_*.json
+.serena/
+.opencode/
+test-results
+playwright-report
+coverage

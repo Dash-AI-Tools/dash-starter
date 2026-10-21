@@ -1,0 +1,50 @@
+{
+  "name": "dash-starter",
+  "version": "0.1.0",
+  "description": "Replacement contract for the create-dash-starter installer. Every literal string in `tokens` is replaced by the matching field of the collected project identity.",
+  "identity": {
+    "name": {
+      "description": "Product name shown in the UI, emails and page titles.",
+      "default": "Dash"
+    },
+    "slug": {
+      "description": "Kebab-case slug used for the project directory, package scope and Docker Compose project.",
+      "default": "dash-starter"
+    },
+    "description": {
+      "description": "One-line description used in the README and the landing page metadata.",
+      "default": "The AI SaaS starter for launching your next product"
+    },
+    "locale": {
+      "description": "Default locale of the generated project.",
+      "default": "en",
+      "options": ["en", "es"]
+    },
+    "email": {
+      "description": "Support contact shown in the footer and in every transactional email.",
+      "default": "support@dash-starter.test"
+    }
+  },
+  "tokens": {
+    "Dash": "name",
+    "dash-starter": "slug",
+    "dash starter": "name",
+    "The AI SaaS starter for launching your next product": "description",
+    "support@dash-starter.test": "email"
+  },
+  "files": ["**/*"],
+  "exclude": [
+    "node_modules/**",
+    "**/node_modules/**",
+    ".git/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.adonisjs/**",
+    "package-lock.json",
+    "**/package-lock.json",
+    "openspec/changes/**",
+    "packages/create-app/**"
+  ],
+  "removePaths": ["packages/create-app", "openspec/changes"],
+  "removeWorkflowJobs": ["installer"]
+}

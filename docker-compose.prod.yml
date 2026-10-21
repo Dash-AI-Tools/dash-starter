@@ -1,0 +1,66 @@
+name: dash-starter
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: dash
+      POSTGRES_PASSWORD: dash
+      POSTGRES_DB: dash
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dash -d dash"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    environment:
+      MP_MAX_MESSAGES: 500
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  api:
+    build:
+      context: ./apps/api
+    environment:
+      TZ: UTC
+      PORT: 3333
+      HOST: 0.0.0.0
+      NODE_ENV: production
+      LOG_LEVEL: info
+      APP_KEY: ${APP_KEY:?set APP_KEY in .env}
+      APP_URL: ${APP_URL:-http://localhost:3333}
+      SESSION_DRIVER: cookie
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: dash
+      DB_PASSWORD: dash
+      DB_DATABASE: dash
+      MAIL_TRANSPORT: brevo
+      MAIL_FROM: "Dash <no-reply@dash-starter.test>"
+      AI_PROVIDER: ${AI_PROVIDER:-stub}
+    entrypoint: >
+      sh -c "node ace migrate --force && node ace db:seed --force && node bin/server.js"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3333/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: ./apps/web
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

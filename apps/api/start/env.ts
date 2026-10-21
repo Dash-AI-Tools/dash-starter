@@ -1,0 +1,109 @@
+import { Env } from '@adonisjs/core/env'
+
+/**
+ * The environment file is validated at boot. Missing or malformed values make
+ * the API refuse to start with a message naming the offending variable.
+ *
+ * The conditional rules below encode the "optional provider keys fall back to
+ * local alternatives only outside production" rule: in production the
+ * provider credentials become mandatory.
+ */
+const isProduction = process.env.NODE_ENV === 'production'
+
+export default await Env.create(new URL('../', import.meta.url), {
+  NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
+  PORT: Env.schema.number(),
+  HOST: Env.schema.string({ format: 'host' }),
+  LOG_LEVEL: Env.schema.string(),
+
+  APP_KEY: Env.schema.secret(),
+  APP_URL: Env.schema.string({ format: 'url', tld: false }),
+
+  DB_HOST: Env.schema.string({ format: 'host' }),
+  DB_PORT: Env.schema.number(),
+  DB_USER: Env.schema.string(),
+  DB_PASSWORD: Env.schema.string.optional(),
+  DB_DATABASE: Env.schema.string(),
+
+  SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
+
+  /**
+   * Default locale of the product. Individual users override it.
+   */
+  DEFAULT_LOCALE: Env.schema.enum(['en', 'es'] as const),
+
+  /**
+   * Mail transport. `brevo` in production, `smtp` (Mailpit) in development
+   * and `fake` in tests.
+   */
+  MAIL_TRANSPORT: Env.schema.enum(['brevo', 'smtp', 'fake'] as const),
+  MAIL_FROM: Env.schema.string(),
+  MAIL_FROM_NAME: Env.schema.string.optional(),
+
+  /**
+   * Brevo transactional API key. Required when MAIL_TRANSPORT=brevo.
+   */
+  BREVO_API_KEY: Env.schema.string.optionalWhen(
+    (key, value) => value === 'brevo' || isProduction,
+    { message: 'BREVO_API_KEY is required when MAIL_TRANSPORT is "brevo"' }
+  ),
+
+  /**
+   * SMTP settings, used by the local Mailpit catcher in development.
+   */
+  SMTP_HOST: Env.schema.string.optional(),
+  SMTP_PORT: Env.schema.number.optional(),
+  SMTP_USER: Env.schema.string.optional(),
+  SMTP_PASSWORD: Env.schema.string.optional(),
+  SMTP_SECURE: Env.schema.boolean.optional(),
+
+  /**
+   * Creem payments. `test` outside production, `live` in production.
+   */
+  CREEM_API_KEY: Env.schema.string.optional(),
+  CREEM_WEBHOOK_SECRET: Env.schema.string.optional(),
+  CREEM_ENV: Env.schema.enum(['test', 'live'] as const),
+
+  /**
+   * AI provider registry. Each provider has its own key and each alias points
+   * at a `provider:model` pair.
+   */
+  AI_PROVIDER: Env.schema.enum([
+    'stub',
+    'anthropic',
+    'openai',
+    'google',
+    'deepseek',
+    'openrouter',
+    'compatible',
+  ] as const),
+  AI_TIMEOUT_MS: Env.schema.number.default(60_000),
+  AI_CHAT_MODEL: Env.schema.string().optional(),
+  AI_FAST_MODEL: Env.schema.string().optional(),
+  AI_REASONING_MODEL: Env.schema.string().optional(),
+  AI_IMAGE_MODEL: Env.schema.string().optional(),
+  ANTHROPIC_API_KEY: Env.schema.string.optional(),
+  OPENAI_API_KEY: Env.schema.string.optional(),
+  GOOGLE_GENERATIVE_AI_API_KEY: Env.schema.string.optional(),
+  DEEPSEEK_API_KEY: Env.schema.string.optional(),
+  OPENROUTER_API_KEY: Env.schema.string.optional(),
+  COMPATIBLE_API_KEY: Env.schema.string.optional(),
+  COMPATIBLE_BASE_URL: Env.schema.string({ format: 'url', tld: false }).optional(),
+  COMPATIBLE_MODEL_ID: Env.schema.string().optional(),
+
+  /**
+   * File storage for avatars and generated images.
+   */
+  DRIVE_DISK: Env.schema.enum(['local', 's3'] as const),
+  DRIVE_ROOT: Env.schema.string().optional(),
+  S3_KEY: Env.schema.string.optional(),
+  S3_SECRET: Env.schema.string.optional(),
+  S3_BUCKET: Env.schema.string.optional(),
+  S3_REGION: Env.schema.string.optional(),
+  S3_ENDPOINT: Env.schema.string().optional(),
+
+  /**
+   * Rate limiting store.
+   */
+  LIMITER_STORE: Env.schema.enum(['database', 'memory'] as const),
+})
