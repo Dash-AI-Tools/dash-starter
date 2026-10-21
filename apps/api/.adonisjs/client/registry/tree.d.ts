@@ -2,6 +2,11 @@
 import type { routes } from './index.ts'
 
 export interface ApiDefinition {
+  drive: {
+    local: {
+      serve: typeof routes['drive.local.serve']
+    }
+  }
   health: {
     show: typeof routes['health.show']
   }
@@ -16,15 +21,23 @@ export interface ApiDefinition {
       verify: typeof routes['auth.email_verification.verify']
       resend: typeof routes['auth.email_verification.resend']
     }
+    emailChange: {
+      verify: typeof routes['auth.email_change.verify']
+    }
     passwordReset: {
       store: typeof routes['auth.password_reset.store']
       update: typeof routes['auth.password_reset.update']
     }
   }
   profile: {
-    profile: {
-      show: typeof routes['profile.profile.show']
-    }
+    show: typeof routes['profile.show']
+    update: typeof routes['profile.update']
+    avatar: typeof routes['profile.avatar']
+    email: typeof routes['profile.email']
+    password: typeof routes['profile.password']
+    destroy: typeof routes['profile.destroy']
+    terms: typeof routes['profile.terms']
+    rememberOrganization: typeof routes['profile.remember_organization']
   }
   organization: {
     index: typeof routes['organization.index']

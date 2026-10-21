@@ -28,3 +28,15 @@ export async function invalidateUserSessions(ctx: HttpContext, userId: number): 
       .map((session) => collection.destroy(session.id))
   )
 }
+
+/**
+ * Destroys every session of a user, including the one of the current
+ * request. It is used when the account is deleted, so no session outlives
+ * the user it belongs to.
+ */
+export async function destroyUserSessions(userId: number): Promise<void> {
+  const collection = await app.container.make(SessionCollection)
+  const sessions = await collection.tagged(String(userId))
+
+  await Promise.all(sessions.map((session) => collection.destroy(session.id)))
+}

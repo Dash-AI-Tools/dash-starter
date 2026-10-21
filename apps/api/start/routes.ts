@@ -16,6 +16,7 @@ router
         router.post('signup', [controllers.Session, 'store'])
         router.post('login', [controllers.Session, 'login'])
         router.get('verify-email', [controllers.EmailVerification, 'verify'])
+        router.get('email-change/verify', [controllers.EmailChange, 'verify'])
         router.post('forgot-password', [controllers.PasswordReset, 'store'])
         router.post('reset-password', [controllers.PasswordReset, 'update'])
 
@@ -29,12 +30,22 @@ router
       .prefix('auth')
       .as('auth')
 
+    /**
+     * The account of the visitor: the profile, the preferences and the
+     * credentials.
+     */
     router
       .group(() => {
         router.get('profile', [controllers.Profile, 'show'])
+        router.patch('profile', [controllers.Profile, 'update'])
+        router.post('profile/avatar', [controllers.Profile, 'avatar'])
+        router.post('profile/email', [controllers.Profile, 'email'])
+        router.post('profile/password', [controllers.Profile, 'password'])
+        router.delete('profile', [controllers.Profile, 'destroy'])
+        router.post('terms', [controllers.Profile, 'terms'])
+        router.post('organization', [controllers.Profile, 'rememberOrganization'])
       })
       .prefix('account')
-      .as('profile')
       .use(middleware.auth())
 
     /**

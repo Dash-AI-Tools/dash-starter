@@ -13,13 +13,33 @@ export default class MemberController {
    * Every member of the organization can see the list: it is the directory
    * of their own organization. Changing or removing a member is a job of
    * the admins.
+   *
+   * The `search` parameter narrows the list down to the members whose name
+   * or email address contains it, which is what the command palette uses.
    */
-  async index({ organization, serialize }: HttpContext) {
-    const memberships = await organization
+  async index(ctx: HttpContext) {
+    const { organization, serialize } = ctx
+
+    const search = String(ctx.request.input('search') ?? '')
+      .trim()
+      .toLowerCase()
+
+    const query = organization
       .related('memberships')
       .query()
       .preload('user')
       .orderBy('createdAt', 'asc')
+
+    if (search) {
+      const pattern = `%${search}%`
+
+      query.whereHas('user', (userQuery) => {
+        userQuery.whereRaw('LOWER(full_name) LIKE ?', [pattern])
+        userQuery.orWhereRaw('LOWER(email) LIKE ?', [pattern])
+      })
+    }
+
+    const memberships = await query
 
     return serialize.withoutWrapping({
       members: MembershipTransformer.transform(memberships),

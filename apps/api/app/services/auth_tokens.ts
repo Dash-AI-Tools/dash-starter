@@ -12,8 +12,18 @@ import { DateTime } from 'luxon'
  */
 export const EMAIL_VERIFICATION_PURPOSE = 'email-verification'
 
+/**
+ * The purpose the links that confirm a change of the email address are
+ * signed for. They only move the address of the account, they never verify
+ * the account itself.
+ */
+export const EMAIL_CHANGE_PURPOSE = 'email-change'
+
 /** How long a verification link stays valid. */
 export const EMAIL_VERIFICATION_TTL = '24h'
+
+/** How long a link that confirms a change of the email address stays valid. */
+export const EMAIL_CHANGE_TTL = '24h'
 
 /** How long a password reset token stays valid, in minutes. */
 export const PASSWORD_RESET_TTL_MINUTES = 60
@@ -30,6 +40,25 @@ export function emailVerificationLink(user: User): string {
     purpose: EMAIL_VERIFICATION_PURPOSE,
     qs: {
       user: user.id,
+      expires: Date.now() + 24 * 60 * 60 * 1000,
+    },
+  })
+
+  return `${env.get('APP_URL')}${path}`
+}
+
+/**
+ * Builds the signed link that confirms the ownership of the new address of
+ * an account. The address travels inside the signed query string, so it
+ * cannot be swapped on the way.
+ */
+export function emailChangeLink(user: User, email: string): string {
+  const path = signedUrlFor('auth.email_change.verify', undefined, {
+    expiresIn: EMAIL_CHANGE_TTL,
+    purpose: EMAIL_CHANGE_PURPOSE,
+    qs: {
+      user: user.id,
+      email,
       expires: Date.now() + 24 * 60 * 60 * 1000,
     },
   })

@@ -4,16 +4,25 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
+    'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'health.show': { paramsTuple?: []; params?: {} }
     'auth.session.show': { paramsTuple?: []; params?: {} }
     'auth.session.store': { paramsTuple?: []; params?: {} }
     'auth.session.login': { paramsTuple?: []; params?: {} }
     'auth.email_verification.verify': { paramsTuple?: []; params?: {} }
+    'auth.email_change.verify': { paramsTuple?: []; params?: {} }
     'auth.password_reset.store': { paramsTuple?: []; params?: {} }
     'auth.password_reset.update': { paramsTuple?: []; params?: {} }
     'auth.session.destroy': { paramsTuple?: []; params?: {} }
     'auth.email_verification.resend': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
+    'profile.show': { paramsTuple?: []; params?: {} }
+    'profile.update': { paramsTuple?: []; params?: {} }
+    'profile.avatar': { paramsTuple?: []; params?: {} }
+    'profile.email': { paramsTuple?: []; params?: {} }
+    'profile.password': { paramsTuple?: []; params?: {} }
+    'profile.destroy': { paramsTuple?: []; params?: {} }
+    'profile.terms': { paramsTuple?: []; params?: {} }
+    'profile.remember_organization': { paramsTuple?: []; params?: {} }
     'organization.index': { paramsTuple?: []; params?: {} }
     'organization.store': { paramsTuple?: []; params?: {} }
     'organization.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -31,10 +40,12 @@ export type ScannedRoutes = {
     'invitation.accept': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
   }
   GET: {
+    'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'health.show': { paramsTuple?: []; params?: {} }
     'auth.session.show': { paramsTuple?: []; params?: {} }
     'auth.email_verification.verify': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
+    'auth.email_change.verify': { paramsTuple?: []; params?: {} }
+    'profile.show': { paramsTuple?: []; params?: {} }
     'organization.index': { paramsTuple?: []; params?: {} }
     'organization.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -42,10 +53,12 @@ export type ScannedRoutes = {
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
   }
   HEAD: {
+    'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
     'health.show': { paramsTuple?: []; params?: {} }
     'auth.session.show': { paramsTuple?: []; params?: {} }
     'auth.email_verification.verify': { paramsTuple?: []; params?: {} }
-    'profile.profile.show': { paramsTuple?: []; params?: {} }
+    'auth.email_change.verify': { paramsTuple?: []; params?: {} }
+    'profile.show': { paramsTuple?: []; params?: {} }
     'organization.index': { paramsTuple?: []; params?: {} }
     'organization.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -59,6 +72,11 @@ export type ScannedRoutes = {
     'auth.password_reset.update': { paramsTuple?: []; params?: {} }
     'auth.session.destroy': { paramsTuple?: []; params?: {} }
     'auth.email_verification.resend': { paramsTuple?: []; params?: {} }
+    'profile.avatar': { paramsTuple?: []; params?: {} }
+    'profile.email': { paramsTuple?: []; params?: {} }
+    'profile.password': { paramsTuple?: []; params?: {} }
+    'profile.terms': { paramsTuple?: []; params?: {} }
+    'profile.remember_organization': { paramsTuple?: []; params?: {} }
     'organization.store': { paramsTuple?: []; params?: {} }
     'organization.transfer': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.leave': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -66,10 +84,12 @@ export type ScannedRoutes = {
     'invitation.accept': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
   }
   PATCH: {
+    'profile.update': { paramsTuple?: []; params?: {} }
     'organization.update': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.update': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'userId': ParamValue} }
   }
   DELETE: {
+    'profile.destroy': { paramsTuple?: []; params?: {} }
     'organization.destroy': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'userId': ParamValue} }
     'invitation.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }

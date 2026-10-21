@@ -146,6 +146,7 @@ export class UserSchema extends BaseModel {
     'lastOrganizationId',
     'locale',
     'password',
+    'pendingEmail',
     'termsAcceptedAt',
     'termsVersion',
     'theme',
@@ -170,6 +171,8 @@ export class UserSchema extends BaseModel {
   declare locale: string
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare pendingEmail: any | null
   @column.dateTime()
   declare termsAcceptedAt: DateTime | null
   @column()

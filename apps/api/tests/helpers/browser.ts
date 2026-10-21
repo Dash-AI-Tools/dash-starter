@@ -96,6 +96,42 @@ export class Browser {
   }
 
   /**
+   * Sends a request with a file attached, the way a form with a file input
+   * does.
+   */
+  async upload(
+    url: string,
+    field: string,
+    file: { contents: Buffer; filename: string; contentType: string }
+  ) {
+    if (!this.#cookies['XSRF-TOKEN']) {
+      await this.get('/api/v1/auth/session')
+    }
+
+    const request = this.client.request(url, 'POST')
+    request.redirects(0)
+
+    for (const [name, value] of Object.entries(this.#cookies)) {
+      request.cookiesJar[name] = { name, value }
+    }
+
+    const xsrfToken = this.#cookies['XSRF-TOKEN']
+    if (xsrfToken) {
+      request.header('x-xsrf-token', xsrfToken)
+    }
+
+    request.file(field, file.contents, {
+      filename: file.filename,
+      contentType: file.contentType,
+    })
+
+    const response = (await request) as ApiResponse
+    this.#store(response)
+
+    return response
+  }
+
+  /**
    * Sends a request with the cookies of the browser and stores the cookies
    * of the answer.
    */

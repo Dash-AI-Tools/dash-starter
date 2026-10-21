@@ -4,6 +4,7 @@
  */
 
 export const controllers = {
+  EmailChange: () => import('#controllers/email_change_controller'),
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Health: () => import('#controllers/health_controller'),
   Invitation: () => import('#controllers/invitation_controller'),

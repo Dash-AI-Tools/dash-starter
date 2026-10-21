@@ -6,6 +6,12 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'drive.local.serve': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/uploads/*',
+    tokens: [[0,"api"],[0,"uploads"],[2,"*"]],
+    types: placeholder as Registry['drive.local.serve']['types'],
+  },
   'health.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/health',
@@ -36,6 +42,12 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"auth"],[0,"verify-email"]],
     types: placeholder as Registry['auth.email_verification.verify']['types'],
   },
+  'auth.email_change.verify': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/auth/email-change/verify',
+    tokens: [[0,"api"],[0,"v1"],[0,"auth"],[0,"email-change"],[0,"verify"]],
+    types: placeholder as Registry['auth.email_change.verify']['types'],
+  },
   'auth.password_reset.store': {
     methods: ["POST"],
     pattern: '/api/v1/auth/forgot-password',
@@ -60,11 +72,53 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"auth"],[0,"resend-verification"]],
     types: placeholder as Registry['auth.email_verification.resend']['types'],
   },
-  'profile.profile.show': {
+  'profile.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/account/profile',
     tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"]],
-    types: placeholder as Registry['profile.profile.show']['types'],
+    types: placeholder as Registry['profile.show']['types'],
+  },
+  'profile.update': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/account/profile',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"]],
+    types: placeholder as Registry['profile.update']['types'],
+  },
+  'profile.avatar': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/profile/avatar',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"],[0,"avatar"]],
+    types: placeholder as Registry['profile.avatar']['types'],
+  },
+  'profile.email': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/profile/email',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"],[0,"email"]],
+    types: placeholder as Registry['profile.email']['types'],
+  },
+  'profile.password': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/profile/password',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"],[0,"password"]],
+    types: placeholder as Registry['profile.password']['types'],
+  },
+  'profile.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/account/profile',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"]],
+    types: placeholder as Registry['profile.destroy']['types'],
+  },
+  'profile.terms': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/terms',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"terms"]],
+    types: placeholder as Registry['profile.terms']['types'],
+  },
+  'profile.remember_organization': {
+    methods: ["POST"],
+    pattern: '/api/v1/account/organization',
+    tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"organization"]],
+    types: placeholder as Registry['profile.remember_organization']['types'],
   },
   'organization.index': {
     methods: ["GET","HEAD"],

@@ -1,0 +1,9 @@
+{
+  "current_password_invalid": "La contraseña actual no es correcta",
+  "avatar_missing": "Elige una imagen para subir",
+  "avatar_invalid_type": "Usa una imagen PNG, JPEG o WebP",
+  "avatar_too_large": "La imagen debe ocupar menos de 2 MB",
+  "email_same": "La nueva dirección debe ser distinta de la actual",
+  "delete_blocked": "Eres el único propietario de una organización que tiene otros miembros o una suscripción de pago activa. Transfiere la propiedad o elimina la organización primero.",
+  "organization_not_found": "No se encontró la organización"
+}
