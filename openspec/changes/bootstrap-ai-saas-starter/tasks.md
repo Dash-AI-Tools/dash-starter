@@ -26,14 +26,14 @@
 
 ## 4. Web foundation: API client, theming, UI kit
 
-- [ ] 4.1 Generate Tuyau client from API routes and add `lib/api.ts` fetch wrapper (credentials, XSRF header, Accept-Language, 401/422/402/429 mapping) with TanStack Query provider; Vitest + MSW tests for each status mapping
-- [ ] 4.2 Theme tokens in `index.css` (light/dark/system) and theme provider persisted to user preference/localStorage; test toggling applies `dark` class
-- [ ] 4.3 Add shadcn primitives for the full inventory in the `ui-components` spec (button, inputs, select, combobox, checkbox, radio, switch, date picker, file upload, dialog, sheet, dropdown/context menu, tabs, tooltip, popover, toast via sonner, badge, avatar, card, skeleton, pagination, breadcrumb, command); verify typecheck and lint pass
-- [ ] 4.4 Build `patterns/Form` (react-hook-form + zod, 422 mapping, pending state) with tests for server error mapping
-- [ ] 4.5 Build `patterns/DataTable` (TanStack Table, server pagination/sort/filter, URL state, selection, column visibility, loading/empty/error) with tests for URL round-trip and empty state
-- [ ] 4.6 Build chart components (line, bar, area, pie) using theme tokens and locale formatting; test Spanish number formatting
-- [ ] 4.7 Build `EmptyState`, `PageHeader`, `CommandPalette` primitives; dialog focus-trap test
-- [ ] 4.8 Showcase route rendering every component and variant, gated by `DEV || VITE_ENABLE_SHOWCASE`; test that production build excludes it
+- [x] 4.1 Generate Tuyau client from API routes and add `lib/api.ts` fetch wrapper (credentials, XSRF header, Accept-Language, 401/422/402/429 mapping) with TanStack Query provider; Vitest + MSW tests for each status mapping
+- [x] 4.2 Theme tokens in `index.css` (light/dark/system) and theme provider persisted to user preference/localStorage; test toggling applies `dark` class
+- [x] 4.3 Add shadcn primitives for the full inventory in the `ui-components` spec (button, inputs, select, combobox, checkbox, radio, switch, date picker, file upload, dialog, sheet, dropdown/context menu, tabs, tooltip, popover, toast via sonner, badge, avatar, card, skeleton, pagination, breadcrumb, command); verify typecheck and lint pass
+- [x] 4.4 Build `patterns/Form` (react-hook-form + zod, 422 mapping, pending state) with tests for server error mapping
+- [x] 4.5 Build `patterns/DataTable` (TanStack Table, server pagination/sort/filter, URL state, selection, column visibility, loading/empty/error) with tests for URL round-trip and empty state
+- [x] 4.6 Build chart components (line, bar, area, pie) using theme tokens and locale formatting; test Spanish number formatting
+- [x] 4.7 Build `EmptyState`, `PageHeader`, `CommandPalette` primitives; dialog focus-trap test
+- [x] 4.8 Showcase route rendering every component and variant, gated by `DEV || VITE_ENABLE_SHOWCASE`; test that production build excludes it
 
 ## 5. Authentication
 

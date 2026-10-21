@@ -17,11 +17,16 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* The API registry is generated with decorators, so they must be enabled
+       here too for the shared types to resolve. */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "../api/.adonisjs/client/**/*.ts", "../api/app/**/*.ts", "../api/start/**/*.ts"]
 }

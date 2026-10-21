@@ -25,8 +25,8 @@ export default defineConfig([
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
-    // lib modules pair a provider with its pure helpers
-    files: ['src/lib/**'],
+    // lib and provider modules pair a component with its helpers
+    files: ['src/lib/**', 'src/providers/**'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])
