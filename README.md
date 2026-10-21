@@ -48,7 +48,13 @@ npm install
 # Create the environment files
 cp .env.example .env
 cp apps/api/.env.example apps/api/.env
-node ace generate:key --force --name=APP_KEY   # run inside apps/api
+```
+
+Generate a signing key for the API and for Compose:
+
+```bash
+cd apps/api && node ace generate:key --force
+cd ../.. && node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"   # paste into the root .env as APP_KEY
 ```
 
 Then boot the stack:
@@ -68,8 +74,8 @@ docker compose up -d
 Run the migrations and seed the default plans:
 
 ```bash
-docker compose exec api node ace migrate --force
-docker compose exec api node ace db:seed --force
+docker compose exec api node ace migration:run --force
+docker compose exec api node ace db:seed
 ```
 
 Sign up at http://localhost:5173/signup — the verification email lands in Mailpit.
@@ -81,6 +87,13 @@ npm run dev            # API on :3333, web on :5173
 ```
 
 The Vite dev server proxies `/api` and `/mcp` to the API, so the browser only ever talks to one origin and session cookies stay first-party. Point `DB_*` in `apps/api/.env` at your own Postgres.
+
+The API test suite uses a separate `dash_test` database. Create it once with:
+
+```bash
+docker compose exec db psql -U dash -d dash -c "CREATE DATABASE dash_test"
+cd apps/api && NODE_ENV=test node ace migration:run --force
+```
 
 ---
 
@@ -98,12 +111,6 @@ Run at the repository root; each one fans out to every workspace.
 | `npm run typecheck` | Type-check every workspace |
 | `npm test` | Run the API (Japa) and web (Vitest) unit suites |
 | `npm run test:e2e` | Run the Playwright suite against the running stack |
-
-The API test database is `dash_test`. Create it once with:
-
-```bash
-createdb dash_test   # or: psql -U postgres -c "CREATE DATABASE dash_test"
-```
 
 ---
 

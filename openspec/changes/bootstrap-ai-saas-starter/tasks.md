@@ -10,11 +10,11 @@
 
 ## 2. Dev environment and configuration
 
-- [ ] 2.1 Write `docker-compose.yml` (dev: postgres, api with `node ace serve --hmr` and source mount, web with Vite and mount, mailpit) and `docker-compose.prod.yml` (built images, nginx proxying `/api` and `/mcp`, migrate-before-start entrypoint); verify `docker compose up` serves web, API and Mailpit at documented URLs
-- [ ] 2.2 Configure Vite dev proxy for `/api` and `/mcp`; remove CORS dependency for same-origin; verify a browser request from the web origin to `/api/v1/health` succeeds without CORS headers
-- [ ] 2.3 Extend `start/env.ts` with all new variables (mail, Brevo, Creem, AI providers/aliases, drive, limiter) and production-only required rules; update `.env.example` files; add unit test asserting boot fails without `APP_KEY` and without `BREVO_API_KEY` in production
-- [ ] 2.4 Add `GET /api/v1/health` checking DB connectivity and wire Compose health checks; add functional test for 200 and simulated DB failure
-- [ ] 2.5 Document setup, commands and URLs in root `README.md`; verify commands run as written on a clean clone
+- [x] 2.1 Write `docker-compose.yml` (dev: postgres, api with `node ace serve --hmr` and source mount, web with Vite and mount, mailpit) and `docker-compose.prod.yml` (built images, nginx proxying `/api` and `/mcp`, migrate-before-start entrypoint); verify `docker compose up` serves web, API and Mailpit at documented URLs
+- [x] 2.2 Configure Vite dev proxy for `/api` and `/mcp`; remove CORS dependency for same-origin; verify a browser request from the web origin to `/api/v1/health` succeeds without CORS headers
+- [x] 2.3 Extend `start/env.ts` with all new variables (mail, Brevo, Creem, AI providers/aliases, drive, limiter) and production-only required rules; update `.env.example` files; add unit test asserting boot fails without `APP_KEY` and without `BREVO_API_KEY` in production
+- [x] 2.4 Add `GET /api/v1/health` checking DB connectivity and wire Compose health checks; add functional test for 200 and simulated DB failure
+- [x] 2.5 Document setup, commands and URLs in root `README.md`; verify commands run as written on a clean clone
 
 ## 3. Localization foundation
 

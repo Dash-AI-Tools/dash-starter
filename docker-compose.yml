@@ -1,5 +1,9 @@
 name: dash-starter
 
+# Development stack. The whole repository is mounted so npm workspaces and the
+# hot-reload boundaries work exactly as they do on the host. Dependencies live
+# in named volumes so the container installs Linux binaries and never writes
+# into the host `node_modules`.
 services:
   db:
     image: postgres:17-alpine
@@ -26,54 +30,75 @@ services:
       MP_MAX_MESSAGES: 500
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8025/readyz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     image: node:24-alpine
-    working_dir: /app
-    command: sh -c "npm install && node ace serve --hmr"
+    working_dir: /app/apps/api
+    command: >
+      sh -c "cd /app && npm ci --workspace @dash/api --include-workspace-root &&
+      cd /app/apps/api && node ace serve --hmr"
     environment:
       TZ: UTC
       PORT: 3333
       HOST: 0.0.0.0
       NODE_ENV: development
-      LOG_LEVEL: info
-      APP_KEY: ${APP_KEY:?set APP_KEY in .env (node ace generate:key --force)}
       APP_URL: http://localhost:3333
-      SESSION_DRIVER: cookie
+      APP_KEY: ${APP_KEY:?set APP_KEY in the root .env}
+      # The database lives in the `db` service, not on the host.
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: dash
-      DB_PASSWORD: dash
-      DB_DATABASE: dash
       MAIL_TRANSPORT: smtp
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
-      MAIL_FROM: "Dash <no-reply@dash-starter.test>"
-      AI_PROVIDER: stub
     volumes:
-      - ./apps/api:/app
+      - .:/app
       - api_node_modules:/app/node_modules
+      # The host `apps/api/.env` points at the host database, so the container
+      # reads its own file instead.
+      - ./apps/api/.env.docker:/app/apps/api/.env:ro
     ports:
       - "3333:3333"
     depends_on:
       db:
         condition: service_healthy
       mailpit:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3333/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   web:
     image: node:24-alpine
-    working_dir: /app
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    working_dir: /app/apps/web
+    command: >
+      sh -c "cd /app && npm ci --workspace @dash/web --include-workspace-root &&
+      cd /app/apps/web && npm run dev -- --host 0.0.0.0"
     environment:
+      # The dev server proxies `/api` and `/mcp` to the API container, so the
+      # browser only ever talks to one origin.
       API_URL: http://api:3333
     volumes:
-      - ./apps/web:/app
+      - .:/app
       - web_node_modules:/app/node_modules
     ports:
       - "5173:5173"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5173/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
 volumes:
   pgdata:

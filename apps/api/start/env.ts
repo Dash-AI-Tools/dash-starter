@@ -6,11 +6,14 @@ import { Env } from '@adonisjs/core/env'
  *
  * The conditional rules below encode the "optional provider keys fall back to
  * local alternatives only outside production" rule: in production the
- * provider credentials become mandatory.
+ * provider credentials become mandatory. They are read lazily, because the
+ * `.env` files are only merged into `process.env` while the schema runs.
+ *
+ * Note that `optionalWhen(condition)` makes the key *optional* when the
+ * condition is true, so every rule below states the case in which the key may
+ * be missing.
  */
-const isProduction = process.env.NODE_ENV === 'production'
-
-export default await Env.create(new URL('../', import.meta.url), {
+export const envSchema = {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),
   HOST: Env.schema.string({ format: 'host' }),
@@ -41,10 +44,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   MAIL_FROM_NAME: Env.schema.string.optional(),
 
   /**
-   * Brevo transactional API key. Required when MAIL_TRANSPORT=brevo.
+   * Brevo transactional API key. Required in production, and whenever the
+   * Brevo transport is selected.
    */
   BREVO_API_KEY: Env.schema.string.optionalWhen(
-    (key, value) => value === 'brevo' || isProduction,
+    () =>
+      process.env.NODE_ENV !== 'production' && process.env.MAIL_TRANSPORT !== 'brevo',
     { message: 'BREVO_API_KEY is required when MAIL_TRANSPORT is "brevo"' }
   ),
 
@@ -77,33 +82,35 @@ export default await Env.create(new URL('../', import.meta.url), {
     'openrouter',
     'compatible',
   ] as const),
-  AI_TIMEOUT_MS: Env.schema.number.default(60_000),
-  AI_CHAT_MODEL: Env.schema.string().optional(),
-  AI_FAST_MODEL: Env.schema.string().optional(),
-  AI_REASONING_MODEL: Env.schema.string().optional(),
-  AI_IMAGE_MODEL: Env.schema.string().optional(),
+  AI_TIMEOUT_MS: Env.schema.number.optional(),
+  AI_CHAT_MODEL: Env.schema.string.optional(),
+  AI_FAST_MODEL: Env.schema.string.optional(),
+  AI_REASONING_MODEL: Env.schema.string.optional(),
+  AI_IMAGE_MODEL: Env.schema.string.optional(),
   ANTHROPIC_API_KEY: Env.schema.string.optional(),
   OPENAI_API_KEY: Env.schema.string.optional(),
   GOOGLE_GENERATIVE_AI_API_KEY: Env.schema.string.optional(),
   DEEPSEEK_API_KEY: Env.schema.string.optional(),
   OPENROUTER_API_KEY: Env.schema.string.optional(),
   COMPATIBLE_API_KEY: Env.schema.string.optional(),
-  COMPATIBLE_BASE_URL: Env.schema.string({ format: 'url', tld: false }).optional(),
-  COMPATIBLE_MODEL_ID: Env.schema.string().optional(),
+  COMPATIBLE_BASE_URL: Env.schema.string.optional(),
+  COMPATIBLE_MODEL_ID: Env.schema.string.optional(),
 
   /**
    * File storage for avatars and generated images.
    */
   DRIVE_DISK: Env.schema.enum(['local', 's3'] as const),
-  DRIVE_ROOT: Env.schema.string().optional(),
+  DRIVE_ROOT: Env.schema.string.optional(),
   S3_KEY: Env.schema.string.optional(),
   S3_SECRET: Env.schema.string.optional(),
   S3_BUCKET: Env.schema.string.optional(),
   S3_REGION: Env.schema.string.optional(),
-  S3_ENDPOINT: Env.schema.string().optional(),
+  S3_ENDPOINT: Env.schema.string.optional(),
 
   /**
    * Rate limiting store.
    */
   LIMITER_STORE: Env.schema.enum(['database', 'memory'] as const),
-})
+}
+
+export default await Env.create(new URL('../', import.meta.url), envSchema)

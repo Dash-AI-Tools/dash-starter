@@ -1,4 +1,4 @@
-name: dash-starter
+name: dash-starter-prod
 
 services:
   db:
@@ -24,7 +24,9 @@ services:
 
   api:
     build:
-      context: ./apps/api
+      # The Dockerfiles resolve the npm workspace from the repository root.
+      context: .
+      dockerfile: apps/api/Dockerfile
     environment:
       TZ: UTC
       PORT: 3333
@@ -34,6 +36,7 @@ services:
       APP_KEY: ${APP_KEY:?set APP_KEY in .env}
       APP_URL: ${APP_URL:-http://localhost:3333}
       SESSION_DRIVER: cookie
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-en}
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: dash
@@ -41,9 +44,13 @@ services:
       DB_DATABASE: dash
       MAIL_TRANSPORT: brevo
       MAIL_FROM: "Dash <no-reply@dash-starter.test>"
+      BREVO_API_KEY: ${BREVO_API_KEY:?set BREVO_API_KEY in .env}
+      CREEM_ENV: ${CREEM_ENV:-live}
       AI_PROVIDER: ${AI_PROVIDER:-stub}
+      DRIVE_DISK: ${DRIVE_DISK:-local}
+      LIMITER_STORE: ${LIMITER_STORE:-database}
     entrypoint: >
-      sh -c "node ace migrate --force && node ace db:seed --force && node bin/server.js"
+      sh -c "node ace migration:run --force && node ace db:seed && node bin/server.js"
     depends_on:
       db:
         condition: service_healthy
@@ -55,7 +62,8 @@ services:
 
   web:
     build:
-      context: ./apps/web
+      context: .
+      dockerfile: apps/web/Dockerfile
     ports:
       - "8080:80"
     depends_on:
