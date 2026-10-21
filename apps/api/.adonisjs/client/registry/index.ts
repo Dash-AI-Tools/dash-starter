@@ -66,6 +66,96 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"account"],[0,"profile"]],
     types: placeholder as Registry['profile.profile.show']['types'],
   },
+  'organization.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"]],
+    types: placeholder as Registry['organization.index']['types'],
+  },
+  'organization.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"]],
+    types: placeholder as Registry['organization.store']['types'],
+  },
+  'organization.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"]],
+    types: placeholder as Registry['organization.show']['types'],
+  },
+  'organization.update': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/orgs/:orgSlug',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"]],
+    types: placeholder as Registry['organization.update']['types'],
+  },
+  'organization.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/orgs/:orgSlug',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"]],
+    types: placeholder as Registry['organization.destroy']['types'],
+  },
+  'organization.transfer': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/transfer-ownership',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"transfer-ownership"]],
+    types: placeholder as Registry['organization.transfer']['types'],
+  },
+  'member.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/members',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"members"]],
+    types: placeholder as Registry['member.index']['types'],
+  },
+  'member.update': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/orgs/:orgSlug/members/:userId',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"members"],[1,"userId"]],
+    types: placeholder as Registry['member.update']['types'],
+  },
+  'member.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/orgs/:orgSlug/members/:userId',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"members"],[1,"userId"]],
+    types: placeholder as Registry['member.destroy']['types'],
+  },
+  'member.leave': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/leave',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"leave"]],
+    types: placeholder as Registry['member.leave']['types'],
+  },
+  'invitation.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/invitations',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"invitations"]],
+    types: placeholder as Registry['invitation.index']['types'],
+  },
+  'invitation.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/invitations',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"invitations"]],
+    types: placeholder as Registry['invitation.store']['types'],
+  },
+  'invitation.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/orgs/:orgSlug/invitations/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"invitations"],[1,"id"]],
+    types: placeholder as Registry['invitation.destroy']['types'],
+  },
+  'invitation.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/invitations/:token',
+    tokens: [[0,"api"],[0,"v1"],[0,"invitations"],[1,"token"]],
+    types: placeholder as Registry['invitation.show']['types'],
+  },
+  'invitation.accept': {
+    methods: ["POST"],
+    pattern: '/api/v1/invitations/:token/accept',
+    tokens: [[0,"api"],[0,"v1"],[0,"invitations"],[1,"token"],[0,"accept"]],
+    types: placeholder as Registry['invitation.accept']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

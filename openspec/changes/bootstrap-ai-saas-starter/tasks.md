@@ -53,13 +53,14 @@
 
 ## 7. Organizations and tenancy
 
-- [ ] 7.1 Migrations and models: organizations (name, slug unique, logo_path, default_locale, onboarded_at, onboarding_state jsonb), memberships (role enum, unique org+user), invitations (email, role, token hash, expires_at, accepted_at, revoked_at); verify migration and model relations
-- [ ] 7.2 `org` middleware resolving org via caller membership (404 otherwise) and Bouncer abilities by role; functional tests for cross-tenant 404 and member 403 on admin route
-- [ ] 7.3 Create organization endpoint with slug suggestion and uniqueness; tests
-- [ ] 7.4 Members endpoints: list, change role (admin cannot touch owner), remove, leave, last-owner protection; tests for each rule
-- [ ] 7.5 Invitations: create (verified inviter, seat check via entitlements), revoke, list, accept with email match, signup-prefill flow; tests including mismatch and seat limit
-- [ ] 7.6 Settings: update name/slug/logo/default locale, transfer ownership, delete org (cancels subscription via billing service); tests
-- [ ] 7.7 Web: members page (DataTable), invite dialog, organization settings page, invitation accept page; component tests for role-based visibility
+- [x] 7.1 Migrations and models: organizations (name, slug unique, logo_path, default_locale, onboarded_at, onboarding_state jsonb), memberships (role enum, unique org+user), invitations (email, role, token hash, expires_at, accepted_at, revoked_at); verify migration and model relations
+- [x] 7.2 `org` middleware resolving org via caller membership (404 otherwise) and Bouncer abilities by role; functional tests for cross-tenant 404 and member 403 on admin route
+- [x] 7.3 Create organization endpoint with slug suggestion and uniqueness; tests
+- [x] 7.4 Members endpoints: list, change role (admin cannot touch owner), remove, leave, last-owner protection; tests for each rule
+- [x] 7.5 Invitations: create (verified inviter, seat check via entitlements), revoke, list, accept with email match, signup-prefill flow; tests including mismatch and seat limit
+- [x] 7.6 Settings: update name/slug/logo/default locale, transfer ownership, delete org (cancels subscription via billing service); tests
+  - NOTE: the cancellation of the subscription lands with the billing group (10.x); there are no subscriptions yet, so the deletion removes the organization and its data.
+- [x] 7.7 Web: members page (DataTable), invite dialog, organization settings page, invitation accept page; component tests for role-based visibility
 
 ## 8. Dashboard shell and profile
 

@@ -10,5 +10,10 @@
   "validation_failed": "The request contains invalid data",
   "invalid_credentials": "The email or password is not correct",
   "invalid_reset_token": "This reset link is invalid or has expired",
-  "email_not_verified": "Please verify your email address to continue"
+  "email_not_verified": "Please verify your email address to continue",
+  "last_owner": "An organization must always have at least one owner",
+  "seat_limit_reached": "Your plan has no seats left. Upgrade to invite more people",
+  "invitation_mismatch": "This invitation was sent to a different email address",
+  "invitation_invalid": "This invitation link is not valid",
+  "membership_not_found": "The member was not found"
 }

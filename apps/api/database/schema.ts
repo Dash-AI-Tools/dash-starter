@@ -7,6 +7,95 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class InvitationSchema extends BaseModel {
+  static $columns = [
+    'acceptedAt',
+    'createdAt',
+    'email',
+    'expiresAt',
+    'id',
+    'invitedById',
+    'organizationId',
+    'revokedAt',
+    'role',
+    'tokenHash',
+    'updatedAt',
+  ] as const
+  $columns = InvitationSchema.$columns
+  @column.dateTime()
+  declare acceptedAt: DateTime | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare email: any
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare invitedById: number
+  @column()
+  declare organizationId: number
+  @column.dateTime()
+  declare revokedAt: DateTime | null
+  @column()
+  declare role: string
+  @column()
+  declare tokenHash: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class MembershipSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'organizationId', 'role', 'updatedAt', 'userId'] as const
+  $columns = MembershipSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare organizationId: number
+  @column()
+  declare role: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
+}
+
+export class OrganizationSchema extends BaseModel {
+  static $columns = [
+    'createdAt',
+    'defaultLocale',
+    'id',
+    'logoPath',
+    'name',
+    'onboardedAt',
+    'onboardingState',
+    'slug',
+    'updatedAt',
+  ] as const
+  $columns = OrganizationSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare defaultLocale: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare logoPath: string | null
+  @column()
+  declare name: string
+  @column.dateTime()
+  declare onboardedAt: DateTime | null
+  @column()
+  declare onboardingState: any | null
+  @column()
+  declare slug: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class PasswordResetTokenSchema extends BaseModel {
   static $columns = ['createdAt', 'expiresAt', 'id', 'tokenHash', 'userId'] as const
   $columns = PasswordResetTokenSchema.$columns

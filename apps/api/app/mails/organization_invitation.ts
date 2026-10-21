@@ -27,12 +27,18 @@ export type InvitationDetails = {
  * The email that invites somebody to join an organization.
  */
 export default class OrganizationInvitation extends AppMail {
+  /**
+   * The link that accepts the invitation.
+   */
+  readonly link: string
+
   private details: InvitationDetails
 
   constructor(details: InvitationDetails) {
     super(details.locale)
 
     this.details = details
+    this.link = details.acceptUrl
     this.from = env.get('MAIL_FROM')
     this.subject = this.t('mail.organization_invitation.subject', {
       inviter: details.inviterName,

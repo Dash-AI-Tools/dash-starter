@@ -6,6 +6,9 @@
 export const controllers = {
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Health: () => import('#controllers/health_controller'),
+  Invitation: () => import('#controllers/invitation_controller'),
+  Member: () => import('#controllers/member_controller'),
+  Organization: () => import('#controllers/organization_controller'),
   PasswordReset: () => import('#controllers/password_reset_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Session: () => import('#controllers/session_controller'),

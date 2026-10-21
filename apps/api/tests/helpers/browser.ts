@@ -87,6 +87,14 @@ export class Browser {
     return this.#request('POST', url, options)
   }
 
+  patch(url: string, options: RequestOptions = {}) {
+    return this.#request('PATCH', url, options)
+  }
+
+  delete(url: string, options: RequestOptions = {}) {
+    return this.#request('DELETE', url, options)
+  }
+
   /**
    * Sends a request with the cookies of the browser and stores the cookies
    * of the answer.

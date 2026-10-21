@@ -137,4 +137,199 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
     }
   }
+  'organization.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['index']>>>
+    }
+  }
+  'organization.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').createOrganizationValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').createOrganizationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'organization.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['show']>>>
+    }
+  }
+  'organization.update': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/orgs/:orgSlug'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').updateOrganizationValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').updateOrganizationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'organization.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/orgs/:orgSlug'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').deleteOrganizationValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').deleteOrganizationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['destroy']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'organization.transfer': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/transfer-ownership'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').transferOwnershipValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').transferOwnershipValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['transfer']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['transfer']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/organization_controller').default['transfer']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'member.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/members'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
+    }
+  }
+  'member.update': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/orgs/:orgSlug/members/:userId'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').changeRoleValidator)>>
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; userId: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').changeRoleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/member_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'member.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/orgs/:orgSlug/members/:userId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; userId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/member_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['destroy']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['destroy']>>>
+    }
+  }
+  'member.leave': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/leave'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/member_controller').default['leave']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['leave']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['leave']>>>
+    }
+  }
+  'invitation.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/invitations'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['index']>>>
+    }
+  }
+  'invitation.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/invitations'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/organization').createInvitationValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/organization').createInvitationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'invitation.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/orgs/:orgSlug/invitations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
+    }
+  }
+  'invitation.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/invitations/:token'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['show']>>>
+    }
+  }
+  'invitation.accept': {
+    methods: ["POST"]
+    pattern: '/api/v1/invitations/:token/accept'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { token: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['accept']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['accept']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['accept']>>>
+    }
+  }
 }

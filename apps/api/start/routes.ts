@@ -36,5 +36,55 @@ router
       .prefix('account')
       .as('profile')
       .use(middleware.auth())
+
+    /**
+     * The organizations of the user.
+     */
+    router
+      .group(() => {
+        router.get('orgs', [controllers.Organization, 'index'])
+        router.post('orgs', [controllers.Organization, 'store'])
+      })
+      .use(middleware.auth())
+
+    /**
+     * The organization of the request is resolved through the membership of
+     * the caller, so a user that does not belong to it gets a 404.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug', [controllers.Organization, 'show'])
+        router.patch('orgs/:orgSlug', [controllers.Organization, 'update'])
+        router.delete('orgs/:orgSlug', [controllers.Organization, 'destroy'])
+        router.post('orgs/:orgSlug/transfer-ownership', [controllers.Organization, 'transfer'])
+
+        router.get('orgs/:orgSlug/members', [controllers.Member, 'index'])
+        router.patch('orgs/:orgSlug/members/:userId', [controllers.Member, 'update'])
+        router.delete('orgs/:orgSlug/members/:userId', [controllers.Member, 'destroy'])
+        router.post('orgs/:orgSlug/leave', [controllers.Member, 'leave'])
+      })
+      .use([middleware.auth(), middleware.org()])
+
+    /**
+     * The invitations of an organization need a confirmed email address from
+     * the inviter.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug/invitations', [controllers.Invitation, 'index'])
+        router.post('orgs/:orgSlug/invitations', [controllers.Invitation, 'store'])
+        router.delete('orgs/:orgSlug/invitations/:id', [controllers.Invitation, 'destroy'])
+      })
+      .use([middleware.auth(), middleware.org(), middleware.verified()])
+
+    /**
+     * The page that accepts an invitation reads the details of the
+     * invitation with the token, so it works without an account.
+     */
+    router.get('invitations/:token', [controllers.Invitation, 'show'])
+
+    router
+      .post('invitations/:token/accept', [controllers.Invitation, 'accept'])
+      .use(middleware.auth())
   })
   .prefix('/api/v1')

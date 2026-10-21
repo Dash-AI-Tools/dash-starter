@@ -10,5 +10,10 @@
   "validation_failed": "La solicitud contiene datos no válidos",
   "invalid_credentials": "El correo electrónico o la contraseña no son correctos",
   "invalid_reset_token": "Este enlace de restablecimiento no es válido o ha caducado",
-  "email_not_verified": "Verifica tu correo electrónico para continuar"
+  "email_not_verified": "Verifica tu correo electrónico para continuar",
+  "last_owner": "Una organización siempre debe tener al menos un propietario",
+  "seat_limit_reached": "Tu plan no tiene más plazas. Mejora el plan para invitar a más personas",
+  "invitation_mismatch": "Esta invitación se envió a un correo electrónico diferente",
+  "invitation_invalid": "Este enlace de invitación no es válido",
+  "membership_not_found": "No se encontró el miembro"
 }

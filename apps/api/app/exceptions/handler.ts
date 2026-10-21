@@ -27,6 +27,11 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_INVALID_CREDENTIALS: { status: 401, message: 'invalid_credentials' },
   E_INVALID_RESET_TOKEN: { status: 422, message: 'invalid_reset_token' },
   E_EMAIL_NOT_VERIFIED: { status: 403, message: 'email_not_verified' },
+  E_LAST_OWNER: { status: 422, message: 'last_owner' },
+  E_MEMBERSHIP_NOT_FOUND: { status: 404, message: 'membership_not_found' },
+  E_SEAT_LIMIT_REACHED: { status: 402, message: 'seat_limit_reached' },
+  E_INVITATION_MISMATCH: { status: 403, message: 'invitation_mismatch' },
+  E_INVITATION_INVALID: { status: 404, message: 'invitation_invalid' },
 }
 
 /**
@@ -45,6 +50,11 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   invalid_credentials: 'The email or password is not correct',
   invalid_reset_token: 'This reset link is invalid or has expired',
   email_not_verified: 'Please verify your email address to continue',
+  last_owner: 'An organization must always have at least one owner',
+  membership_not_found: 'The member was not found',
+  seat_limit_reached: 'Your plan has no seats left. Upgrade to invite more people',
+  invitation_mismatch: 'This invitation was sent to a different email address',
+  invitation_invalid: 'This invitation link is not valid',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {

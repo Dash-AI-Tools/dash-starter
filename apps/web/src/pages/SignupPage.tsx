@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -57,7 +57,15 @@ function TermsField() {
 export default function SignupPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const setCurrentUser = useSetCurrentUser()
+
+  /**
+   * An invitation arrives with the address it was sent to, so the visitor
+   * does not have to type it again.
+   */
+  const email = params.get('email') ?? ''
+  const invitation = params.get('invitation')
 
   const schema = useMemo(
     () =>
@@ -84,6 +92,7 @@ export default function SignupPage() {
       <Form
         className="mt-8"
         schema={schema}
+        defaultValues={{ email }}
         fields={[
           { name: 'fullName', label: t('fullName') },
           { name: 'email', label: t('email'), type: 'email' },
@@ -106,7 +115,15 @@ export default function SignupPage() {
           })
 
           setCurrentUser(response.user)
-          navigate(response.redirectTo ?? '/onboarding', { replace: true })
+
+          /**
+           * A visitor that came from an invitation joins the organization
+           * right away, instead of going through the onboarding.
+           */
+          navigate(
+            invitation ? `/invitations/${invitation}/accept` : (response.redirectTo ?? '/onboarding'),
+            { replace: true }
+          )
         }}
       >
         <TermsField />

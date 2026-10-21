@@ -1,0 +1,9 @@
+{
+  "slug_taken": "Ese identificador de URL ya está en uso. Prueba con {suggestion}.",
+  "already_member": "{email} ya pertenece a esta organización",
+  "already_invited": "{email} ya tiene una invitación pendiente",
+  "invitation_sent": "La invitación se envió a {email}",
+  "name_mismatch": "El nombre no coincide con la organización ({name})",
+  "invitation_not_pending": "La invitación ya se ha utilizado",
+  "cannot_transfer_to_self": "La propiedad no se puede transferir a uno mismo"
+}

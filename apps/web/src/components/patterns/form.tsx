@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react'
 import {
   FormProvider,
   useForm,
+  type DefaultValues,
   type FieldError,
   type FieldPath,
   type FieldValues,
@@ -51,6 +52,7 @@ export function Form<T extends FieldValues>({
   onSubmit,
   submitLabel,
   pendingLabel,
+  defaultValues,
   children,
   className,
   /** Called when the request fails with an error that is not a field error. */
@@ -66,13 +68,19 @@ export function Form<T extends FieldValues>({
   submitLabel: ReactNode
   /** The label of the submit button while the request is pending. */
   pendingLabel?: ReactNode
+  /** The values the form starts with. */
+  defaultValues?: DefaultValues<T>
   /** Extra content rendered under the fields. */
   children?: ReactNode
   className?: string
   onError?: (message: string) => void
 }) {
   const [serverError, setServerError] = useState<string | null>(null)
-  const methods = useForm<T>({ resolver: zodResolver(schema), mode: 'onBlur' })
+  const methods = useForm<T>({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues,
+  })
   const {
     formState: { errors, isSubmitting },
     register,

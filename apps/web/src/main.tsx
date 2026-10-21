@@ -19,10 +19,17 @@ const routes = [
   { path: '/verify-email', ...page(() => import('./pages/VerifyEmailPage')) },
   { path: '/forgot-password', ...page(() => import('./pages/ForgotPasswordPage')) },
   { path: '/reset-password', ...page(() => import('./pages/ResetPasswordPage')) },
+  { path: '/invitations/:token/accept', ...page(() => import('./pages/AcceptInvitationPage')) },
   {
     path: '/',
     ...page(() => import('./layouts/AppLayout')),
-    children: [],
+    children: [
+      { path: 'app/:orgSlug/members', ...page(() => import('./pages/MembersPage')) },
+      {
+        path: 'app/:orgSlug/settings',
+        ...page(() => import('./pages/OrganizationSettingsPage')),
+      },
+    ],
   },
 ]
 

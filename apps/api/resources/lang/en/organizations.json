@@ -1,0 +1,9 @@
+{
+  "slug_taken": "That URL slug is already taken. Try {suggestion} instead.",
+  "already_member": "{email} already belongs to this organization",
+  "already_invited": "{email} already has a pending invitation",
+  "invitation_sent": "The invitation was sent to {email}",
+  "name_mismatch": "The name does not match the organization ({name})",
+  "invitation_not_pending": "The invitation has already been used",
+  "cannot_transfer_to_self": "The ownership cannot be handed over to yourself"
+}

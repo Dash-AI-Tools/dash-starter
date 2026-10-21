@@ -37,6 +37,7 @@ router.use([
   () => import('@adonisjs/shield/shield_middleware'),
   () => import('@adonisjs/auth/initialize_auth_middleware'),
   () => import('#middleware/silent_auth_middleware'),
+  () => import('#middleware/initialize_bouncer_middleware'),
   () => import('#middleware/detect_user_locale_middleware'),
 ])
 
@@ -47,4 +48,5 @@ router.use([
 export const middleware = router.named({
   auth: () => import('#middleware/auth_middleware'),
   verified: () => import('#middleware/verified_middleware'),
+  org: () => import('#middleware/org_middleware'),
 })
