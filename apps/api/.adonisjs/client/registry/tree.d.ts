@@ -6,19 +6,24 @@ export interface ApiDefinition {
     show: typeof routes['health.show']
   }
   auth: {
-    newAccount: {
-      store: typeof routes['auth.new_account.store']
+    session: {
+      show: typeof routes['auth.session.show']
+      store: typeof routes['auth.session.store']
+      login: typeof routes['auth.session.login']
+      destroy: typeof routes['auth.session.destroy']
     }
-    accessTokens: {
-      store: typeof routes['auth.access_tokens.store']
+    emailVerification: {
+      verify: typeof routes['auth.email_verification.verify']
+      resend: typeof routes['auth.email_verification.resend']
+    }
+    passwordReset: {
+      store: typeof routes['auth.password_reset.store']
+      update: typeof routes['auth.password_reset.update']
     }
   }
   profile: {
     profile: {
       show: typeof routes['profile.profile.show']
-    }
-    accessTokens: {
-      destroy: typeof routes['profile.access_tokens.destroy']
     }
   }
 }

@@ -59,8 +59,13 @@ describe('Form', () => {
 
     const user = userEvent.setup()
     renderForm(async (values) => {
-      await client.api.auth.newAccount.store({
-        body: { ...values, fullName: null, passwordConfirmation: values.password },
+      await client.api.auth.session.store({
+        body: {
+          ...values,
+          fullName: 'Ada Lovelace',
+          passwordConfirmation: values.password,
+          terms: true,
+        },
       })
     })
 

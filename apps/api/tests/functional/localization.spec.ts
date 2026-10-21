@@ -1,4 +1,5 @@
 import { test } from '@japa/runner'
+import { Browser } from '#tests/helpers/browser'
 
 /**
  * The shape of a localized error response. The Tuyau registry types the
@@ -35,11 +36,16 @@ test.group('Localized API responses', () => {
     client,
     assert,
   }) => {
-    const response = await client.post('/api/v1/auth/signup').header('Accept-Language', 'es').json({
-      fullName: 'Ada Lovelace',
-      email: 'not-an-email',
-      password: 'supersecret',
-      passwordConfirmation: 'supersecret',
+    const browser = new Browser(client)
+    const response = await browser.post('/api/v1/auth/signup', {
+      headers: { 'Accept-Language': 'es' },
+      body: {
+        fullName: 'Ada Lovelace',
+        email: 'not-an-email',
+        password: 'supersecret',
+        passwordConfirmation: 'supersecret',
+        terms: true,
+      },
     })
 
     response.assertStatus(422)
@@ -53,11 +59,16 @@ test.group('Localized API responses', () => {
   })
 
   test('an English validation error uses the English catalog', async ({ client, assert }) => {
-    const response = await client.post('/api/v1/auth/signup').header('Accept-Language', 'en').json({
-      fullName: 'Ada Lovelace',
-      email: 'not-an-email',
-      password: 'supersecret',
-      passwordConfirmation: 'supersecret',
+    const browser = new Browser(client)
+    const response = await browser.post('/api/v1/auth/signup', {
+      headers: { 'Accept-Language': 'en' },
+      body: {
+        fullName: 'Ada Lovelace',
+        email: 'not-an-email',
+        password: 'supersecret',
+        passwordConfirmation: 'supersecret',
+        terms: true,
+      },
     })
 
     response.assertStatus(422)
@@ -72,15 +83,19 @@ test.group('Localized API responses', () => {
      * The session plugin overwrites the `Cookie` header, so the locale
      * cookie is added to the request's cookie jar instead.
      */
-    const request = client.post('/api/v1/auth/signup').header('Accept-Language', 'en').json({
-      fullName: 'Ada Lovelace',
-      email: 'not-an-email',
-      password: 'supersecret',
-      passwordConfirmation: 'supersecret',
-    })
-    request.cookiesJar['locale'] = { name: 'locale', value: 'es' }
+    const browser = new Browser(client)
+    browser.setCookie('locale', 'es')
 
-    const response = await request
+    const response = await browser.post('/api/v1/auth/signup', {
+      headers: { 'Accept-Language': 'en' },
+      body: {
+        fullName: 'Ada Lovelace',
+        email: 'not-an-email',
+        password: 'supersecret',
+        passwordConfirmation: 'supersecret',
+        terms: true,
+      },
+    })
 
     response.assertStatus(422)
 

@@ -1,0 +1,20 @@
+{
+  "verify_email": {
+    "subject": "Verifica tu correo electrónico",
+    "title": "Verifica tu correo electrónico",
+    "greeting": "Hola {name}:",
+    "intro": "Confirma tu correo electrónico para activar tu cuenta de {app}.",
+    "cta": "Verificar mi correo",
+    "expiry": "Este enlace caduca en 24 horas.",
+    "footer": "Si no creaste una cuenta, puedes ignorar este correo."
+  },
+  "reset_password": {
+    "subject": "Restablece tu contraseña",
+    "title": "Elige una nueva contraseña",
+    "greeting": "Hola {name}:",
+    "intro": "Recibimos una solicitud para restablecer la contraseña de tu cuenta de {app}.",
+    "cta": "Elegir una nueva contraseña",
+    "expiry": "Este enlace caduca en 60 minutos.",
+    "footer": "Si no solicitaste una nueva contraseña, puedes ignorar este correo."
+  }
+}

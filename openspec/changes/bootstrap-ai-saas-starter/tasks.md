@@ -37,13 +37,13 @@
 
 ## 5. Authentication
 
-- [ ] 5.1 Replace user migrations: users (`full_name`, `email` unique citext, `password`, `email_verified_at`, `locale`, `theme`, `avatar_path`, `terms_version`, `terms_accepted_at`, `last_organization_id`); remove access-token user auth; switch default guard to `web` session; configure shield CSRF; verify migrations run fresh
-- [ ] 5.2 Signup endpoint with Vine validator (terms required), auto-login, verification email; functional tests for success, duplicate email, terms missing
-- [ ] 5.3 Login/logout with generic error and safe same-origin `redirectTo`; functional tests
-- [ ] 5.4 Email verification (signed URL, 24h expiry, resend) and `verified` middleware; tests for valid, expired, resend
-- [ ] 5.5 Password reset (request with identical response, single-use 60-min token, invalidate other sessions); tests including reuse rejection
-- [ ] 5.6 Configure `@adonisjs/limiter` (database store) and apply auth limits per IP and email; test 429 after 5 failed logins
-- [ ] 5.7 Web: login, signup, verify-email, forgot/reset password pages built on `patterns/Form`, localized; `RequireAuth` route guard with return-to; Vitest tests for guard redirect
+- [x] 5.1 Replace user migrations: users (`full_name`, `email` unique citext, `password`, `email_verified_at`, `locale`, `theme`, `avatar_path`, `terms_version`, `terms_accepted_at`, `last_organization_id`); remove access-token user auth; switch default guard to `web` session; configure shield CSRF; verify migrations run fresh
+- [x] 5.2 Signup endpoint with Vine validator (terms required), auto-login, verification email; functional tests for success, duplicate email, terms missing
+- [x] 5.3 Login/logout with generic error and safe same-origin `redirectTo`; functional tests
+- [x] 5.4 Email verification (signed URL, 24h expiry, resend) and `verified` middleware; tests for valid, expired, resend
+- [x] 5.5 Password reset (request with identical response, single-use 60-min token, invalidate other sessions); tests including reuse rejection
+- [x] 5.6 Configure `@adonisjs/limiter` (database store) and apply auth limits per IP and email; test 429 after 5 failed logins
+- [x] 5.7 Web: login, signup, verify-email, forgot/reset password pages built on `patterns/Form`, localized; `RequireAuth` route guard with return-to; Vitest tests for guard redirect
 
 ## 6. Transactional email
 

@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { type HttpContext, ExceptionHandler, errors as HttpErrors } from '@adonisjs/core/http'
+import { errors as LimiterErrors } from '@adonisjs/limiter'
 
 /**
  * Maps a status code to the catalog key holding its default message. The
@@ -19,6 +20,16 @@ const STATUS_MESSAGE_KEYS: Record<number, string> = {
 }
 
 /**
+ * Errors that carry a status and a message of their own. The catalog key
+ * holds the localized text, while the code stays locale-independent.
+ */
+const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
+  E_INVALID_CREDENTIALS: { status: 401, message: 'invalid_credentials' },
+  E_INVALID_RESET_TOKEN: { status: 422, message: 'invalid_reset_token' },
+  E_EMAIL_NOT_VERIFIED: { status: 403, message: 'email_not_verified' },
+}
+
+/**
  * English text used when the request never reached the locale middleware.
  */
 const DEFAULT_MESSAGES: Record<string, string> = {
@@ -31,6 +42,9 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   unprocessable: 'The request could not be processed',
   too_many_requests: 'Too many requests. Please try again later',
   internal_server_error: 'Something went wrong on our side. Please try again',
+  invalid_credentials: 'The email or password is not correct',
+  invalid_reset_token: 'This reset link is invalid or has expired',
+  email_not_verified: 'Please verify your email address to continue',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {
@@ -75,11 +89,29 @@ export default class HttpExceptionHandler extends ExceptionHandler {
       return
     }
 
-    ctx.response.status(httpError.status).send({
+    /**
+     * A rate limit carries the headers that tell the client when it can
+     * try again.
+     */
+    if (httpError instanceof LimiterErrors.ThrottleException) {
+      for (const [header, value] of Object.entries(httpError.getDefaultHeaders())) {
+        ctx.response.header(header, value)
+      }
+
+      ctx.response.status(429).send({
+        code: httpError.code || 'E_TOO_MANY_REQUESTS',
+        message: this.translate(ctx, 'too_many_requests'),
+      })
+      return
+    }
+
+    const override = ERROR_OVERRIDES[httpError.code || '']
+
+    ctx.response.status(override?.status ?? httpError.status).send({
       code: httpError.code || 'E_UNKNOWN_ERROR',
       message: this.translate(
         ctx,
-        STATUS_MESSAGE_KEYS[httpError.status] || 'internal_server_error'
+        override?.message ?? STATUS_MESSAGE_KEYS[httpError.status] ?? 'internal_server_error'
       ),
     })
   }

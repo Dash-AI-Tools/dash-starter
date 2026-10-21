@@ -22,6 +22,12 @@ export const envSchema = {
   APP_KEY: Env.schema.secret(),
   APP_URL: Env.schema.string({ format: 'url', tld: false }),
 
+  /**
+   * Public URL of the web application. The links that travel by email open
+   * the browser app, not the JSON API.
+   */
+  WEB_URL: Env.schema.string({ format: 'url', tld: false }),
+
   DB_HOST: Env.schema.string({ format: 'host' }),
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),

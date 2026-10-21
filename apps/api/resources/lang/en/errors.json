@@ -7,5 +7,8 @@
   "too_many_requests": "Too many requests. Please try again later",
   "internal_server_error": "Something went wrong on our side. Please try again",
   "payment_required": "Your plan does not include this feature",
-  "validation_failed": "The request contains invalid data"
+  "validation_failed": "The request contains invalid data",
+  "invalid_credentials": "The email or password is not correct",
+  "invalid_reset_token": "This reset link is invalid or has expired",
+  "email_not_verified": "Please verify your email address to continue"
 }

@@ -7,5 +7,8 @@
   "too_many_requests": "Demasiadas solicitudes. Inténtalo de nuevo más tarde",
   "internal_server_error": "Algo salió mal por nuestra parte. Inténtalo de nuevo",
   "payment_required": "Tu plan no incluye esta funcionalidad",
-  "validation_failed": "La solicitud contiene datos no válidos"
+  "validation_failed": "La solicitud contiene datos no válidos",
+  "invalid_credentials": "El correo electrónico o la contraseña no son correctos",
+  "invalid_reset_token": "Este enlace de restablecimiento no es válido o ha caducado",
+  "email_not_verified": "Verifica tu correo electrónico para continuar"
 }

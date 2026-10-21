@@ -28,5 +28,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../api/.adonisjs/client/**/*.ts", "../api/app/**/*.ts", "../api/start/**/*.ts"]
+  "include": [
+    "src",
+    "../api/.adonisjs/client/**/*.ts",
+    "../api/.adonisjs/server/routes.d.ts",
+    "../api/app/**/*.ts",
+    "../api/start/**/*.ts"
+  ]
 }

@@ -1,6 +1,5 @@
 import { test } from '@japa/runner'
 import db from '@adonisjs/lucid/services/db'
-import type { PostgreConfig } from '@adonisjs/lucid/types/database'
 
 /**
  * The health endpoint is unauthenticated and reports the readiness of the
@@ -17,21 +16,21 @@ test.group('Health', () => {
 
   test('reports degraded when the database is unreachable', async ({ client, assert }) => {
     /**
-     * The connection is repointed to a closed port to simulate an
-     * unreachable database, and restored right after the request.
+     * The probe of the endpoint is the unit under test, so only that query
+     * is broken: a full outage takes the session middleware down first,
+     * because the sessions live in the database.
      */
-    const original = db.config.connections.pg as PostgreConfig
-    db.manager.patch('pg', {
-      ...original,
-      connection: { ...(original.connection as object), port: 1 },
-    })
+    const original = db.rawQuery.bind(db)
+    db.rawQuery = (() => {
+      throw new Error('Database is down')
+    }) as typeof db.rawQuery
 
     const response = await client.get('/api/v1/health')
+
+    db.rawQuery = original
 
     response.assertStatus(503)
     assert.equal(response.body().status, 'degraded')
     assert.equal(response.body().database, 'down')
-
-    db.manager.patch('pg', original)
   })
 })

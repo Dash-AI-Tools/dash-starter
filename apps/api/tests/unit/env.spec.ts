@@ -15,6 +15,7 @@ const validEnv: Record<string, string> = {
   LOG_LEVEL: 'info',
   APP_KEY: 'test-app-key',
   APP_URL: 'http://localhost:3333',
+  WEB_URL: 'http://localhost:5173',
   DB_HOST: 'localhost',
   DB_PORT: '5432',
   DB_USER: 'dash',

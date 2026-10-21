@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState, type ReactNode } from 'react'
 import {
+  FormProvider,
   useForm,
   type FieldError,
   type FieldPath,
@@ -71,12 +72,13 @@ export function Form<T extends FieldValues>({
   onError?: (message: string) => void
 }) {
   const [serverError, setServerError] = useState<string | null>(null)
+  const methods = useForm<T>({ resolver: zodResolver(schema), mode: 'onBlur' })
   const {
     formState: { errors, isSubmitting },
     register,
     setError,
     handleSubmit,
-  } = useForm<T>({ resolver: zodResolver(schema), mode: 'onBlur' })
+  } = methods
 
   const submit = handleSubmit(async (values) => {
     setServerError(null)
@@ -100,37 +102,39 @@ export function Form<T extends FieldValues>({
   })
 
   return (
-    <form onSubmit={submit} className={cn('space-y-4', className)} noValidate>
-      {fields.map((field) => (
-        <Field key={field.name} data-invalid={errors[field.name] ? 'true' : undefined}>
-          <FieldLabel htmlFor={field.name}>{field.label}</FieldLabel>
-          <FieldContent>
-            {field.children ?? (
-              <Input
-                id={field.name}
-                type={field.type ?? 'text'}
-                placeholder={field.placeholder}
-                aria-invalid={errors[field.name] ? 'true' : undefined}
-                {...register(field.name)}
-              />
-            )}
-            {field.description ? <FieldDescription>{field.description}</FieldDescription> : null}
-            <FieldErrorMessage errors={[errors[field.name] as FieldError | undefined]} />
-          </FieldContent>
-        </Field>
-      ))}
+    <FormProvider {...methods}>
+      <form onSubmit={submit} className={cn('space-y-4', className)} noValidate>
+        {fields.map((field) => (
+          <Field key={field.name} data-invalid={errors[field.name] ? 'true' : undefined}>
+            <FieldLabel htmlFor={field.name}>{field.label}</FieldLabel>
+            <FieldContent>
+              {field.children ?? (
+                <Input
+                  id={field.name}
+                  type={field.type ?? 'text'}
+                  placeholder={field.placeholder}
+                  aria-invalid={errors[field.name] ? 'true' : undefined}
+                  {...register(field.name)}
+                />
+              )}
+              {field.description ? <FieldDescription>{field.description}</FieldDescription> : null}
+              <FieldErrorMessage errors={[errors[field.name] as FieldError | undefined]} />
+            </FieldContent>
+          </Field>
+        ))}
 
-      {children}
+        {children}
 
-      {serverError ? (
-        <p role="alert" className="text-sm text-destructive">
-          {serverError}
-        </p>
-      ) : null}
+        {serverError ? (
+          <p role="alert" className="text-sm text-destructive">
+            {serverError}
+          </p>
+        ) : null}
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? (pendingLabel ?? submitLabel) : submitLabel}
-      </Button>
-    </form>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? (pendingLabel ?? submitLabel) : submitLabel}
+        </Button>
+      </form>
+    </FormProvider>
   )
 }

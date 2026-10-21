@@ -48,6 +48,7 @@ services:
       HOST: 0.0.0.0
       NODE_ENV: development
       APP_URL: http://localhost:3333
+      WEB_URL: http://localhost:5173
       APP_KEY: ${APP_KEY:?set APP_KEY in the root .env}
       # The database lives in the `db` service, not on the host.
       DB_HOST: db

@@ -16,6 +16,9 @@ const routes = [
   { path: '/', element: <Home /> },
   { path: '/login', ...page(() => import('./pages/LoginPage')) },
   { path: '/signup', ...page(() => import('./pages/SignupPage')) },
+  { path: '/verify-email', ...page(() => import('./pages/VerifyEmailPage')) },
+  { path: '/forgot-password', ...page(() => import('./pages/ForgotPasswordPage')) },
+  { path: '/reset-password', ...page(() => import('./pages/ResetPasswordPage')) },
   {
     path: '/',
     ...page(() => import('./layouts/AppLayout')),

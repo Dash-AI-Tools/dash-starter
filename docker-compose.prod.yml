@@ -35,7 +35,8 @@ services:
       LOG_LEVEL: info
       APP_KEY: ${APP_KEY:?set APP_KEY in .env}
       APP_URL: ${APP_URL:-http://localhost:3333}
-      SESSION_DRIVER: cookie
+      WEB_URL: ${WEB_URL:-http://localhost:8080}
+      SESSION_DRIVER: database
       DEFAULT_LOCALE: ${DEFAULT_LOCALE:-en}
       DB_HOST: db
       DB_PORT: 5432
