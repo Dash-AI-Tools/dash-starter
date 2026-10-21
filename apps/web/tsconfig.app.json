@@ -9,6 +9,11 @@
     "skipLibCheck": true,
     "paths": { "@/*": ["./src/*"] },
 
+    /* The API sources are type-checked as part of this program, so the
+       strictness must match the API tsconfig or shared types resolve
+       differently (e.g. middleware args become required). */
+    "strict": true,
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
