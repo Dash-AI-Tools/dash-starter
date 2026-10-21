@@ -18,11 +18,11 @@
 
 ## 3. Localization foundation
 
-- [ ] 3.1 API: install/configure `@adonisjs/i18n` with `resources/lang/{en,es}`, locale-detection middleware (user → cookie → Accept-Language → default), VineJS messages provider and exception handler returning `{ code, message }` localized; functional test for Spanish 422 response with stable rule code
-- [ ] 3.2 API: Japa unit test that fails when `en` and `es` catalogs have different keys; verify it fails on a deliberately missing key
-- [ ] 3.3 API: Vine rule `localizedText` requiring all supported locales for jsonb fields; unit test
-- [ ] 3.4 Web: refactor `lib/i18n.tsx` into `locales/{en,es}/<namespace>.ts` with `es satisfies Messages`, interpolation, plurals (`Intl.PluralRules`), `formatDate/formatNumber/formatCurrency` helpers, `<html lang>` sync and cookie persistence; Vitest tests for plurals, formatting and fallback; verify removing an `es` key fails `npm run typecheck`
-- [ ] 3.5 Web: language switcher component preserving current route; component test
+- [x] 3.1 API: install/configure `@adonisjs/i18n` with `resources/lang/{en,es}`, locale-detection middleware (user → cookie → Accept-Language → default), VineJS messages provider and exception handler returning `{ code, message }` localized; functional test for Spanish 422 response with stable rule code
+- [x] 3.2 API: Japa unit test that fails when `en` and `es` catalogs have different keys; verify it fails on a deliberately missing key
+- [x] 3.3 API: Vine rule `localizedText` requiring all supported locales for jsonb fields; unit test
+- [x] 3.4 Web: refactor `lib/i18n.tsx` into `locales/{en,es}/<namespace>.ts` with `es satisfies Messages`, interpolation, plurals (`Intl.PluralRules`), `formatDate/formatNumber/formatCurrency` helpers, `<html lang>` sync and cookie persistence; Vitest tests for plurals, formatting and fallback; verify removing an `es` key fails `npm run typecheck`
+- [x] 3.5 Web: language switcher component preserving current route; component test
 
 ## 4. Web foundation: API client, theming, UI kit
 

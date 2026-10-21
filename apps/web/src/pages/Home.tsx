@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { ArrowRight, Check, Sparkles } from 'lucide-react'
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/lib/i18n'
 import { usePublicPageMeta } from '@/lib/use-page-meta'
@@ -37,6 +38,7 @@ export default function Home() {
             {t('appName')}
           </Link>
           <nav className="flex items-center gap-3">
+            <LanguageSwitcher />
             <Link to="/pricing" className="text-sm text-muted-foreground hover:text-foreground">
               {t('heroSecondary')}
             </Link>

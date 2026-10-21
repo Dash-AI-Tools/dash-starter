@@ -1,5 +1,5 @@
 import { test } from '@japa/runner'
-import { Env, errors as EnvErrors } from '@adonisjs/core/env'
+import { Env, type errors as EnvErrors } from '@adonisjs/core/env'
 import { envSchema } from '#start/env'
 
 type EnvValidationException = InstanceType<typeof EnvErrors.E_INVALID_ENV_VARIABLES>

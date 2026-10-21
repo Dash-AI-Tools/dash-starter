@@ -1,0 +1,11 @@
+{
+  "not_found": "No se encontró el recurso solicitado",
+  "unauthorized": "Debes iniciar sesión para acceder a este recurso",
+  "forbidden": "No tienes permiso para realizar esta acción",
+  "conflict": "La solicitud entra en conflicto con el estado actual del recurso",
+  "unprocessable": "No se pudo procesar la solicitud",
+  "too_many_requests": "Demasiadas solicitudes. Inténtalo de nuevo más tarde",
+  "internal_server_error": "Algo salió mal por nuestra parte. Inténtalo de nuevo",
+  "payment_required": "Tu plan no incluye esta funcionalidad",
+  "validation_failed": "La solicitud contiene datos no válidos"
+}

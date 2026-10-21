@@ -48,8 +48,7 @@ export const envSchema = {
    * Brevo transport is selected.
    */
   BREVO_API_KEY: Env.schema.string.optionalWhen(
-    () =>
-      process.env.NODE_ENV !== 'production' && process.env.MAIL_TRANSPORT !== 'brevo',
+    () => process.env.NODE_ENV !== 'production' && process.env.MAIL_TRANSPORT !== 'brevo',
     { message: 'BREVO_API_KEY is required when MAIL_TRANSPORT is "brevo"' }
   ),
 

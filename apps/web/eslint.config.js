@@ -24,4 +24,9 @@ export default defineConfig([
     files: ['src/components/ui/**'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
+  {
+    // lib modules pair a provider with its pure helpers
+    files: ['src/lib/**'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
 ])

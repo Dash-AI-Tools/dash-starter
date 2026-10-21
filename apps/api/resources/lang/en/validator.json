@@ -1,0 +1,38 @@
+{
+  "shared": {
+    "fields": {
+      "email": "email",
+      "password": "password",
+      "full_name": "full name",
+      "fullName": "full name",
+      "organization_name": "organization name",
+      "organizationName": "organization name",
+      "slug": "slug",
+      "role": "role",
+      "terms": "terms of service",
+      "name": "name"
+    },
+    "messages": {
+      "required": "The {field} field is required",
+      "email": "The {field} must be a valid email address",
+      "minLength": "The {field} must be at least {min} characters long",
+      "maxLength": "The {field} must not be longer than {max} characters",
+      "confirmed": "The {field} confirmation does not match",
+      "unique": "The {field} is already taken",
+      "enum": "The {field} is invalid",
+      "number": "The {field} must be a number",
+      "boolean": "The {field} must be a boolean value",
+      "url": "The {field} must be a valid URL",
+      "minValue": "The {field} must be at least {min}",
+      "maxValue": "The {field} must be at most {max}",
+      "email.required": "Enter your email address",
+      "email.email": "Enter a valid email address",
+      "password.required": "Enter your password",
+      "password.minLength": "The password must be at least {min} characters long",
+      "full_name.required": "Enter your full name",
+      "terms.accepted": "You must accept the terms of service to create an account",
+      "slug.required": "Enter a slug for the organization",
+      "slug.unique": "This slug is already taken"
+    }
+  }
+}
