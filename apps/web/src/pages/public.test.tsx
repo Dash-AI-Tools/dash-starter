@@ -279,6 +279,14 @@ describe('The pricing page', () => {
     })
   })
 
+  it('shows the title of the page in Spanish', () => {
+    document.cookie = 'locale=es; path=/'
+
+    renderPublic('/pricing')
+
+    expect(document.title).toBe('Planes y precios')
+  })
+
   it('sends a signed-in visitor to the dashboard', async () => {
     server.use(
       http.get(SESSION, () =>

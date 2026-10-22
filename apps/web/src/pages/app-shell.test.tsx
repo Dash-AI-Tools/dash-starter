@@ -236,6 +236,20 @@ describe('The shell of the app', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/app/other-labs')
   })
 
+  it('starts the setup of a new organization from the switcher', async () => {
+    serveApp()
+    const visitor = userEvent.setup()
+
+    renderShell()
+
+    await visitor.click(
+      await screen.findByRole('button', { name: 'Switch organization: Acme Labs' })
+    )
+    await visitor.click(await screen.findByRole('menuitem', { name: 'Create organization' }))
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/onboarding')
+  })
+
   it('opens the command palette with the keyboard and focuses the input', async () => {
     serveApp()
     renderShell()

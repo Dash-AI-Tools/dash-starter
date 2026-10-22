@@ -15,7 +15,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useI18n } from '@/lib/i18n'
-import { orgPath } from '@/lib/nav'
+import { canAccess, orgPath } from '@/lib/nav'
+import { useConversations } from '@/lib/chat'
+import { useBilling } from '@/lib/billing'
 import { useMembers, useOrganization } from '@/lib/organizations'
 import { useCurrentUser } from '@/lib/session'
 
@@ -58,50 +60,55 @@ export default function DashboardPage() {
   const { data: organization } = useOrganization(orgSlug)
   const { data: members = [] } = useMembers(orgSlug)
   const { data: user } = useCurrentUser()
+  const { data: conversations = [] } = useConversations(orgSlug)
+
+  /**
+   * The billing belongs to the admins, so the plan of the organization is only
+   * read for the roles that can reach the billing page.
+   */
+  const managesBilling = canAccess(organization?.role, 'admin')
+  const { data: billing } = useBilling(orgSlug, { enabled: managesBilling })
 
   /**
    * The steps of the setup, with the ones that are already done ticked.
    */
   const checklist = useMemo(
-    () => [
-      {
-        id: 'invite',
-        label: t('checklistInvite'),
-        hint: t('checklistInviteHint'),
-        to: orgPath(orgSlug, 'members'),
-        done: members.length > 1,
-      },
-      {
-        id: 'chat',
-        label: t('checklistChat'),
-        hint: t('checklistChatHint'),
-        to: orgPath(orgSlug, 'chat'),
-        /**
-         * shortcut: the assistant arrives with the AI group, so the step
-         * cannot be ticked yet.
-         */
-        done: false,
-      },
-      {
-        id: 'plan',
-        label: t('checklistPlan'),
-        hint: t('checklistPlanHint'),
-        to: orgPath(orgSlug, 'settings/billing'),
-        /**
-         * shortcut: the plan of the organization arrives with the billing
-         * group, so the step cannot be ticked yet.
-         */
-        done: false,
-      },
-      {
-        id: 'profile',
-        label: t('checklistProfile'),
-        hint: t('checklistProfileHint'),
-        to: orgPath(orgSlug, 'profile'),
-        done: !!user?.avatarPath,
-      },
-    ],
-    [members.length, orgSlug, t, user?.avatarPath]
+    () =>
+      [
+        {
+          id: 'invite',
+          label: t('checklistInvite'),
+          hint: t('checklistInviteHint'),
+          to: orgPath(orgSlug, 'members'),
+          done: members.length > 1,
+        },
+        {
+          id: 'chat',
+          label: t('checklistChat'),
+          hint: t('checklistChatHint'),
+          to: orgPath(orgSlug, 'chat'),
+          done: conversations.length > 0,
+        },
+        {
+          id: 'plan',
+          label: t('checklistPlan'),
+          hint: t('checklistPlanHint'),
+          to: orgPath(orgSlug, 'settings/billing'),
+          /**
+           * The plan is only read by the roles that manage the billing, so
+           * the step is left for the others.
+           */
+          done: !!billing && billing.plan.key !== 'free',
+        },
+        {
+          id: 'profile',
+          label: t('checklistProfile'),
+          hint: t('checklistProfileHint'),
+          to: orgPath(orgSlug, 'profile'),
+          done: !!user?.avatarPath,
+        },
+      ].filter((item) => item.id !== 'plan' || managesBilling),
+    [members.length, orgSlug, t, user?.avatarPath, conversations.length, billing, managesBilling]
   )
 
   const cards = [

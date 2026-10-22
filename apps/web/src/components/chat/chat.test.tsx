@@ -134,6 +134,59 @@ describe('The chat of an organization', () => {
     expect(body).toEqual({ message: 'How many admins?' })
   })
 
+  it('stops the answer and keeps what was written', async () => {
+    server.use(
+      http.post(CHAT, () => {
+        const encoder = new TextEncoder()
+
+        /**
+         * The answer never ends, the way it does when the member stops it.
+         */
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ type: 'start', messageId: 'answer-1' })}\n\n`
+              )
+            )
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ type: 'text-start', id: 'text-1' })}\n\n`)
+            )
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ type: 'text-delta', id: 'text-1', delta: 'There are ' })}\n\n`
+              )
+            )
+          },
+        })
+
+        return new HttpResponse(stream, {
+          headers: { 'Content-Type': 'text/event-stream' },
+        })
+      })
+    )
+
+    const visitor = userEvent.setup()
+    renderChat()
+
+    await visitor.type(
+      await screen.findByLabelText('Ask anything about your organization…'),
+      'How many admins?'
+    )
+    await visitor.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(await screen.findByText('There are')).toBeInTheDocument()
+
+    await visitor.click(await screen.findByRole('button', { name: 'Stop generating' }))
+
+    /**
+     * The partial answer stays in the conversation and the chat is ready for
+     * the next message.
+     */
+    expect(screen.getByText('There are')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Send' })).toBeInTheDocument()
+  })
+
   it('shows the script of the model as text and never runs it', async () => {
     server.use(
       http.get(CONVERSATIONS, () => HttpResponse.json({ conversations: [conversation()] })),

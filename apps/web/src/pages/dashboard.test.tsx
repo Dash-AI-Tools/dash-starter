@@ -11,6 +11,8 @@ import { server } from '@/test/server'
 const SESSION = `${API_BASE_URL}/api/v1/auth/session`
 const ORGANIZATION = `${API_BASE_URL}/api/v1/orgs/:orgSlug`
 const MEMBERS = `${API_BASE_URL}/api/v1/orgs/:orgSlug/members`
+const CONVERSATIONS = `${API_BASE_URL}/api/v1/orgs/:orgSlug/chat/conversations`
+const BILLING = `${API_BASE_URL}/api/v1/orgs/:orgSlug/billing`
 
 const NOW = '2026-01-01T00:00:00.000Z'
 
@@ -33,7 +35,7 @@ const user = {
 /**
  * Serves the organization of the visitor with the given members.
  */
-function serveDashboard(members: number) {
+function serveDashboard(members: number, options: { conversations?: number; plan?: string } = {}) {
   server.use(
     http.get(SESSION, () => HttpResponse.json({ user })),
     http.get(ORGANIZATION, () =>
@@ -67,6 +69,36 @@ function serveDashboard(members: number) {
             emailVerifiedAt: NOW,
           },
         })),
+      })
+    ),
+    http.get(CONVERSATIONS, () =>
+      HttpResponse.json({
+        conversations: Array.from({ length: options.conversations ?? 0 }, (_, index) => ({
+          id: index + 1,
+          title: `Conversation ${index + 1}`,
+          createdAt: NOW,
+          updatedAt: NOW,
+        })),
+      })
+    ),
+    http.get(BILLING, () =>
+      HttpResponse.json({
+        billing: {
+          plan: {
+            key: options.plan ?? 'free',
+            name: 'Free',
+            description: 'The free plan.',
+            entitlements: {
+              seats: 3,
+              aiCredits: 100,
+              mcpEnabled: false,
+              mcpCalls: 0,
+              mcpRpm: 0,
+            },
+          },
+          subscription: null,
+          usage: { seats: 1, aiCredits: 0, mcpCalls: 0 },
+        },
       })
     )
   )
@@ -115,5 +147,32 @@ describe('DashboardPage', () => {
     })
     expect(screen.getByRole('checkbox', { name: 'Complete your profile' })).not.toBeChecked()
     expect(screen.getByRole('checkbox', { name: 'Try the AI assistant' })).not.toBeChecked()
+  })
+
+  it('ticks the chat and the plan when the organization already uses them', async () => {
+    serveDashboard(2, { conversations: 1, plan: 'pro' })
+    renderDashboard()
+
+    await waitFor(() => {
+      expect(screen.getByRole('checkbox', { name: 'Try the AI assistant' })).toBeChecked()
+      expect(screen.getByRole('checkbox', { name: 'Pick a plan that fits' })).toBeChecked()
+    })
+  })
+
+  it('leaves the plan of the checklist open when the organization is on the free plan', async () => {
+    serveDashboard(2)
+    renderDashboard()
+
+    await waitFor(() => {
+      expect(screen.getByRole('checkbox', { name: 'Invite your teammates' })).toBeChecked()
+    })
+
+    const plan = screen.getByRole('checkbox', { name: 'Pick a plan that fits' })
+
+    expect(plan).not.toBeChecked()
+    expect(screen.getByRole('link', { name: 'Pick a plan that fits' })).toHaveAttribute(
+      'href',
+      '/app/acme-labs/settings/billing'
+    )
   })
 })

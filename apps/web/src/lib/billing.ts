@@ -23,14 +23,18 @@ export type Entitlements = Plan['entitlements']
 
 /**
  * Reads the state of the billing of an organization.
+ *
+ * The billing belongs to the admins, so the query is only run for the roles
+ * that can reach it.
  */
-export function useBilling(orgSlug: string) {
+export function useBilling(orgSlug: string, options: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: ['billing', orgSlug],
     queryFn: async () => {
       const response = await client.api.billing.show({ params: { orgSlug } })
       return response.billing
     },
+    enabled: options.enabled ?? true,
   })
 }
 
