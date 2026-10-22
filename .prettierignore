@@ -8,6 +8,7 @@ apps/api/database/schema.ts
 test-results
 playwright-report
 package-lock.json
+.vitest
 .claude
 .opencode
 .serena

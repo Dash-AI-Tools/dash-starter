@@ -23,7 +23,10 @@ services:
       # The links that travel by email have to open the ports the host
       # publishes, not the ones of the container.
       APP_URL: http://localhost:3334
-      WEB_URL: http://localhost:5174
+      # The origin of the web app travels in the emails, and the session of
+      # the user has to travel with them, so the stack takes the origin the
+      # suite drives.
+      WEB_URL: ${E2E_WEB_URL:-http://localhost:5174}
       # The secret the suite signs the webhooks of the payment provider with.
       CREEM_WEBHOOK_SECRET: e2e-webhook-secret
       # The suite creates several accounts from the same address, so the

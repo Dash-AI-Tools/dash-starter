@@ -74,10 +74,11 @@ services:
       test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3333/api/v1/health || exit 1']
       interval: 10s
       timeout: 5s
-      retries: 12
+      retries: 30
       # The container installs the dependencies and runs the migrations before
-      # it serves, so the first probe needs a wide window.
-      start_period: 180s
+      # it serves, so the first probe needs a wide window: a machine without a
+      # warm volume spends several minutes in the installation.
+      start_period: 300s
 
   web:
     image: node:24-alpine
@@ -101,9 +102,9 @@ services:
       test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:5173/ || exit 1']
       interval: 10s
       timeout: 5s
-      retries: 12
+      retries: 30
       # The container installs the dependencies before it serves.
-      start_period: 180s
+      start_period: 300s
 
 volumes:
   pgdata:
