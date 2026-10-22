@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
+import { readFile } from 'node:fs/promises'
+
+import { askIdentity } from '../src/prompts.js'
 import {
+  PALETTES,
   buildValues,
   defaultEmail,
   isValidEmail,
@@ -16,6 +20,7 @@ const manifest = {
     slug: { default: 'dash-starter' },
     description: { default: 'The AI SaaS starter for launching your next product' },
     locale: { default: 'en' },
+    palette: { default: 'line' },
     email: { default: 'support@{slug}.test' },
   },
 }
@@ -65,6 +70,7 @@ test('the flags win over the defaults', () => {
       slug: 'acme-ai',
       description: 'A product',
       locale: 'es',
+      palette: 'ocean',
       email: 'hi@acme.test',
     },
     manifest
@@ -75,6 +81,7 @@ test('the flags win over the defaults', () => {
     slug: 'acme-ai',
     description: 'A product',
     locale: 'es',
+    palette: 'ocean',
     email: 'hi@acme.test',
   })
 })
@@ -102,4 +109,40 @@ test('the values of the replacement are derived from the identity', () => {
   assert.equal(values.storageTest, 'acme-ai-test-storage')
   assert.equal(values.consent, 'acme_ai_consent')
   assert.equal(values.prefix, 'acme_ai_')
+})
+
+test('the palette defaults to line and refuses one that does not exist', () => {
+  assert.equal(resolveIdentity({}, manifest).palette, 'line')
+  assert.equal(resolveIdentity({ palette: 'ember' }, manifest).palette, 'ember')
+  assert.throws(() => resolveIdentity({ palette: 'neon' }, manifest), /does not exist/)
+})
+
+test('the palettes of the installer are the ones of the web app', async () => {
+  const source = await readFile(
+    new URL('../../../apps/web/src/lib/palettes.ts', import.meta.url),
+    'utf8'
+  )
+  const declared = /export const PALETTE_IDS = \[([^\]]+)\] as const/.exec(source)
+
+  assert.ok(declared, 'PALETTE_IDS is declared in the web app')
+  assert.deepEqual(
+    declared[1].split(',').map((entry) => entry.trim().replace(/'/g, '')),
+    PALETTES
+  )
+})
+
+test('a flag answers the palette without asking', async () => {
+  const answers = await askIdentity(manifest, {
+    flags: {
+      name: 'Acme AI',
+      slug: 'acme-ai',
+      description: 'An AI product',
+      locale: 'en',
+      palette: 'plum',
+      email: 'hi@acme.test',
+    },
+    yes: false,
+  })
+
+  assert.equal(answers.palette, 'plum')
 })

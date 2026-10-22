@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import type { TranslationKey } from '@/lib/i18n'
 import type { OrganizationRole } from '@/lib/organizations'
+import type { StationTone } from '@/lib/stations'
 
 /**
  * A destination of the application.
@@ -25,6 +26,8 @@ export type NavItem = {
   icon: LucideIcon
   /** The minimum role that can reach the destination. */
   minRole: OrganizationRole
+  /** The station whose colour the destination wears. */
+  station: StationTone
 }
 
 /**
@@ -55,6 +58,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: '',
         icon: LayoutDashboard,
         minRole: 'member',
+        station: 'line',
       },
       {
         id: 'chat',
@@ -62,6 +66,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'chat',
         icon: MessageSquare,
         minRole: 'member',
+        station: 'ai',
       },
     ],
   },
@@ -75,6 +80,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'settings',
         icon: Settings,
         minRole: 'admin',
+        station: 'orgs',
       },
       {
         id: 'members',
@@ -82,6 +88,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'members',
         icon: Users,
         minRole: 'member',
+        station: 'orgs',
       },
       {
         id: 'billing',
@@ -89,6 +96,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'settings/billing',
         icon: CreditCard,
         minRole: 'admin',
+        station: 'billing',
       },
       {
         id: 'api-keys',
@@ -96,6 +104,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'settings/api-keys',
         icon: KeyRound,
         minRole: 'admin',
+        station: 'mcp',
       },
     ],
   },
@@ -109,6 +118,7 @@ export const NAV_GROUPS: NavGroup[] = [
         path: 'profile',
         icon: User,
         minRole: 'member',
+        station: 'auth',
       },
     ],
   },

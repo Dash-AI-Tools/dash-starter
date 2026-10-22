@@ -3,12 +3,13 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ConsentProvider } from '@/providers/consent-provider'
 import PublicLayout from '@/layouts/PublicLayout'
 import { API_BASE_URL } from '@/lib/api'
 import { CONSENT_COOKIE, CONSENT_POLICY_VERSION } from '@/lib/consent'
 import { I18nProvider } from '@/lib/i18n'
+import { PaletteProvider } from '@/providers/palette-provider'
 import Home from '@/pages/Home'
 import PrivacyPage from '@/pages/PrivacyPage'
 import PricingPage from '@/pages/PricingPage'
@@ -76,17 +77,19 @@ function renderPublic(path: string) {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <ConsentProvider>
-          <MemoryRouter initialEntries={[path]}>
-            <Routes>
-              <Route element={<PublicLayout />}>
-                <Route index element={<Home />} />
-                <Route path="pricing" element={<PricingPage />} />
-                <Route path="terms" element={<TermsPage />} />
-                <Route path="privacy" element={<PrivacyPage />} />
-              </Route>
-            </Routes>
-            <CurrentPath />
-          </MemoryRouter>
+          <PaletteProvider>
+            <MemoryRouter initialEntries={[path]}>
+              <Routes>
+                <Route element={<PublicLayout />}>
+                  <Route index element={<Home />} />
+                  <Route path="pricing" element={<PricingPage />} />
+                  <Route path="terms" element={<TermsPage />} />
+                  <Route path="privacy" element={<PrivacyPage />} />
+                </Route>
+              </Routes>
+              <CurrentPath />
+            </MemoryRouter>
+          </PaletteProvider>
         </ConsentProvider>
       </I18nProvider>
     </QueryClientProvider>
@@ -191,17 +194,40 @@ describe('The landing page', () => {
     document.cookie = `${CONSENT_COOKIE}=; path=/; max-age=0`
   })
 
-  it('shows the hero, the features, the pricing teaser, the FAQ and the call to action', () => {
+  it('shows the hero, the command, the stations of the line and the FAQ', () => {
     renderPublic('/')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Launch your AI product, not your plumbing' })
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Every station of your AI SaaS, already running.',
+      })
     ).toBeInTheDocument()
-    expect(screen.getByText('Everything a SaaS needs on day one')).toBeInTheDocument()
-    expect(screen.getByText('Simple pricing that scales with you')).toBeInTheDocument()
+    expect(screen.getByText('npx create-dash-starter')).toBeInTheDocument()
+
+    for (const name of ['Auth', 'Organizations', 'Billing', 'AI', 'MCP', 'Email']) {
+      expect(
+        screen.getByRole('heading', { level: 2, name: new RegExp(`^${name} `) })
+      ).toBeInTheDocument()
+    }
+
+    expect(
+      screen.getAllByRole('img', { name: 'The billing page of the demo organization' })
+    ).toHaveLength(2)
+    expect(screen.getByText('End of the line: your product.')).toBeInTheDocument()
     expect(screen.getByText('Frequently asked questions')).toBeInTheDocument()
-    expect(screen.getByText('Ready to build?')).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: 'Create your account' }).length).toBe(2)
+  })
+
+  it('copies the command that creates a project', async () => {
+    const user = userEvent.setup()
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+
+    renderPublic('/')
+    await user.click(screen.getByRole('button', { name: 'Copy command' }))
+
+    expect(writeText).toHaveBeenCalledWith('npx create-dash-starter')
+    expect(await screen.findAllByText('Command copied')).not.toHaveLength(0)
   })
 
   it('shows the landing page in Spanish', () => {
@@ -210,9 +236,16 @@ describe('The landing page', () => {
     renderPublic('/')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Lanza tu producto con IA, no sus cimientos' })
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Cada estación de tu SaaS de IA, ya funcionando.',
+      })
     ).toBeInTheDocument()
-    expect(screen.getByText('¿Listo para construir?')).toBeInTheDocument()
+    expect(screen.getByText('Every station of your AI SaaS, already running.')).toHaveAttribute(
+      'lang',
+      'en'
+    )
+    expect(screen.getByRole('heading', { level: 2, name: /^Cobros / })).toBeInTheDocument()
   })
 })
 

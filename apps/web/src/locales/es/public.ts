@@ -5,31 +5,57 @@ export const publicSite = {
   ogTitle: 'Dash — El starter SaaS con IA',
   ogDescription:
     'Lanza tu próximo producto con IA con cuentas, organizaciones, facturación, chat y un servidor MCP ya conectados.',
-  heroTitle: 'Lanza tu producto con IA, no sus cimientos',
+  heroTitle: 'Cada estación de tu SaaS de IA, ya funcionando.',
+  heroTitleAlt: 'Every station of your AI SaaS, already running.',
+  altLang: 'en',
   heroSubtitle:
-    'Dash incluye autenticación, organizaciones, facturación, correos transaccionales, una capa de proveedor de IA, chat integrado y un servidor MCP, para que empieces por la parte interesante.',
+    'Cuentas, organizaciones, cobros, IA con cualquier modelo, un servidor MCP y correo bilingüe, conectados y probados. Sube con un solo comando.',
+  heroCommandLabel: 'Crea un proyecto con el instalador',
+  commandCopy: 'Copiar comando',
+  commandCopied: 'Comando copiado',
   heroPrimary: 'Crea tu cuenta',
   heroSecondary: 'Ver los precios',
-  featuresTitle: 'Todo lo que un SaaS necesita el primer día',
-  featuresSubtitle: 'Sustituye el código de demostración por la lógica de tu producto y lánzate.',
-  featureAuthTitle: 'Cuentas que se comportan',
-  featureAuthBody:
-    'Cookies de sesión, protección CSRF, verificación de correo, restablecimiento de contraseña y límites de uso listos.',
-  featureOrgsTitle: 'Multi-inquilino por defecto',
-  featureOrgsBody:
-    'Organizaciones, roles, invitaciones y aislamiento entre inquilinos aplicado en el servidor, no en la interfaz.',
-  featureBillingTitle: 'Facturación que factura',
-  featureBillingBody:
-    'Planes configurados en la base de datos, pago alojado, webhooks, derechos de uso y portal de cliente.',
-  featureAiTitle: 'Cualquier modelo, un solo servicio',
-  featureAiBody:
-    'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama o cualquier endpoint compatible con OpenAI.',
-  featureEmailTitle: 'Correos que llegan',
-  featureEmailBody:
-    'Plantillas transaccionales localizadas entregadas por Brevo, con un capturador SMTP local en desarrollo.',
-  featureMcpTitle: 'MCP integrado',
-  featureMcpBody:
-    'Expón las capacidades de tu producto a agentes externos con claves con alcance, medidas y limitadas.',
+  routeTitle: 'Línea 1 – De la idea al lanzamiento',
+  proofCaption: 'Capturado de la demo en marcha',
+  stationAuthName: 'Acceso',
+  stationAuthAlt: 'Auth',
+  stationOrgsName: 'Organizaciones',
+  stationOrgsAlt: 'Organizations',
+  stationBillingName: 'Cobros',
+  stationBillingAlt: 'Billing',
+  stationAiName: 'IA',
+  stationAiAlt: 'AI',
+  stationMcpName: 'MCP',
+  stationMcpAlt: 'MCP',
+  stationEmailName: 'Correo',
+  stationEmailAlt: 'Email',
+  stationAuthTitle: 'Cuentas que se comportan',
+  stationAuthBody:
+    'Cookies de sesión, protección CSRF, verificación de correo, recuperación de contraseña y límite de intentos desde el primer día.',
+  stationAuthProof: 'La pantalla de inicio de sesión de la demo',
+  stationOrgsTitle: 'Multiempresa por defecto',
+  stationOrgsBody:
+    'Organizaciones, roles, invitaciones y aislamiento entre clientes aplicado en el servidor, no en la interfaz.',
+  stationOrgsProof: 'La página de miembros de la organización de demo',
+  stationBillingTitle: 'Cobros que cobran',
+  stationBillingBody:
+    'Planes mensuales y anuales configurados en la base de datos, checkout de Creem, webhooks, permisos por plan y portal de cliente.',
+  stationBillingProof: 'La página de facturación de la organización de demo',
+  stationAiTitle: 'Cualquier modelo, un solo servicio',
+  stationAiBody:
+    'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama o cualquier endpoint compatible con OpenAI, medido por organización.',
+  stationAiProof: 'El chat con IA respondiendo en la demo',
+  stationMcpTitle: 'MCP incluido',
+  stationMcpBody:
+    'Abre tu producto a agentes externos con claves de API con permisos, cuotas mensuales y límites de uso.',
+  stationMcpProof: 'La página de claves de API con una clave MCP',
+  stationEmailTitle: 'Correos que llegan',
+  stationEmailBody:
+    'Plantillas transaccionales traducidas y enviadas con Brevo, con una bandeja local para desarrollo.',
+  stationEmailProof: 'Un correo de recuperación de contraseña tal como lo ve quien lo recibe',
+  terminalTitle: 'Fin de la línea: tu producto.',
+  terminalBody:
+    'Cada estación está construida y probada. Lo que sigue es la parte que solo tú puedes hacer.',
   pricingTitle: 'Precios sencillos que escalan contigo',
   pricingSubtitle: 'Empieza gratis. Sube de plan cuando tu equipo y tu uso crezcan.',
   pricingTeaserCta: 'Ver todos los planes',
@@ -52,8 +78,6 @@ export const publicSite = {
   faq4Q: '¿Puedo usar mi propio proveedor de IA?',
   faq4A:
     'Sí. Apunta cualquier endpoint compatible con OpenAI en la configuración de IA, sin tocar código.',
-  ctaTitle: '¿Listo para construir?',
-  ctaSubtitle: 'Crea una cuenta y ten un espacio de trabajo funcionando en minutos.',
   ctaButton: 'Crea tu cuenta',
   footerProduct: 'Producto',
   footerResources: 'Recursos',

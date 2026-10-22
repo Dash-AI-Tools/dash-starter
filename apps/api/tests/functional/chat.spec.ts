@@ -134,7 +134,7 @@ test.group('The chat of the member', () => {
 
     assert.equal(conversation.organizationId, organization.id)
     assert.equal(conversation.userId, owner.id)
-    assert.isNotNull(conversation.title)
+    assert.equal(conversation.title, 'Summarize our members by role')
 
     assert.lengthOf(messages, 2)
     assert.equal(messages[0].role, 'user')

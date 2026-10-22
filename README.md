@@ -28,7 +28,8 @@ Every external integration has a local fallback, so the whole product boots and 
 
 ## Requirements
 
-- Node.js 22 or newer
+- Node.js 24.22.1 or newer (`nvm use` reads `.nvmrc`; 24.2.0 crashes the API tests with
+  `Unexpected module status 3`, and 22.x lacks the module hooks the TypeScript loader needs)
 - Docker with Compose v2 (for the local stack)
 - npm 10 or newer (workspaces)
 
@@ -154,6 +155,24 @@ See `docs/ai.md`, `docs/billing.md` and `docs/mcp.md` for the details of each in
 
 ---
 
+## Color palettes
+
+The product ships six palettes: `line` (the default), `ink`, `ocean`, `forest`, `plum` and `ember`. Each one is a full set of design tokens for light and dark mode in `apps/web/src/styles/palettes.css`; components only read tokens, so a palette re-colours everything without code changes.
+
+**Choose the palette of the product.** Every visitor sees one default palette. The installer asks for it (`--palette <id>`); to change it later, edit one line in `apps/web/src/lib/palettes.ts`:
+
+```ts
+export const DEFAULT_PALETTE: PaletteId = 'ocean'
+```
+
+An id that does not exist fails `npm run typecheck`.
+
+**Demo mode.** `DEMO_MODE=true` in the root `.env` shows a palette picker on the public site and in the dashboard, so visitors can try every palette; their pick is remembered in their browser only. The template runs with it on; the installer turns it off in every new project. The web app reads it as `VITE_DEMO_MODE`, at dev-server start in Compose and at build time in the production image, so changing it needs a restart or a rebuild.
+
+**Add a palette.** Add a light block (`[data-palette='<id>']`) and a dark block (`.dark[data-palette='<id>'], .dark [data-palette='<id>']`) to `palettes.css` with every token of the `line` blocks, add the id to `PALETTE_IDS` and its name to the `palette…` keys in `src/locales/{en,es}/common.ts`. `npm test` fails until the palette defines every token, meets WCAG AA contrast and keeps its six station colours apart.
+
+---
+
 ## The installer
 
 ```bash
@@ -169,6 +188,7 @@ Flags (all optional, all work with `--yes` for a non-interactive run):
 --slug <slug>          Kebab-case slug, e.g. acme-ai
 --description <text>   One-line description
 --locale <en|es>       Default locale
+--palette <id>         Default color palette: line, ink, ocean, forest, plum or ember
 --email <address>      Support email
 --template <path|url>  Use a local directory instead of the published release
 --yes                  Accept every default without prompting

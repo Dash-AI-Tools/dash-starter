@@ -1,7 +1,7 @@
 import { cancel, confirm, isCancel, select, text } from '@clack/prompts'
 
 import { AI_KEYS } from './env.js'
-import { defaultEmail, isValidEmail, isValidSlug, LOCALES } from './identity.js'
+import { defaultEmail, isValidEmail, isValidSlug, LOCALES, PALETTES } from './identity.js'
 
 /**
  * The providers of the AI registry that the installer can configure.
@@ -82,6 +82,18 @@ export async function askIdentity(manifest, { flags, yes }) {
           })
         ))
 
+  const palette =
+    flags.palette ??
+    (yes
+      ? defaults.palette.default
+      : await ask(
+          select({
+            message: 'Default color palette',
+            initialValue: defaults.palette.default,
+            options: PALETTES.map((value) => ({ value, label: value })),
+          })
+        ))
+
   const email =
     flags.email ??
     (yes
@@ -94,7 +106,7 @@ export async function askIdentity(manifest, { flags, yes }) {
           })
         ))
 
-  return { name, slug, description, locale, email }
+  return { name, slug, description, locale, palette, email }
 }
 
 /**

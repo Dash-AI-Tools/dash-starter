@@ -203,11 +203,13 @@ export function ChatPanel({ orgSlug }: { orgSlug: string }) {
                         variant="ghost"
                         onClick={() => open(conversation.id)}
                         className={cn(
-                          'h-auto flex-1 justify-start px-2 py-1.5 text-left',
+                          'h-auto min-w-0 flex-1 justify-start px-2 py-1.5 text-left',
                           conversation.id === conversationId && 'bg-muted'
                         )}
                       >
-                        {conversation.title ?? t('newConversation')}
+                        <span className="truncate">
+                          {conversation.title ?? t('newConversation')}
+                        </span>
                       </Button>
 
                       <Button

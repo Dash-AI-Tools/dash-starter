@@ -13,11 +13,20 @@ import {
 import { waitForMail } from '../support/mailpit'
 
 /**
+ * The keys that hold the other language on purpose: the second name of each
+ * station and the second headline of the landing page are shown in English on
+ * a Spanish page, and in Spanish on an English one.
+ */
+function isOtherLanguageOnPurpose(key: string): boolean {
+  return key === 'altLang' || key.endsWith('Alt')
+}
+
+/**
  * The English strings that the Spanish catalog translates. A page in Spanish
  * that shows one of them carries a string without translation.
  */
 const translated = (Object.entries(en) as [keyof typeof en, string][]).filter(
-  ([key, value]) => es[key] !== value
+  ([key, value]) => es[key] !== value && !isOtherLanguageOnPurpose(key)
 )
 
 /**

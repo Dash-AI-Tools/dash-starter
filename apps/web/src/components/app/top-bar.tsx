@@ -1,6 +1,7 @@
 import { Bell, Menu, Search } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { UserMenu } from '@/components/app/user-menu'
+import { PalettePicker } from '@/components/palette-picker'
 import { Button } from '@/components/ui/button'
 import {
   Breadcrumb,
@@ -85,6 +86,8 @@ export function TopBar({
           <span className="hidden sm:inline">{t('searchPlaceholder')}</span>
           <kbd className="hidden rounded border px-1 font-mono text-[10px] sm:inline">⌘K</kbd>
         </Button>
+
+        <PalettePicker />
 
         <DropdownMenu>
           <DropdownMenuTrigger

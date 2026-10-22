@@ -5,6 +5,7 @@ import Message from '#models/message'
 import type { MessagePart, MessageRole } from '#models/message'
 import type Organization from '#models/organization'
 import { AiService } from '#services/ai'
+import { STUB_TEXT } from '#services/ai_models'
 import { usedCredits } from '#services/ai_usage'
 import { EntitlementService } from '#services/entitlements'
 import { toolRegistry } from '#tools/main'
@@ -108,8 +109,12 @@ export async function titleConversation(
     { prompt: translate(ctx.locale, 'chat.titlePrompt', { message }) }
   )
 
-  const title = result.text
-    .trim()
+  /**
+   * The stub answers every prompt with the same text, so its title would be
+   * that text on every conversation: the question names the thread instead.
+   */
+  const answer = result.text.trim()
+  const title = (answer === STUB_TEXT ? message.trim() : answer)
     .replace(/^["'“«]+|["'”»]+$/g, '')
     .slice(0, 120)
 

@@ -5,31 +5,56 @@ export const publicSite = {
   ogTitle: 'Dash — The AI SaaS starter',
   ogDescription:
     'Launch your next AI product with accounts, organizations, billing, AI chat and an MCP server already wired.',
-  heroTitle: 'Launch your AI product, not your plumbing',
+  heroTitle: 'Every station of your AI SaaS, already running.',
+  heroTitleAlt: 'Cada estación de tu SaaS de IA, ya funcionando.',
+  altLang: 'es',
   heroSubtitle:
-    'Dash ships with authentication, organizations, billing, transactional email, an AI provider layer, in-app chat and an MCP server — so you can start from the interesting part.',
+    'Accounts, organizations, billing, any-model AI, an MCP server and bilingual email, wired together and tested. Board with one command.',
+  heroCommandLabel: 'Create a project with the installer',
+  commandCopy: 'Copy command',
+  commandCopied: 'Command copied',
   heroPrimary: 'Create your account',
   heroSecondary: 'See the pricing',
-  featuresTitle: 'Everything a SaaS needs on day one',
-  featuresSubtitle: 'Replace the demo code with your product logic and ship.',
-  featureAuthTitle: 'Accounts that behave',
-  featureAuthBody:
+  routeTitle: 'Line 1 – From idea to launch',
+  proofCaption: 'Captured from the running demo',
+  stationAuthName: 'Auth',
+  stationAuthAlt: 'Acceso',
+  stationOrgsName: 'Organizations',
+  stationOrgsAlt: 'Organizaciones',
+  stationBillingName: 'Billing',
+  stationBillingAlt: 'Cobros',
+  stationAiName: 'AI',
+  stationAiAlt: 'IA',
+  stationMcpName: 'MCP',
+  stationMcpAlt: 'MCP',
+  stationEmailName: 'Email',
+  stationEmailAlt: 'Correo',
+  stationAuthTitle: 'Accounts that behave',
+  stationAuthBody:
     'Session cookies, CSRF protection, email verification, password reset and rate limiting out of the box.',
-  featureOrgsTitle: 'Multi-tenant by default',
-  featureOrgsBody:
+  stationAuthProof: 'The sign-in screen of the demo',
+  stationOrgsTitle: 'Multi-tenant by default',
+  stationOrgsBody:
     'Organizations, roles, invitations and tenant isolation enforced on the server, not in the UI.',
-  featureBillingTitle: 'Billing that bills',
-  featureBillingBody:
-    'Database-configured plans, hosted checkout, webhooks, entitlements and a customer portal.',
-  featureAiTitle: 'Any model, one service',
-  featureAiBody:
-    'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama or any OpenAI-compatible endpoint.',
-  featureEmailTitle: 'Emails that arrive',
-  featureEmailBody:
-    'Localized transactional templates delivered through Brevo, with a local SMTP catcher for development.',
-  featureMcpTitle: 'MCP built in',
-  featureMcpBody:
-    'Expose your product capabilities to external agents with scoped, metered, rate-limited API keys.',
+  stationOrgsProof: 'The members page of the demo organization',
+  stationBillingTitle: 'Billing that bills',
+  stationBillingBody:
+    'Monthly and yearly plans configured in the database, Creem checkout, webhooks, entitlements and a customer portal.',
+  stationBillingProof: 'The billing page of the demo organization',
+  stationAiTitle: 'Any model, one service',
+  stationAiBody:
+    'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama or any OpenAI-compatible endpoint, metered per organization.',
+  stationAiProof: 'The AI chat answering in the demo',
+  stationMcpTitle: 'MCP built in',
+  stationMcpBody:
+    'Expose your product to external agents with scoped API keys, monthly quotas and rate limits.',
+  stationMcpProof: 'The API keys page with an MCP key',
+  stationEmailTitle: 'Emails that arrive',
+  stationEmailBody:
+    'Localized transactional templates delivered through Brevo, with a local inbox for development.',
+  stationEmailProof: 'A password reset email as the recipient sees it',
+  terminalTitle: 'End of the line: your product.',
+  terminalBody: 'Every station is built and tested. What comes next is the part only you can make.',
   pricingTitle: 'Simple pricing that scales with you',
   pricingSubtitle: 'Start free. Upgrade when your team and usage grow.',
   pricingTeaserCta: 'See all plans',
@@ -51,8 +76,6 @@ export const publicSite = {
   faq4Q: 'Can I use my own AI provider?',
   faq4A:
     'Yes. Point any OpenAI-compatible endpoint at the AI configuration, no code changes required.',
-  ctaTitle: 'Ready to build?',
-  ctaSubtitle: 'Create an account and get a working workspace in minutes.',
   ctaButton: 'Create your account',
   footerProduct: 'Product',
   footerResources: 'Resources',

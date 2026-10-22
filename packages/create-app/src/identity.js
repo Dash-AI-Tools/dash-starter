@@ -4,6 +4,13 @@
 export const LOCALES = ['en', 'es']
 
 /**
+ * The colour palettes the product ships with. The test of the installer
+ * checks that they match `PALETTE_IDS` in `apps/web/src/lib/palettes.ts`, so
+ * an unknown palette is refused before a single file is written.
+ */
+export const PALETTES = ['line', 'ink', 'ocean', 'forest', 'plum', 'ember']
+
+/**
  * The shape of a slug: lowercase words joined with dashes.
  */
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -85,6 +92,7 @@ export function resolveIdentity(input, manifest) {
     slug,
     description: input.description ?? defaults.description.default,
     locale: input.locale ?? defaults.locale.default,
+    palette: input.palette ?? defaults.palette.default,
     email: input.email ?? defaultEmail(manifest, slug),
   }
 
@@ -100,6 +108,12 @@ export function resolveIdentity(input, manifest) {
 
   if (!LOCALES.includes(identity.locale)) {
     throw new Error(`The locale "${identity.locale}" is not supported: use "en" or "es"`)
+  }
+
+  if (!PALETTES.includes(identity.palette)) {
+    throw new Error(
+      `The palette "${identity.palette}" does not exist: use one of ${PALETTES.join(', ')}`
+    )
   }
 
   if (!isValidEmail(identity.email)) {

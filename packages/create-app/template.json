@@ -20,6 +20,11 @@
       "default": "en",
       "options": ["en", "es"]
     },
+    "palette": {
+      "description": "Color palette every visitor of the generated project sees.",
+      "default": "line",
+      "options": ["line", "ink", "ocean", "forest", "plum", "ember"]
+    },
     "email": {
       "description": "Support contact shown in the footer and in every transactional email.",
       "default": "support@{slug}.test"

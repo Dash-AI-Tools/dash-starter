@@ -11,12 +11,14 @@ import {
 import { checkAccessibility } from '../support/axe'
 
 /**
- * The reply of the assistant. The stub repeats it in the title of the
- * conversation, so only the paragraph of the message is the answer.
+ * The reply of the assistant: the paragraph of the message, not the list of
+ * the conversations.
  */
 function answer(page: Page) {
   return page.getByRole('paragraph').filter({ hasText: 'This answer comes from the stub provider' })
 }
+
+const QUESTION = 'How many members does the organization have?'
 
 test.describe('The assistant of the organization', () => {
   test('answers the question of a member', async ({ page }) => {
@@ -38,7 +40,7 @@ test.describe('The assistant of the organization', () => {
 
     await checkAccessibility(page)
 
-    await page.getByLabel(en.placeholder).fill('How many members does the organization have?')
+    await page.getByLabel(en.placeholder).fill(QUESTION)
     await page.getByRole('button', { name: en.send, exact: true }).click()
 
     await expect(answer(page)).toBeVisible()
@@ -49,7 +51,11 @@ test.describe('The assistant of the organization', () => {
      */
     await page.reload()
 
-    await page.getByRole('button', { name: /This answer comes from the stub provider/ }).click()
+    /**
+     * The stub cannot write a title, so the conversation is named after the
+     * question.
+     */
+    await page.getByRole('button', { name: QUESTION, exact: true }).click()
 
     await expect(answer(page)).toBeVisible()
   })

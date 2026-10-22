@@ -1,5 +1,7 @@
 import { Link, Outlet } from 'react-router'
+import { LogoMark } from '@/components/brand/logo-mark'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { PalettePicker } from '@/components/palette-picker'
 import { useConsent } from '@/providers/consent-provider'
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/lib/i18n'
@@ -19,12 +21,16 @@ export default function PublicLayout() {
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">
       <header className="border-b">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
-          <Link to="/" className="text-lg font-bold tracking-tight">
+        <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:h-16 sm:flex-nowrap sm:px-6 sm:py-0 lg:px-8">
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 rounded-md font-heading text-xl font-bold tracking-[-0.01em]"
+          >
+            <LogoMark />
             {t('appName')}
           </Link>
 
-          <nav className="flex items-center gap-3">
+          <nav className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Link
               to="/pricing"
               className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline"
@@ -32,6 +38,7 @@ export default function PublicLayout() {
               {t('pricingNav')}
             </Link>
 
+            <PalettePicker />
             <LanguageSwitcher />
 
             {user ? (
@@ -40,7 +47,10 @@ export default function PublicLayout() {
               </Link>
             ) : (
               <>
-                <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link
+                  to="/login"
+                  className="text-sm whitespace-nowrap text-muted-foreground hover:text-foreground"
+                >
                   {t('signIn')}
                 </Link>
                 <Link to="/signup">
@@ -57,9 +67,12 @@ export default function PublicLayout() {
       </main>
 
       <footer className="border-t">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
           <div className="max-w-xs">
-            <p className="font-semibold">{t('appName')}</p>
+            <p className="flex items-center gap-2.5 font-heading text-lg font-bold">
+              <LogoMark className="size-6" />
+              {t('appName')}
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">{t('tagline')}</p>
           </div>
 
@@ -102,7 +115,7 @@ export default function PublicLayout() {
         </div>
 
         <div className="border-t">
-          <p className="mx-auto max-w-6xl px-4 py-4 text-sm text-muted-foreground">
+          <p className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted-foreground sm:px-6 lg:px-8">
             {t('footerRights', { year: new Date().getFullYear() })}
           </p>
         </div>

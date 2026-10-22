@@ -15,7 +15,7 @@ export function LanguageSwitcher() {
       aria-label={t('language')}
       className="inline-flex items-center gap-1 rounded-lg border p-0.5"
     >
-      <Languages className="size-4 shrink-0 opacity-60" aria-hidden="true" />
+      <Languages className="hidden size-4 shrink-0 opacity-60 sm:block" aria-hidden="true" />
       {LOCALES.map((option) => (
         <Button
           key={option}
@@ -24,8 +24,10 @@ export function LanguageSwitcher() {
           variant={option === locale ? 'secondary' : 'ghost'}
           aria-pressed={option === locale}
           onClick={() => setLocale(option)}
+          aria-label={option === 'en' ? t('english') : t('spanish')}
         >
-          {option === 'en' ? t('english') : t('spanish')}
+          <span className="uppercase sm:hidden">{option}</span>
+          <span className="hidden sm:inline">{option === 'en' ? t('english') : t('spanish')}</span>
         </Button>
       ))}
     </div>

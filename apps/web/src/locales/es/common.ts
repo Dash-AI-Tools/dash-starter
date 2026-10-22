@@ -40,4 +40,11 @@ export const common = {
   language: 'Idioma',
   english: 'Inglés',
   spanish: 'Español',
+  paletteLabel: 'Paleta de colores',
+  paletteLine: 'Línea',
+  paletteInk: 'Tinta',
+  paletteOcean: 'Océano',
+  paletteForest: 'Bosque',
+  palettePlum: 'Ciruela',
+  paletteEmber: 'Brasa',
 } as const

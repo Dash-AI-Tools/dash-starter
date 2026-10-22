@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { API_BASE_URL } from '@/lib/api'
 import { I18nProvider } from '@/lib/i18n'
+import { PaletteProvider } from '@/providers/palette-provider'
 import AppLayout from '@/layouts/AppLayout'
 import DashboardPage from '@/pages/DashboardPage'
 import { server } from '@/test/server'
@@ -111,16 +112,18 @@ function renderShell(page = <DashboardPage />) {
   return render(
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <MemoryRouter initialEntries={['/app/acme-labs']}>
-          <Location />
-          <Routes>
-            <Route path="/app/:orgSlug" element={<AppLayout />}>
-              <Route index element={page} />
-            </Route>
-            <Route path="/login" element={<p>Login page</p>} />
-            <Route path="/onboarding" element={<p>Onboarding page</p>} />
-          </Routes>
-        </MemoryRouter>
+        <PaletteProvider>
+          <MemoryRouter initialEntries={['/app/acme-labs']}>
+            <Location />
+            <Routes>
+              <Route path="/app/:orgSlug" element={<AppLayout />}>
+                <Route index element={page} />
+              </Route>
+              <Route path="/login" element={<p>Login page</p>} />
+              <Route path="/onboarding" element={<p>Onboarding page</p>} />
+            </Routes>
+          </MemoryRouter>
+        </PaletteProvider>
       </I18nProvider>
     </QueryClientProvider>
   )

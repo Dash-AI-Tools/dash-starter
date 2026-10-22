@@ -17,5 +17,5 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": true
   },
-  "include": ["specs", "support", "playwright.config.ts"]
+  "include": ["specs", "support", "scripts", "playwright.config.ts"]
 }

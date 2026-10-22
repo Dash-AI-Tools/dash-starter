@@ -238,7 +238,7 @@ export function BillingSettings({ orgSlug }: { orgSlug: string }) {
               {period ? (
                 <>
                   <dt className="text-muted-foreground">
-                    {subscription?.cancelAtPeriodEnd ? t('endsOn') : t('renewsOn')}
+                    {subscription?.cancelAtPeriodEnd ? t('endsOnLabel') : t('renewsOnLabel')}
                   </dt>
                   <dd>{formatDate(period)}</dd>
                 </>

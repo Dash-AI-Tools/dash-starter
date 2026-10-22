@@ -7,6 +7,9 @@ import { I18nProvider } from './lib/i18n'
 import { ConsentProvider } from './providers/consent-provider'
 import { AppProviders } from './providers/app-providers'
 import { ThemeProvider } from './providers/theme-provider'
+import { PaletteProvider } from './providers/palette-provider'
+import { DEMO_MODE } from './lib/demo-mode'
+import { applyPalette, resolveInitialPalette } from './lib/palettes'
 import Home from './pages/Home'
 import NotFoundPage, { NotFoundContent } from './pages/NotFoundPage'
 
@@ -80,14 +83,20 @@ routes.push({ path: '*', element: <NotFoundPage /> })
 
 const router = createBrowserRouter(routes)
 
+// The palette is set on the root before the first render, so the page never
+// paints in another palette first.
+applyPalette(resolveInitialPalette(DEMO_MODE))
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
       <ConsentProvider>
         <ThemeProvider>
-          <AppProviders>
-            <RouterProvider router={router} />
-          </AppProviders>
+          <PaletteProvider>
+            <AppProviders>
+              <RouterProvider router={router} />
+            </AppProviders>
+          </PaletteProvider>
         </ThemeProvider>
       </ConsentProvider>
     </I18nProvider>

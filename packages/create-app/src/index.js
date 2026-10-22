@@ -6,7 +6,7 @@ import { readManifest, readInstallerVersion } from './manifest.js'
 import { buildValues, resolveIdentity } from './identity.js'
 import { DEFAULT_TEMPLATE_REPO, fetchTemplate } from './fetch.js'
 import { applyReplacements, applyRemovals, removePaths, removeWorkflowJobs } from './replace.js'
-import { applyLocale, generateEnvFiles, generateKey, generateSecret } from './env.js'
+import { applyLocale, applyPalette, generateEnvFiles, generateKey, generateSecret } from './env.js'
 import { createRemote, initRepository } from './git.js'
 import { bootStack, hasDocker, installDependencies } from './boot.js'
 import { run as shell } from './shell.js'
@@ -97,6 +97,7 @@ export async function run(argv, options = {}) {
   await removePaths(dir, manifest.removePaths)
   await removeWorkflowJobs(dir, manifest.removeWorkflowJobs)
   await applyLocale(dir, identity.locale)
+  await applyPalette(dir, identity.palette)
 
   await generateEnvFiles(dir, {
     identity,

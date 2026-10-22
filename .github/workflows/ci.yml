@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
@@ -85,7 +85,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
@@ -111,7 +111,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
@@ -130,7 +130,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
@@ -183,7 +183,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
@@ -191,8 +191,15 @@ jobs:
       - name: Generate a project
         run: >
           node packages/create-app/bin/create-dash-starter.js "$RUNNER_TEMP/project"
-          --template . --name "Acme AI" --slug acme-ai --locale es
+          --template . --name "Acme AI" --slug acme-ai --locale es --palette forest
           --yes --no-install --no-boot --no-git
+
+      - name: Check the palette and the demo mode of the project
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          grep -q "DEFAULT_PALETTE: PaletteId = 'forest'" apps/web/src/lib/palettes.ts
+          grep -qx "DEMO_MODE=false" .env
+          grep -qx "DEMO_MODE=false" .env.example
 
       - name: Install the dependencies of the project
         working-directory: ${{ runner.temp }}/project

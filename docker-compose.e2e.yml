@@ -37,5 +37,10 @@ services:
       - '3334:3333'
 
   web:
+    environment:
+      # The suite runs the template as its showcase, with the palette picker.
+      # `E2E_DEMO_MODE=false` runs it as a new installation instead; the
+      # suite reads the same variable.
+      VITE_DEMO_MODE: ${E2E_DEMO_MODE:-true}
     ports: !override
       - '5174:5173'

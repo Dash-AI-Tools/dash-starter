@@ -9,6 +9,7 @@ const OPTIONS = {
   'slug': { type: 'string' },
   'description': { type: 'string' },
   'locale': { type: 'string' },
+  'palette': { type: 'string' },
   'email': { type: 'string' },
   'template': { type: 'string' },
   'yes': { type: 'boolean', default: false },
@@ -30,6 +31,7 @@ Options:
   --slug <slug>          Kebab-case slug, e.g. acme-ai
   --description <text>   One-line description
   --locale <en|es>       Default locale
+  --palette <id>         Default color palette: line, ink, ocean, forest, plum or ember
   --email <address>      Support email
   --template <path|url>  Use a local directory instead of the published release
   --yes                  Accept every default without prompting

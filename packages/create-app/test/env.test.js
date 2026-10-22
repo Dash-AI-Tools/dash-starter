@@ -6,6 +6,7 @@ import { join } from 'node:path'
 
 import {
   applyLocale,
+  applyPalette,
   generateEnvFiles,
   generateKey,
   generateSecret,
@@ -41,7 +42,7 @@ test('the environment files are written from the examples', async () => {
 
   await writeFile(
     join(root, '.env.example'),
-    'APP_KEY=\nAPP_URL=http://localhost:5173\nSUPPORT_EMAIL=support@dash-starter.test\n'
+    'APP_KEY=\nAPP_URL=http://localhost:5173\nSUPPORT_EMAIL=support@dash-starter.test\nDEMO_MODE=true\n'
   )
   await mkdir(join(root, 'apps/api'), { recursive: true })
   await writeFile(
@@ -69,6 +70,8 @@ test('the environment files are written from the examples', async () => {
 
   assert.match(rootEnv, new RegExp(`APP_KEY=${secrets.appKey}`))
   assert.match(rootEnv, /SUPPORT_EMAIL=hi@acme.test/)
+  assert.match(rootEnv, /^DEMO_MODE=false$/m)
+  assert.match(await readFile(join(root, '.env.example'), 'utf8'), /^DEMO_MODE=false$/m)
   assert.match(apiEnv, new RegExp(`APP_KEY=${secrets.appKey}`))
   assert.match(apiEnv, /DEFAULT_LOCALE=es/)
   assert.match(apiEnv, /MAIL_FROM=Acme AI <no-reply@acme.test>/)
@@ -115,4 +118,20 @@ test('the web app points at the locale of the product', async () => {
   const content = await readFile(join(root, 'apps/web/src/lib/i18n.tsx'), 'utf8')
 
   assert.match(content, /export const DEFAULT_LOCALE: Locale = 'es'/)
+})
+
+test('the web app shows the palette of the product', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'create-app-palette-'))
+
+  await mkdir(join(root, 'apps/web/src/lib'), { recursive: true })
+  await writeFile(
+    join(root, 'apps/web/src/lib/palettes.ts'),
+    "export const DEFAULT_PALETTE: PaletteId = 'line'\n"
+  )
+
+  await applyPalette(root, 'ocean')
+
+  const content = await readFile(join(root, 'apps/web/src/lib/palettes.ts'), 'utf8')
+
+  assert.match(content, /export const DEFAULT_PALETTE: PaletteId = 'ocean'/)
 })

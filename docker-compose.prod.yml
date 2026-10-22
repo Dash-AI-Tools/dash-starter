@@ -65,6 +65,8 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        VITE_DEMO_MODE: ${DEMO_MODE:-false}
     ports:
       - '8080:80'
     depends_on:

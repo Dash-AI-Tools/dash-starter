@@ -18,6 +18,7 @@ const manifest = {
     slug: { default: 'dash-starter' },
     description: { default: 'The AI SaaS starter for launching your next product' },
     locale: { default: 'en' },
+    palette: { default: 'line' },
     email: { default: 'support@{slug}.test' },
   },
   tokens: {
@@ -87,6 +88,10 @@ async function createTemplate() {
     join(root, 'apps/web/src/lib/i18n.tsx'),
     "export const DEFAULT_LOCALE: Locale = 'en'\n"
   )
+  await writeFile(
+    join(root, 'apps/web/src/lib/palettes.ts'),
+    "export const DEFAULT_PALETTE: PaletteId = 'line'\n"
+  )
 
   await mkdir(join(root, 'packages/create-app'), { recursive: true })
   await writeFile(join(root, 'packages/create-app/package.json'), '{}\n')
@@ -139,6 +144,8 @@ test('a project is generated from a local template', async () => {
       'hi@acme.test',
       '--locale',
       'es',
+      '--palette',
+      'forest',
       '--yes',
       '--no-install',
       '--no-boot',
@@ -183,6 +190,31 @@ test('a project is generated from a local template', async () => {
   const locale = await readFile(join(target, 'apps/web/src/lib/i18n.tsx'), 'utf8')
 
   assert.equal(locale.includes("DEFAULT_LOCALE: Locale = 'es'"), true)
+
+  const palette = await readFile(join(target, 'apps/web/src/lib/palettes.ts'), 'utf8')
+
+  assert.equal(palette.includes("DEFAULT_PALETTE: PaletteId = 'forest'"), true)
+
+  const env = await readFile(join(target, '.env'), 'utf8')
+
+  assert.match(env, /^DEMO_MODE=false$/m)
+})
+
+test('an unknown palette is refused before the project is written', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+
+  await assert.rejects(
+    run([target, '--template', template, '--palette', 'neon', '--yes', '--no-git'], {
+      manifest,
+      version: '0.1.0',
+      log: () => {},
+    }),
+    /palette "neon" does not exist: use one of line, ink, ocean, forest, plum, ember/
+  )
+
+  await assert.rejects(readFile(join(target, 'README.md'), 'utf8'))
 })
 
 test('no placeholder of the template survives in the project', async () => {

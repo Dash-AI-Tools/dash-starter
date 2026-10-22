@@ -66,6 +66,9 @@ export async function generateEnvFiles(root, { identity, secrets, options = {} }
 
   let rootEnv = setEnvValue(rootExample, 'APP_KEY', secrets.appKey)
   rootEnv = setEnvValue(rootEnv, 'SUPPORT_EMAIL', identity.email)
+  // The palette picker is a showcase of the template: new projects start
+  // without it and show their own palette to every visitor.
+  rootEnv = setEnvValue(rootEnv, 'DEMO_MODE', 'false')
 
   let apiEnv = setEnvValue(apiExample, 'APP_KEY', secrets.appKey)
   apiEnv = setEnvValue(apiEnv, 'DEFAULT_LOCALE', identity.locale)
@@ -87,6 +90,8 @@ export async function generateEnvFiles(root, { identity, secrets, options = {} }
   }
 
   await writeFile(join(root, '.env'), rootEnv)
+  // The example is what a teammate copies later: it keeps demo mode off too.
+  await writeFile(join(root, '.env.example'), setEnvValue(rootExample, 'DEMO_MODE', 'false'))
   await writeFile(join(root, 'apps/api/.env'), apiEnv)
 
   return { root: rootEnv, api: apiEnv }
@@ -110,6 +115,33 @@ export async function applyLocale(root, locale) {
   const replaced = content.replace(
     /export const DEFAULT_LOCALE: Locale = '[a-z]+'/,
     `export const DEFAULT_LOCALE: Locale = '${locale}'`
+  )
+
+  if (replaced !== content) {
+    await writeFile(path, replaced)
+  }
+
+  return replaced
+}
+
+/**
+ * Sets the palette every visitor of the product sees, in the constant the web
+ * app reads it from.
+ */
+export async function applyPalette(root, palette) {
+  const path = join(root, 'apps/web/src/lib/palettes.ts')
+
+  let content
+
+  try {
+    content = await readFile(path, 'utf8')
+  } catch {
+    return null
+  }
+
+  const replaced = content.replace(
+    /export const DEFAULT_PALETTE: PaletteId = '[a-z]+'/,
+    `export const DEFAULT_PALETTE: PaletteId = '${palette}'`
   )
 
   if (replaced !== content) {

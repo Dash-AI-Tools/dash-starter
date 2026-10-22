@@ -33,6 +33,7 @@ The browser talks to the web app only: the dev server proxies `/api` and `/mcp` 
 | `E2E_WEB_URL`              | `http://localhost:5174` | The origin of the web app            |
 | `E2E_MAILPIT_URL`          | `http://localhost:8026` | The API of the catcher of the emails |
 | `E2E_CREEM_WEBHOOK_SECRET` | `e2e-webhook-secret`    | The secret the signed webhooks carry |
+| `E2E_DEMO_MODE`            | `true`                  | Demo mode of the stack and the suite |
 
 The stack takes the origin of the web app from `E2E_WEB_URL`, so the links that travel by email open on the origin the browser drives and the session of the user travels with them.
 
