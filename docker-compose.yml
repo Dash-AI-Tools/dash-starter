@@ -41,7 +41,8 @@ services:
     working_dir: /app/apps/api
     command: >
       sh -c "cd /app && npm ci --workspace @dash/api --include-workspace-root &&
-      cd /app/apps/api && node ace serve --hmr"
+      cd /app/apps/api && node ace codegen && node ace migration:run --force &&
+      node ace serve --hmr"
     environment:
       TZ: UTC
       PORT: 3333
@@ -74,7 +75,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 12
-      start_period: 40s
+      # The container installs the dependencies and runs the migrations before
+      # it serves, so the first probe needs a wide window.
+      start_period: 180s
 
   web:
     image: node:24-alpine
@@ -99,7 +102,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 12
-      start_period: 40s
+      # The container installs the dependencies before it serves.
+      start_period: 180s
 
 volumes:
   pgdata:

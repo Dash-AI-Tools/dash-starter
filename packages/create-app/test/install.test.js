@@ -343,3 +343,56 @@ test('a directory that is not empty is refused', async () => {
     /not empty/
   )
 })
+
+test('the lock file of the project is committed with it', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+  const commands = []
+
+  await run([target, '--template', template, '--yes', '--no-boot'], {
+    manifest,
+    version: '0.1.0',
+    log: () => {},
+    run: async (command, args) => {
+      commands.push(`${command} ${args.join(' ')}`)
+
+      return { code: 0, output: '', error: null }
+    },
+  })
+
+  const install = commands.indexOf('npm install')
+  const commit = commands.indexOf('git commit -m Initial commit')
+
+  assert.notEqual(install, -1)
+  assert.notEqual(commit, -1)
+  assert.equal(install < commit, true)
+})
+
+test('a failed installation leaves the stack alone', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+  const commands = []
+  const messages = []
+
+  await run([target, '--template', template, '--yes', '--no-git'], {
+    manifest,
+    version: '0.1.0',
+    log: (message) => messages.push(message),
+    run: async (command, args) => {
+      commands.push(`${command} ${args.join(' ')}`)
+
+      return { code: command === 'npm' ? 1 : 0, output: '', error: null }
+    },
+  })
+
+  assert.equal(
+    commands.some((command) => command.startsWith('docker compose')),
+    false
+  )
+  assert.equal(
+    messages.some((message) => message.includes('could not be installed')),
+    true
+  )
+})

@@ -67,10 +67,9 @@ docker compose up -d
 | Mailpit inbox | http://localhost:8025                       |
 | Postgres      | `localhost:5433` (`dash` / `dash` / `dash`) |
 
-Run the migrations and seed the default plans:
+The API container installs the dependencies and runs the migrations before it serves, so the web app starts on a database that is ready. Seed the default plans once:
 
 ```bash
-docker compose exec api node ace migration:run --force
 docker compose exec api node ace db:seed
 ```
 
@@ -115,10 +114,8 @@ Run at the repository root; each one fans out to every workspace.
 The journeys live in `e2e/` and drive a real browser against the real stack: the API, the database, Mailpit and a signed webhook of the payment provider. They need the stack up, so they use their own ports and never touch the ones of your development session.
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace migration:run --force
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
 docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
 
 npm run test:e2e
 ```

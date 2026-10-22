@@ -7,13 +7,11 @@ The journeys of the product, driven with a real browser against the real stack: 
 The suite runs against the development stack with other ports, so both can live on the same machine. The `docker-compose.e2e.yml` file is the override that does it.
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace migration:run --force
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
 docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
 ```
 
-The API is not healthy until the migrations run, because its probe reads the table of the sessions. That is why the stack is started, prepared and only then waited for.
+The API container installs the dependencies and runs the migrations before it serves, so the stack is ready when the wait ends. The plans are seeded once, after it.
 
 | Service    | Port                  |
 | ---------- | --------------------- |

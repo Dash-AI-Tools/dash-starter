@@ -8,24 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AiUsageEventSchema extends BaseModel {
-  static $columns = [
-    'alias',
-    'createdAt',
-    'credits',
-    'errorMessage',
-    'feature',
-    'id',
-    'images',
-    'inputTokens',
-    'latencyMs',
-    'modelId',
-    'organizationId',
-    'outcome',
-    'outputTokens',
-    'provider',
-    'updatedAt',
-    'userId',
-  ] as const
+  static $columns = ['alias', 'createdAt', 'credits', 'errorMessage', 'feature', 'id', 'images', 'inputTokens', 'latencyMs', 'modelId', 'organizationId', 'outcome', 'outputTokens', 'provider', 'updatedAt', 'userId'] as const
   $columns = AiUsageEventSchema.$columns
   @column()
   declare alias: string
@@ -62,21 +45,7 @@ export class AiUsageEventSchema extends BaseModel {
 }
 
 export class ApiKeySchema extends BaseModel {
-  static $columns = [
-    'abilities',
-    'createdAt',
-    'createdById',
-    'expiresAt',
-    'hash',
-    'id',
-    'lastUsedAt',
-    'name',
-    'prefix',
-    'revokedAt',
-    'tokenableId',
-    'type',
-    'updatedAt',
-  ] as const
+  static $columns = ['abilities', 'createdAt', 'createdById', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'prefix', 'revokedAt', 'tokenableId', 'type', 'updatedAt'] as const
   $columns = ApiKeySchema.$columns
   @column()
   declare abilities: string
@@ -107,15 +76,7 @@ export class ApiKeySchema extends BaseModel {
 }
 
 export class BillingEventSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'id',
-    'payload',
-    'processedAt',
-    'providerEventId',
-    'type',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'id', 'payload', 'processedAt', 'providerEventId', 'type', 'updatedAt'] as const
   $columns = BillingEventSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -151,19 +112,7 @@ export class ConversationSchema extends BaseModel {
 }
 
 export class InvitationSchema extends BaseModel {
-  static $columns = [
-    'acceptedAt',
-    'createdAt',
-    'email',
-    'expiresAt',
-    'id',
-    'invitedById',
-    'organizationId',
-    'revokedAt',
-    'role',
-    'tokenHash',
-    'updatedAt',
-  ] as const
+  static $columns = ['acceptedAt', 'createdAt', 'email', 'expiresAt', 'id', 'invitedById', 'organizationId', 'revokedAt', 'role', 'tokenHash', 'updatedAt'] as const
   $columns = InvitationSchema.$columns
   @column.dateTime()
   declare acceptedAt: DateTime | null
@@ -190,16 +139,7 @@ export class InvitationSchema extends BaseModel {
 }
 
 export class McpUsageEventSchema extends BaseModel {
-  static $columns = [
-    'apiKeyId',
-    'createdAt',
-    'durationMs',
-    'id',
-    'organizationId',
-    'outcome',
-    'tool',
-    'updatedAt',
-  ] as const
+  static $columns = ['apiKeyId', 'createdAt', 'durationMs', 'id', 'organizationId', 'outcome', 'tool', 'updatedAt'] as const
   $columns = McpUsageEventSchema.$columns
   @column()
   declare apiKeyId: number | null
@@ -254,17 +194,7 @@ export class MessageSchema extends BaseModel {
 }
 
 export class OrganizationSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'defaultLocale',
-    'id',
-    'logoPath',
-    'name',
-    'onboardedAt',
-    'onboardingState',
-    'slug',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'defaultLocale', 'id', 'logoPath', 'name', 'onboardedAt', 'onboardingState', 'slug', 'updatedAt'] as const
   $columns = OrganizationSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -302,17 +232,7 @@ export class PasswordResetTokenSchema extends BaseModel {
 }
 
 export class PlanPriceSchema extends BaseModel {
-  static $columns = [
-    'amountCents',
-    'createdAt',
-    'creemProductId',
-    'currency',
-    'id',
-    'interval',
-    'isActive',
-    'planId',
-    'updatedAt',
-  ] as const
+  static $columns = ['amountCents', 'createdAt', 'creemProductId', 'currency', 'id', 'interval', 'isActive', 'planId', 'updatedAt'] as const
   $columns = PlanPriceSchema.$columns
   @column()
   declare amountCents: number
@@ -335,20 +255,7 @@ export class PlanPriceSchema extends BaseModel {
 }
 
 export class PlanSchema extends BaseModel {
-  static $columns = [
-    'createdAt',
-    'description',
-    'entitlements',
-    'features',
-    'id',
-    'isActive',
-    'isDefaultFree',
-    'isPublic',
-    'key',
-    'name',
-    'sortOrder',
-    'updatedAt',
-  ] as const
+  static $columns = ['createdAt', 'description', 'entitlements', 'features', 'id', 'isActive', 'isDefaultFree', 'isPublic', 'key', 'name', 'sortOrder', 'updatedAt'] as const
   $columns = PlanSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -401,20 +308,7 @@ export class SessionSchema extends BaseModel {
 }
 
 export class SubscriptionSchema extends BaseModel {
-  static $columns = [
-    'cancelAtPeriodEnd',
-    'createdAt',
-    'creemCustomerId',
-    'creemSubscriptionId',
-    'currentPeriodEnd',
-    'graceUntil',
-    'id',
-    'lastEventAt',
-    'organizationId',
-    'planPriceId',
-    'status',
-    'updatedAt',
-  ] as const
+  static $columns = ['cancelAtPeriodEnd', 'createdAt', 'creemCustomerId', 'creemSubscriptionId', 'currentPeriodEnd', 'graceUntil', 'id', 'lastEventAt', 'organizationId', 'planPriceId', 'status', 'updatedAt'] as const
   $columns = SubscriptionSchema.$columns
   @column()
   declare cancelAtPeriodEnd: boolean
@@ -443,22 +337,7 @@ export class SubscriptionSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'avatarPath',
-    'createdAt',
-    'email',
-    'emailVerifiedAt',
-    'fullName',
-    'id',
-    'lastOrganizationId',
-    'locale',
-    'password',
-    'pendingEmail',
-    'termsAcceptedAt',
-    'termsVersion',
-    'theme',
-    'updatedAt',
-  ] as const
+  static $columns = ['avatarPath', 'createdAt', 'email', 'emailVerifiedAt', 'fullName', 'id', 'lastOrganizationId', 'locale', 'password', 'pendingEmail', 'termsAcceptedAt', 'termsVersion', 'theme', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null

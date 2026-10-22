@@ -17,8 +17,7 @@ export async function installDependencies(dir, { run }) {
 }
 
 /**
- * Starts the stack of a generated project, runs the migrations and seeds the
- * plans of the product.
+ * Starts the stack of a generated project and seeds the plans of the product.
  */
 export async function bootStack(dir, { run }) {
   const up = await run('docker', ['compose', 'up', '-d'], { cwd: dir })
@@ -27,14 +26,16 @@ export async function bootStack(dir, { run }) {
     return { ok: false, reason: 'docker compose up failed' }
   }
 
-  const migrations = await run(
-    'docker',
-    ['compose', 'exec', '-T', 'api', 'node', 'ace', 'migration:run', '--force'],
-    { cwd: dir }
-  )
+  /**
+   * The API container installs the dependencies and runs the migrations before
+   * it serves, so the stack is healthy once its probe answers.
+   */
+  const ready = await run('docker', ['compose', 'up', '-d', '--wait', '--wait-timeout', '300'], {
+    cwd: dir,
+  })
 
-  if (migrations.code !== 0) {
-    return { ok: false, reason: 'the migrations failed' }
+  if (ready.code !== 0) {
+    return { ok: false, reason: 'the stack did not become healthy' }
   }
 
   const seeds = await run('docker', ['compose', 'exec', '-T', 'api', 'node', 'ace', 'db:seed'], {

@@ -104,6 +104,23 @@ export async function run(argv, options = {}) {
     options: keys,
   })
 
+  /**
+   * The dependencies come first: the lock file they write belongs to the
+   * first commit, and the containers of the stack install the project with it.
+   */
+  let installed = true
+
+  if (steps.install) {
+    logger('Installing the dependencies...')
+    const result = await installDependencies(dir, { run: runCommand })
+
+    installed = result.code === 0
+
+    if (!installed) {
+      logger('The dependencies could not be installed. Run "npm install" in the project and start the stack again.')
+    }
+  }
+
   if (steps.git) {
     const repository = await initRepository(dir, { run: runCommand, identity })
 
@@ -123,12 +140,7 @@ export async function run(argv, options = {}) {
     }
   }
 
-  if (steps.install) {
-    logger('Installing the dependencies...')
-    await installDependencies(dir, { run: runCommand })
-  }
-
-  if (steps.boot) {
+  if (steps.boot && installed) {
     if (await hasDocker({ run: runCommand })) {
       logger('Starting the stack...')
       const stack = await bootStack(dir, { run: runCommand })
@@ -151,13 +163,12 @@ export async function run(argv, options = {}) {
   logger('Next steps:')
   logger(`  cd ${target}`)
 
-  if (!steps.install) {
+  if (!steps.install || !installed) {
     logger('  npm install')
   }
 
-  if (!steps.boot) {
+  if (!steps.boot || !installed) {
     logger('  docker compose up -d')
-    logger('  docker compose exec api node ace migration:run --force')
     logger('  docker compose exec api node ace db:seed')
   }
 

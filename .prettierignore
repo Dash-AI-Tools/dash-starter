@@ -4,6 +4,7 @@ build
 coverage
 .adonisjs
 tmp
+apps/api/database/schema.ts
 test-results
 playwright-report
 package-lock.json

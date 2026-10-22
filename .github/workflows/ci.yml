@@ -141,13 +141,11 @@ jobs:
       - name: Start the stack
         run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d
 
-      - name: Prepare the database
-        run: |
-          docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec -T api node ace migration:run --force
-          docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec -T api node ace db:seed
-
       - name: Wait for the stack
-        run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+        run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait --wait-timeout 300
+
+      - name: Seed the plans
+        run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec -T api node ace db:seed
 
       - name: Run the journeys
         run: npm run test:e2e
