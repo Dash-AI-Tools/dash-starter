@@ -24,27 +24,14 @@ export const updateProfileValidator = vine.create({
  * The payload of the change of the email address. The current password is
  * required, so a stolen session cannot move the account to another address.
  *
- * The pending address of the same user is left out of the uniqueness check,
- * so asking twice for the same address works.
+ * The validator is a plain one, so the registry can describe the body of the
+ * request. The address that is already waiting for a confirmation in another
+ * account is checked by the controller, which knows who is asking.
  */
-export function changeEmailValidator(userId: number) {
-  return vine.create({
-    email: vine
-      .string()
-      .trim()
-      .email()
-      .maxLength(254)
-      .unique({ table: 'users', column: 'email' })
-      .unique({
-        table: 'users',
-        column: 'pending_email',
-        filter: (query) => {
-          void query.whereNot('id', userId)
-        },
-      }),
-    currentPassword: vine.string(),
-  })
-}
+export const changeEmailValidator = vine.create({
+  email: vine.string().trim().email().maxLength(254).unique({ table: 'users', column: 'email' }),
+  currentPassword: vine.string(),
+})
 
 /**
  * The payload of the change of the password.
@@ -60,4 +47,11 @@ export const changePasswordValidator = vine.create({
  */
 export const deleteAccountValidator = vine.create({
   password: vine.string(),
+})
+
+/**
+ * The payload that remembers the organization the user is working in.
+ */
+export const rememberOrganizationValidator = vine.create({
+  organizationId: vine.number().positive(),
 })

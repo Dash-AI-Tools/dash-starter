@@ -6,7 +6,8 @@
   "license": "MIT",
   "exports": {
     "./data": "./.adonisjs/client/data.d.ts",
-    "./registry": "./.adonisjs/client/registry/index.ts"
+    "./registry": "./.adonisjs/client/registry/index.ts",
+    "./terms": "./app/terms.ts"
   },
   "scripts": {
     "start": "node bin/server.js",

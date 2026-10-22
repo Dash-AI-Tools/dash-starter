@@ -245,13 +245,13 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/v1/account/organization'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/profile').rememberOrganizationValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/profile').rememberOrganizationValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['rememberOrganization']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['rememberOrganization']>>>
-      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['rememberOrganization']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['rememberOrganization']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['rememberOrganization']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'organization.index': {
@@ -339,10 +339,10 @@ export interface Registry {
       body: {}
       paramsTuple: [ParamValue]
       params: { orgSlug: ParamValue }
-      query: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/organization').searchMembersValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
-      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['index']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'member.update': {

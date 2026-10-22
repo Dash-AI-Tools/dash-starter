@@ -66,3 +66,11 @@ export const createInvitationValidator = vine.create({
   email: vine.string().trim().email().maxLength(254),
   role: vine.enum(ROLES),
 })
+
+/**
+ * The filters of the list of members. The search narrows the list down to the
+ * members whose name or email address contains it.
+ */
+export const searchMembersValidator = vine.create({
+  search: vine.string().trim().maxLength(200).optional(),
+})

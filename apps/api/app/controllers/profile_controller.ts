@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { randomBytes } from 'node:crypto'
 import EmailChange from '#mails/email_change'
-import type User from '#models/user'
+import User from '#models/user'
 import { emailChangeLink } from '#services/auth_tokens'
 import {
   AVATAR_MAX_BYTES,
@@ -17,6 +17,7 @@ import {
   changeEmailValidator,
   changePasswordValidator,
   deleteAccountValidator,
+  rememberOrganizationValidator,
   updateProfileValidator,
 } from '#validators/profile'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -106,7 +107,7 @@ export default class ProfileController {
     const { request, auth, i18n } = ctx
 
     const user = auth.getUserOrFail()
-    const { email, currentPassword } = await request.validateUsing(changeEmailValidator(user.id))
+    const { email, currentPassword } = await request.validateUsing(changeEmailValidator)
 
     await this.assertCurrentPassword(
       user,
@@ -123,6 +124,8 @@ export default class ProfileController {
         },
       ])
     }
+
+    await this.assertEmailIsFree(email, user, i18n.t('profile.email_pending'))
 
     user.pendingEmail = email
     await user.save()
@@ -212,7 +215,7 @@ export default class ProfileController {
     const { request, auth, serialize } = ctx
 
     const user = auth.getUserOrFail()
-    const organizationId = Number(request.input('organizationId'))
+    const { organizationId } = await request.validateUsing(rememberOrganizationValidator)
 
     /**
      * Only an organization the user belongs to can be remembered.
@@ -252,6 +255,24 @@ export default class ProfileController {
           field: 'currentPassword',
           message,
           rule: 'current_password_invalid',
+        },
+      ])
+    }
+  }
+
+  /**
+   * An address that is already waiting for a confirmation in another account
+   * cannot be taken, so two accounts never wait for the same address.
+   */
+  private async assertEmailIsFree(email: string, user: User, message: string) {
+    const pending = await User.query().where('pending_email', email).whereNot('id', user.id).first()
+
+    if (pending) {
+      throw new VineErrors.E_VALIDATION_ERROR([
+        {
+          field: 'email',
+          message,
+          rule: 'email_pending',
         },
       ])
     }

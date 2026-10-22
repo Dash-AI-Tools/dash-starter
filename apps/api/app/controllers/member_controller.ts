@@ -3,7 +3,7 @@ import Membership from '#models/membership'
 import type Organization from '#models/organization'
 import { assertAnotherOwner } from '#services/organizations'
 import MembershipTransformer from '#transformers/membership_transformer'
-import { changeRoleValidator } from '#validators/organization'
+import { changeRoleValidator, searchMembersValidator } from '#validators/organization'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MemberController {
@@ -18,11 +18,11 @@ export default class MemberController {
    * or email address contains it, which is what the command palette uses.
    */
   async index(ctx: HttpContext) {
-    const { organization, serialize } = ctx
+    const { request, organization, serialize } = ctx
 
-    const search = String(ctx.request.input('search') ?? '')
-      .trim()
-      .toLowerCase()
+    const { search } = await request.validateUsing(searchMembersValidator)
+
+    const pattern = search ? `%${search.toLowerCase()}%` : ''
 
     const query = organization
       .related('memberships')
@@ -30,9 +30,7 @@ export default class MemberController {
       .preload('user')
       .orderBy('createdAt', 'asc')
 
-    if (search) {
-      const pattern = `%${search}%`
-
+    if (pattern) {
       query.whereHas('user', (userQuery) => {
         userQuery.whereRaw('LOWER(full_name) LIKE ?', [pattern])
         userQuery.orWhereRaw('LOWER(email) LIKE ?', [pattern])

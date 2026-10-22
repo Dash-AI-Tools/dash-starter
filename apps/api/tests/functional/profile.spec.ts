@@ -249,7 +249,7 @@ test.group('Email change', () => {
 })
 
 test.group('Password change', () => {
-  test('changes the password and ends the other sessions', async ({ client, assert }) => {
+  test('changes the password and ends the other sessions', async ({ client }) => {
     await createUser('ada@example.com')
 
     const first = await signIn(client, 'ada@example.com')

@@ -4,6 +4,7 @@
   "avatar_invalid_type": "Use a PNG, JPEG or WebP image",
   "avatar_too_large": "The image must be smaller than 2 MB",
   "email_same": "The new address must be different from the current one",
+  "email_pending": "Another account is already waiting for this address",
   "delete_blocked": "You are the only owner of an organization that has other members or an active paid subscription. Transfer the ownership or delete the organization first.",
   "organization_not_found": "The organization was not found"
 }
