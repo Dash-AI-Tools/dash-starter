@@ -10,7 +10,7 @@ import Membership from '#models/membership'
 import type { Role } from '#models/membership'
 import type Organization from '#models/organization'
 import type User from '#models/user'
-import { entitlements } from '#services/entitlements'
+import { EntitlementService } from '#services/entitlements'
 import { usedSeats } from '#services/organizations'
 import env from '#start/env'
 import type { I18n } from '@adonisjs/i18n'
@@ -95,7 +95,10 @@ export async function inviteMember(
     ])
   }
 
-  if ((await usedSeats(organization)) >= entitlements(organization).seats) {
+  const limits = await EntitlementService.limits(organization)
+  const seats = await usedSeats(organization)
+
+  if (!EntitlementService.allows(limits.seats, seats + 1)) {
     throw new E_SEAT_LIMIT_REACHED()
   }
 

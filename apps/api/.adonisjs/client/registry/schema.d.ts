@@ -527,4 +527,95 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['acceptInvitation']>>>
     }
   }
+  'plan.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/plans'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/plan_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/plan_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/plan_controller').default['index']>>>
+    }
+  }
+  'billing.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/billing'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['show']>>>
+    }
+  }
+  'billing.portal': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/billing/portal'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['portal']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['portal']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['portal']>>>
+    }
+  }
+  'billing.change_plan': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/billing/change-plan'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/billing').changePlanValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/billing').changePlanValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['changePlan']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['changePlan']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['changePlan']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'billing.cancel': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/billing/cancel'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/billing').cancelValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/billing').cancelValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['cancel']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['cancel']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['cancel']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'billing.checkout': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/billing/checkout'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/billing').checkoutValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/billing').checkoutValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['checkout']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['checkout']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['checkout']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'creem_webhook': {
+    methods: ["POST"]
+    pattern: '/api/v1/webhooks/creem'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/creem_webhook_controller').default['handle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/creem_webhook_controller').default['handle']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/creem_webhook_controller').default['handle']>>>
+    }
+  }
 }

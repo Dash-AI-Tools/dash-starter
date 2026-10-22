@@ -7,6 +7,33 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class BillingEventSchema extends BaseModel {
+  static $columns = [
+    'createdAt',
+    'id',
+    'payload',
+    'processedAt',
+    'providerEventId',
+    'type',
+    'updatedAt',
+  ] as const
+  $columns = BillingEventSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare payload: any
+  @column.dateTime()
+  declare processedAt: DateTime | null
+  @column()
+  declare providerEventId: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class InvitationSchema extends BaseModel {
   static $columns = [
     'acceptedAt',
@@ -111,6 +138,81 @@ export class PasswordResetTokenSchema extends BaseModel {
   declare userId: number
 }
 
+export class PlanPriceSchema extends BaseModel {
+  static $columns = [
+    'amountCents',
+    'createdAt',
+    'creemProductId',
+    'currency',
+    'id',
+    'interval',
+    'isActive',
+    'planId',
+    'updatedAt',
+  ] as const
+  $columns = PlanPriceSchema.$columns
+  @column()
+  declare amountCents: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare creemProductId: string | null
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare interval: string
+  @column()
+  declare isActive: boolean
+  @column()
+  declare planId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class PlanSchema extends BaseModel {
+  static $columns = [
+    'createdAt',
+    'description',
+    'entitlements',
+    'features',
+    'id',
+    'isActive',
+    'isDefaultFree',
+    'isPublic',
+    'key',
+    'name',
+    'sortOrder',
+    'updatedAt',
+  ] as const
+  $columns = PlanSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: any
+  @column()
+  declare entitlements: any
+  @column()
+  declare features: any
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isActive: boolean
+  @column()
+  declare isDefaultFree: boolean
+  @column()
+  declare isPublic: boolean
+  @column()
+  declare key: string
+  @column()
+  declare name: any
+  @column()
+  declare sortOrder: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class RateLimitSchema extends BaseModel {
   static $columns = ['expire', 'key', 'points'] as const
   $columns = RateLimitSchema.$columns
@@ -133,6 +235,48 @@ export class SessionSchema extends BaseModel {
   declare id: string
   @column()
   declare userId: string | null
+}
+
+export class SubscriptionSchema extends BaseModel {
+  static $columns = [
+    'cancelAtPeriodEnd',
+    'createdAt',
+    'creemCustomerId',
+    'creemSubscriptionId',
+    'currentPeriodEnd',
+    'graceUntil',
+    'id',
+    'lastEventAt',
+    'organizationId',
+    'planPriceId',
+    'status',
+    'updatedAt',
+  ] as const
+  $columns = SubscriptionSchema.$columns
+  @column()
+  declare cancelAtPeriodEnd: boolean
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare creemCustomerId: string | null
+  @column()
+  declare creemSubscriptionId: string | null
+  @column.dateTime()
+  declare currentPeriodEnd: DateTime | null
+  @column.dateTime()
+  declare graceUntil: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare lastEventAt: DateTime | null
+  @column()
+  declare organizationId: number
+  @column()
+  declare planPriceId: number | null
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class UserSchema extends BaseModel {

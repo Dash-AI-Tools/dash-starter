@@ -4,15 +4,6 @@ import db from '@adonisjs/lucid/services/db'
 import { errors as VineErrors, type ValidationError } from '@vinejs/vine'
 
 /**
- * The seats of the free plan: the owner and two more people.
- *
- * shortcut: the plans arrive with the billing group, so every organization
- * has the seats of the free plan until the entitlements read them from the
- * plan of the organization.
- */
-export const FREE_PLAN_SEATS = 3
-
-/**
  * Turns a name into the slug of the URL: lowercase letters, numbers and
  * dashes.
  */

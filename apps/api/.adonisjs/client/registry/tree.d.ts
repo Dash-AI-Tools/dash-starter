@@ -68,4 +68,15 @@ export interface ApiDefinition {
     complete: typeof routes['onboarding.complete']
     acceptInvitation: typeof routes['onboarding.accept_invitation']
   }
+  plan: {
+    index: typeof routes['plan.index']
+  }
+  billing: {
+    show: typeof routes['billing.show']
+    portal: typeof routes['billing.portal']
+    changePlan: typeof routes['billing.change_plan']
+    cancel: typeof routes['billing.cancel']
+    checkout: typeof routes['billing.checkout']
+  }
+  creemWebhook: typeof routes['creem_webhook']
 }

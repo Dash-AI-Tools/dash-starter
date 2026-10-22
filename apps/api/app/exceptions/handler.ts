@@ -33,6 +33,11 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_INVITATION_MISMATCH: { status: 403, message: 'invitation_mismatch' },
   E_INVITATION_INVALID: { status: 404, message: 'invitation_invalid' },
   E_ONBOARDING_NOT_STARTED: { status: 422, message: 'onboarding_not_started' },
+  E_NO_DEFAULT_PLAN: { status: 500, message: 'no_default_plan' },
+  E_SUBSCRIPTION_EXISTS: { status: 409, message: 'subscription_exists' },
+  E_NO_SUBSCRIPTION: { status: 404, message: 'no_subscription' },
+  E_INVALID_WEBHOOK_SIGNATURE: { status: 401, message: 'invalid_webhook_signature' },
+  E_PLAN_UNAVAILABLE: { status: 422, message: 'plan_unavailable' },
 }
 
 /**
@@ -57,6 +62,11 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   invitation_mismatch: 'This invitation was sent to a different email address',
   invitation_invalid: 'This invitation link is not valid',
   onboarding_not_started: 'The setup of the organization has not started yet',
+  no_default_plan: 'There is no free plan in the database. Run the seeder to create it',
+  subscription_exists: 'The organization already has a subscription. Change the plan instead',
+  no_subscription: 'The organization has no subscription',
+  invalid_webhook_signature: 'The signature of the webhook is not valid',
+  plan_unavailable: 'This plan is not available',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {

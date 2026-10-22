@@ -4,6 +4,8 @@
  */
 
 export const controllers = {
+  Billing: () => import('#controllers/billing_controller'),
+  CreemWebhook: () => import('#controllers/creem_webhook_controller'),
   EmailChange: () => import('#controllers/email_change_controller'),
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Health: () => import('#controllers/health_controller'),
@@ -12,6 +14,7 @@ export const controllers = {
   Onboarding: () => import('#controllers/onboarding_controller'),
   Organization: () => import('#controllers/organization_controller'),
   PasswordReset: () => import('#controllers/password_reset_controller'),
+  Plan: () => import('#controllers/plan_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Session: () => import('#controllers/session_controller'),
 }

@@ -2,6 +2,7 @@ import { test } from '@japa/runner'
 import OrganizationInvitation from '#mails/organization_invitation'
 import Membership from '#models/membership'
 import Organization from '#models/organization'
+import Plan from '#models/plan'
 import User from '#models/user'
 import { slugify } from '#services/organizations'
 import { Browser } from '#tests/helpers/browser'
@@ -441,6 +442,35 @@ test.group('Invitations', () => {
 
     response.assertStatus(402)
     assert.equal(response.body().code, 'E_SEAT_LIMIT_REACHED')
+  })
+
+  test('invites somebody when the plan does not limit the seats', async ({ client }) => {
+    const owner = await createUser('ada@example.com')
+    const organization = await createOrganization(owner, 'Acme Labs')
+
+    /**
+     * A limit of `-1` means that the seats are not limited, so the check of
+     * the seats never blocks.
+     */
+    const plan = await Plan.query().where('key', 'free').firstOrFail()
+    plan.entitlements = { ...plan.entitlements, seats: -1 }
+    await plan.save()
+
+    for (const email of ['one@example.com', 'two@example.com', 'three@example.com']) {
+      const member = await createUser(email)
+      await Membership.create({
+        organizationId: organization.id,
+        userId: member.id,
+        role: 'member',
+      })
+    }
+
+    const browser = await signIn(client, 'ada@example.com')
+    const response = await browser.post('/api/v1/orgs/acme-labs/invitations', {
+      body: { email: 'ana@example.com', role: 'member' },
+    })
+
+    response.assertStatus(201)
   })
 
   test('refuses to invite a member twice', async ({ client, assert }) => {

@@ -8,6 +8,11 @@ type RequestOptions = {
   headers?: Record<string, string>
   /** The JSON body of the request. */
   body?: unknown
+  /**
+   * The body of the request, sent as it is. The webhooks are signed against
+   * the bytes they carry, so they cannot be serialized on the way.
+   */
+  raw?: string
 }
 
 /**
@@ -176,6 +181,10 @@ export class Browser {
 
     if (options.body !== undefined) {
       request.json(options.body)
+    }
+
+    if (options.raw !== undefined) {
+      request.unsafeJson(options.raw)
     }
 
     const response = (await request) as ApiResponse

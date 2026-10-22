@@ -33,6 +33,10 @@ const routes = [
         path: 'settings',
         ...page(() => import('./pages/OrganizationSettingsPage')),
       },
+      {
+        path: 'settings/billing',
+        ...page(() => import('./pages/BillingPage')),
+      },
       { path: 'profile', ...page(() => import('./pages/ProfilePage')) },
       {
         path: '*',

@@ -1,3 +1,4 @@
+import { PLAN_INTERVALS } from '#models/plan_price'
 import vine from '@vinejs/vine'
 
 /**
@@ -9,11 +10,6 @@ export const TEAM_SIZES = ['1', '2', '3', '4'] as const
  * What an organization will use the product for.
  */
 export const USE_CASES = ['content', 'support', 'data', 'assistant'] as const
-
-/**
- * The intervals a plan can be paid with.
- */
-export const INTERVALS = ['month', 'year'] as const
 
 /**
  * The payload of the use case step: the size of the team and what the
@@ -46,5 +42,5 @@ export const onboardingPlanValidator = vine.create({
     .trim()
     .regex(/^[a-z0-9-]+$/)
     .maxLength(60),
-  interval: vine.enum(INTERVALS),
+  interval: vine.enum(PLAN_INTERVALS),
 })

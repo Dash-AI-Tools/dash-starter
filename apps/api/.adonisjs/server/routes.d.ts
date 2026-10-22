@@ -44,6 +44,13 @@ export type ScannedRoutes = {
     'onboarding.plan': { paramsTuple?: []; params?: {} }
     'onboarding.complete': { paramsTuple?: []; params?: {} }
     'onboarding.accept_invitation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'plan.index': { paramsTuple?: []; params?: {} }
+    'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.change_plan': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'creem_webhook': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -58,6 +65,9 @@ export type ScannedRoutes = {
     'invitation.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'onboarding.show': { paramsTuple?: []; params?: {} }
+    'plan.index': { paramsTuple?: []; params?: {} }
+    'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
   }
   HEAD: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -72,6 +82,9 @@ export type ScannedRoutes = {
     'invitation.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'onboarding.show': { paramsTuple?: []; params?: {} }
+    'plan.index': { paramsTuple?: []; params?: {} }
+    'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
   }
   POST: {
     'auth.session.store': { paramsTuple?: []; params?: {} }
@@ -95,6 +108,10 @@ export type ScannedRoutes = {
     'onboarding.plan': { paramsTuple?: []; params?: {} }
     'onboarding.complete': { paramsTuple?: []; params?: {} }
     'onboarding.accept_invitation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'billing.change_plan': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'creem_webhook': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }

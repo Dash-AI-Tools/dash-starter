@@ -16,5 +16,11 @@
   "invitation_mismatch": "This invitation was sent to a different email address",
   "invitation_invalid": "This invitation link is not valid",
   "onboarding_not_started": "The setup of the organization has not started yet",
-  "membership_not_found": "The member was not found"
+  "membership_not_found": "The member was not found",
+  "no_default_plan": "There is no free plan in the database. Run the seeder to create it",
+  "subscription_exists": "The organization already has a subscription. Change the plan instead",
+  "no_subscription": "The organization has no subscription",
+  "downgrade_blocked": "Remove {count} members before downgrading to {plan}",
+  "invalid_webhook_signature": "The signature of the webhook is not valid",
+  "plan_unavailable": "This plan is not available"
 }

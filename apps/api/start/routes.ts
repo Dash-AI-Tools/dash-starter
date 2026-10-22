@@ -120,5 +120,34 @@ router
     router
       .post('onboarding/invitations/:id/accept', [controllers.Onboarding, 'acceptInvitation'])
       .use([middleware.auth(), middleware.verified()])
+
+    /**
+     * The catalog of the plans: the pricing page reads it before the
+     * visitor has an account.
+     */
+    router.get('plans', [controllers.Plan, 'index'])
+
+    /**
+     * The billing of the organization. The checkout needs a confirmed
+     * email address, because the receipt of the payment travels to it.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug/billing', [controllers.Billing, 'show'])
+        router.get('orgs/:orgSlug/billing/portal', [controllers.Billing, 'portal'])
+        router.post('orgs/:orgSlug/billing/change-plan', [controllers.Billing, 'changePlan'])
+        router.post('orgs/:orgSlug/billing/cancel', [controllers.Billing, 'cancel'])
+      })
+      .use([middleware.auth(), middleware.org()])
+
+    router
+      .post('orgs/:orgSlug/billing/checkout', [controllers.Billing, 'checkout'])
+      .use([middleware.auth(), middleware.org(), middleware.verified()])
+
+    /**
+     * The events of the payment provider. The endpoint is public: the
+     * signature of the request is what proves that it comes from Creem.
+     */
+    router.post('webhooks/creem', [controllers.CreemWebhook, 'handle'])
   })
   .prefix('/api/v1')

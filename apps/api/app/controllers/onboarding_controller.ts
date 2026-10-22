@@ -7,7 +7,7 @@ import Welcome from '#mails/welcome'
 import Invitation from '#models/invitation'
 import type Organization from '#models/organization'
 import type User from '#models/user'
-import { entitlements } from '#services/entitlements'
+import { EntitlementService } from '#services/entitlements'
 import { acceptInvitation, inviteMember } from '#services/invitations'
 import { onboardingFor, pendingInvitationsFor, saveProgress } from '#services/onboarding'
 import { usedSeats } from '#services/organizations'
@@ -67,7 +67,10 @@ export default class OnboardingController {
      * The whole list is checked before the first invitation is sent, so a
      * plan without enough seats does not leave half of the team invited.
      */
-    if ((await usedSeats(organization)) + invited.length > entitlements(organization).seats) {
+    const limits = await EntitlementService.limits(organization)
+    const seats = await usedSeats(organization)
+
+    if (!EntitlementService.allows(limits.seats, seats + invited.length)) {
       throw new E_SEAT_LIMIT_REACHED()
     }
 

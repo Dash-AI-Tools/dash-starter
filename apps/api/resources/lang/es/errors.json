@@ -16,5 +16,11 @@
   "invitation_mismatch": "Esta invitación se envió a un correo electrónico diferente",
   "invitation_invalid": "Este enlace de invitación no es válido",
   "onboarding_not_started": "La configuración de la organización todavía no ha empezado",
-  "membership_not_found": "No se encontró el miembro"
+  "membership_not_found": "No se encontró el miembro",
+  "no_default_plan": "No hay un plan gratuito en la base de datos. Ejecuta el seeder para crearlo",
+  "subscription_exists": "La organización ya tiene una suscripción. Cambia el plan en su lugar",
+  "no_subscription": "La organización no tiene ninguna suscripción",
+  "downgrade_blocked": "Quita {count} miembros antes de bajar al plan {plan}",
+  "invalid_webhook_signature": "La firma del webhook no es válida",
+  "plan_unavailable": "Este plan no está disponible"
 }

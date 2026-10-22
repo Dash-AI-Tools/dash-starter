@@ -35,6 +35,13 @@ export const manageInvitations = Bouncer.ability((user: User, membership: Member
 )
 
 /**
+ * The billing of the organization is managed by the admins and the owner.
+ */
+export const manageBilling = Bouncer.ability((user: User, membership: Membership) =>
+  allowed(user, membership, 'admin')
+)
+
+/**
  * The two members of a change of a member: the one that asks for it and the
  * one that is affected by it.
  */

@@ -88,18 +88,23 @@
 
 ## 10. Billing plans and Creem payments
 
-- [ ] 10.1 Migrations/models for plans, plan_prices (partial unique active per interval), subscriptions, billing_events; partial unique default free plan; tests that DB rejects two active monthly prices
-- [ ] 10.2 Idempotent plan seeder (Free/Pro/Business, monthly+yearly, `en`/`es` content, entitlements incl. seats, AI credits, MCP access/calls/rpm); test re-run produces no duplicates
-- [ ] 10.3 `EntitlementService.for(org)` with effective-plan resolution (active/trialing/grace → plan, else free) and `-1` unlimited; unit tests for each state
-- [ ] 10.4 Public `GET /api/v1/plans` localized; functional test for `es`
-- [ ] 10.5 `CreemClient` (checkout, portal, cancel, change product, create product; test/prod base URL) bound in container with a fake for tests; unit tests against recorded fixtures
-- [ ] 10.6 Checkout endpoint (admin, verified, no active subscription) returning redirect URL with metadata; tests
-- [ ] 10.7 Webhook endpoint: raw-body HMAC verification, idempotent `billing_events`, transactional apply with row lock and out-of-order guard, lifecycle mapping (active, paid/renewed, past_due with 7-day grace, canceled, expired); tests for invalid signature, duplicate, out-of-order, each lifecycle event; verify event names against docs.creem.io
-- [ ] 10.8 Change plan/interval and cancel endpoints with seat-based downgrade guard; portal link endpoint; tests
-- [ ] 10.9 `node ace billing:sync` creating missing Creem products and reporting drift; test with fake client
-- [ ] 10.10 Billing emails (started, payment failed, canceled) wired to webhook transitions; tests with `mail.fake()`
-- [ ] 10.11 Web: billing settings page (plan, status, renewal, usage meters, change plan, cancel, portal, processing state after return, past-due banner); component tests
-- [ ] 10.12 Document plan configuration and Creem setup (keys, webhook URL, test mode, sync command) in `docs/billing.md`
+- [x] 10.1 Migrations/models for plans, plan_prices (partial unique active per interval), subscriptions, billing_events; partial unique default free plan; tests that DB rejects two active monthly prices
+- [x] 10.2 Idempotent plan seeder (Free/Pro/Business, monthly+yearly, `en`/`es` content, entitlements incl. seats, AI credits, MCP access/calls/rpm); test re-run produces no duplicates
+- [x] 10.3 `EntitlementService.for(org)` with effective-plan resolution (active/trialing/grace → plan, else free) and `-1` unlimited; unit tests for each state
+  - NOTE: the `-1` rule lives in `EntitlementService.allows(limit, used)`, and the checks of the seats (invitations, onboarding, downgrade) go through it, so an unlimited plan never blocks.
+- [x] 10.4 Public `GET /api/v1/plans` localized; functional test for `es`
+- [x] 10.5 `CreemClient` (checkout, portal, cancel, change product, create product; test/prod base URL) bound in container with a fake for tests; unit tests against recorded fixtures
+  - NOTE: the client talks to the API with `fetch` and the `x-api-key` header; the unit tests record the requests instead of using fixtures of the provider.
+- [x] 10.6 Checkout endpoint (admin, verified, no active subscription) returning redirect URL with metadata; tests
+- [x] 10.7 Webhook endpoint: raw-body HMAC verification, idempotent `billing_events`, transactional apply with row lock and out-of-order guard, lifecycle mapping (active, paid/renewed, past_due with 7-day grace, canceled, expired); tests for invalid signature, duplicate, out-of-order, each lifecycle event; verify event names against docs.creem.io
+  - NOTE: Creem has no `subscription.renewed`; a renewal arrives as `subscription.paid`, which the mapping treats as active.
+- [x] 10.8 Change plan/interval and cancel endpoints with seat-based downgrade guard; portal link endpoint; tests
+- [x] 10.9 `node ace billing:sync` creating missing Creem products and reporting drift; test with fake client
+  - NOTE: the drift is reported when the amount or the billing period of the product disagree with the price, and the product that the provider no longer knows is created again.
+- [x] 10.10 Billing emails (started, payment failed, canceled) wired to webhook transitions; tests with `mail.fake()`
+- [x] 10.11 Web: billing settings page (plan, status, renewal, usage meters, change plan, cancel, portal, processing state after return, past-due banner); component tests
+  - NOTE: the page shows the "processing" state while the webhook has not confirmed the subscription, and refreshes itself until it does.
+- [x] 10.12 Document plan configuration and Creem setup (keys, webhook URL, test mode, sync command) in `docs/billing.md`
 
 ## 11. Public site, legal pages and cookie consent
 

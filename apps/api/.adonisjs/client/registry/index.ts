@@ -246,6 +246,48 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"invitations"],[1,"id"],[0,"accept"]],
     types: placeholder as Registry['onboarding.accept_invitation']['types'],
   },
+  'plan.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/plans',
+    tokens: [[0,"api"],[0,"v1"],[0,"plans"]],
+    types: placeholder as Registry['plan.index']['types'],
+  },
+  'billing.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/billing',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"]],
+    types: placeholder as Registry['billing.show']['types'],
+  },
+  'billing.portal': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/billing/portal',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"portal"]],
+    types: placeholder as Registry['billing.portal']['types'],
+  },
+  'billing.change_plan': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/billing/change-plan',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"change-plan"]],
+    types: placeholder as Registry['billing.change_plan']['types'],
+  },
+  'billing.cancel': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/billing/cancel',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"cancel"]],
+    types: placeholder as Registry['billing.cancel']['types'],
+  },
+  'billing.checkout': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/billing/checkout',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"checkout"]],
+    types: placeholder as Registry['billing.checkout']['types'],
+  },
+  'creem_webhook': {
+    methods: ["POST"],
+    pattern: '/api/v1/webhooks/creem',
+    tokens: [[0,"api"],[0,"v1"],[0,"webhooks"],[0,"creem"]],
+    types: placeholder as Registry['creem_webhook']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

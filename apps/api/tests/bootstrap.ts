@@ -7,6 +7,7 @@ import { dbAssertions } from '@adonisjs/lucid/plugins/db'
 import testUtils from '@adonisjs/core/services/test_utils'
 import db from '@adonisjs/lucid/services/db'
 import limiter from '@adonisjs/limiter/services/main'
+import { seedPlans } from '#services/plans'
 import type { Registry } from '../.adonisjs/client/registry/schema.d.ts'
 
 /**
@@ -92,11 +93,16 @@ export const configureSuite: Config['configureSuite'] = (suite) => {
    * previous one. The hooks are registered on the groups, because the
    * `onTest` hook of the suite only reaches the tests that live outside of
    * a group.
+   *
+   * The catalog of plans is written again after the tables are emptied: the
+   * free plan is the plan every organization starts with, so a test that does
+   * not talk about billing still needs it.
    */
   suite.onGroup((group) =>
     group.each.setup(async () => {
       await limiter.clear()
       await truncateTables()
+      await seedPlans()
     })
   )
 }

@@ -84,3 +84,52 @@ export const E_ONBOARDING_NOT_STARTED = createError(
   'E_ONBOARDING_NOT_STARTED',
   422
 )
+
+/**
+ * The database has no free plan, so the limits of the organization cannot be
+ * read. The catalog of plans is written by the seeder.
+ */
+export const E_NO_DEFAULT_PLAN = createError(
+  'There is no free plan in the database',
+  'E_NO_DEFAULT_PLAN',
+  500
+)
+
+/**
+ * The organization already has a subscription, so it has to change the plan
+ * instead of buying a new one.
+ */
+export const E_SUBSCRIPTION_EXISTS = createError(
+  'The organization already has a subscription',
+  'E_SUBSCRIPTION_EXISTS',
+  409
+)
+
+/**
+ * The organization has no subscription, so there is nothing to change or to
+ * cancel.
+ */
+export const E_NO_SUBSCRIPTION = createError(
+  'The organization has no subscription',
+  'E_NO_SUBSCRIPTION',
+  404
+)
+
+/**
+ * The webhook of the payment provider did not carry a valid signature.
+ */
+export const E_INVALID_WEBHOOK_SIGNATURE = createError(
+  'The signature of the webhook is not valid',
+  'E_INVALID_WEBHOOK_SIGNATURE',
+  401
+)
+
+/**
+ * The plan does not exist, is not active or has no product in the payment
+ * provider yet, so it cannot be bought.
+ */
+export const E_PLAN_UNAVAILABLE = createError(
+  'The plan is not available',
+  'E_PLAN_UNAVAILABLE',
+  422
+)
