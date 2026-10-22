@@ -7,6 +7,60 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class AiUsageEventSchema extends BaseModel {
+  static $columns = [
+    'alias',
+    'createdAt',
+    'credits',
+    'errorMessage',
+    'feature',
+    'id',
+    'images',
+    'inputTokens',
+    'latencyMs',
+    'modelId',
+    'organizationId',
+    'outcome',
+    'outputTokens',
+    'provider',
+    'updatedAt',
+    'userId',
+  ] as const
+  $columns = AiUsageEventSchema.$columns
+  @column()
+  declare alias: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare credits: number
+  @column()
+  declare errorMessage: string | null
+  @column()
+  declare feature: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare images: number
+  @column()
+  declare inputTokens: number
+  @column()
+  declare latencyMs: number
+  @column()
+  declare modelId: string
+  @column()
+  declare organizationId: number
+  @column()
+  declare outcome: string
+  @column()
+  declare outputTokens: number
+  @column()
+  declare provider: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number | null
+}
+
 export class BillingEventSchema extends BaseModel {
   static $columns = [
     'createdAt',

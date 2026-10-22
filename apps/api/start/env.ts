@@ -76,7 +76,8 @@ export const envSchema = {
 
   /**
    * AI provider registry. Each provider has its own key and each alias points
-   * at a `provider:model` pair.
+   * at a `provider:model` pair. An alias can name another provider, so the
+   * chat can run on one vendor and the images on another.
    */
   AI_PROVIDER: Env.schema.enum([
     'stub',
@@ -85,21 +86,38 @@ export const envSchema = {
     'google',
     'deepseek',
     'openrouter',
+    'qwen',
+    'kimi',
+    'glm',
+    'ollama',
     'compatible',
   ] as const),
   AI_TIMEOUT_MS: Env.schema.number.optional(),
+  /**
+   * The provider and the model of every alias. The provider of an alias is
+   * a plain string, because the registry of the providers is the one of the
+   * AI config, and that config refuses the names it does not know.
+   */
+  AI_CHAT_PROVIDER: Env.schema.string.optional(),
   AI_CHAT_MODEL: Env.schema.string.optional(),
+  AI_FAST_PROVIDER: Env.schema.string.optional(),
   AI_FAST_MODEL: Env.schema.string.optional(),
+  AI_REASONING_PROVIDER: Env.schema.string.optional(),
   AI_REASONING_MODEL: Env.schema.string.optional(),
+  AI_IMAGE_PROVIDER: Env.schema.string.optional(),
   AI_IMAGE_MODEL: Env.schema.string.optional(),
   ANTHROPIC_API_KEY: Env.schema.string.optional(),
   OPENAI_API_KEY: Env.schema.string.optional(),
   GOOGLE_GENERATIVE_AI_API_KEY: Env.schema.string.optional(),
   DEEPSEEK_API_KEY: Env.schema.string.optional(),
   OPENROUTER_API_KEY: Env.schema.string.optional(),
+  QWEN_API_KEY: Env.schema.string.optional(),
+  KIMI_API_KEY: Env.schema.string.optional(),
+  GLM_API_KEY: Env.schema.string.optional(),
+  OLLAMA_API_KEY: Env.schema.string.optional(),
+  OLLAMA_BASE_URL: Env.schema.string.optional(),
   COMPATIBLE_API_KEY: Env.schema.string.optional(),
   COMPATIBLE_BASE_URL: Env.schema.string.optional(),
-  COMPATIBLE_MODEL_ID: Env.schema.string.optional(),
 
   /**
    * File storage for avatars and generated images.

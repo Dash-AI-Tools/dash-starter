@@ -128,8 +128,8 @@ The variables you are most likely to change:
 | `MAIL_TRANSPORT` | `smtp`, `brevo` or `fake`. |
 | `BREVO_API_KEY` | Required in production. |
 | `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET` | Creem credentials and the webhook signing secret. |
-| `AI_PROVIDER` | `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter` or `compatible`. |
-| `AI_CHAT_MODEL` etc. | Alias → model mapping, as `<provider>:<model-id>`. |
+| `AI_PROVIDER` | Default provider of the aliases: `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter`, `qwen`, `kimi`, `glm`, `ollama` or `compatible`. |
+| `AI_CHAT_PROVIDER`, `AI_CHAT_MODEL` etc. | The provider and the model of each alias. |
 
 See `docs/ai.md`, `docs/billing.md` and `docs/mcp.md` for the details of each integration.
 

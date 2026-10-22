@@ -38,6 +38,9 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_NO_SUBSCRIPTION: { status: 404, message: 'no_subscription' },
   E_INVALID_WEBHOOK_SIGNATURE: { status: 401, message: 'invalid_webhook_signature' },
   E_PLAN_UNAVAILABLE: { status: 422, message: 'plan_unavailable' },
+  E_AI_QUOTA_EXCEEDED: { status: 402, message: 'ai_quota_exceeded' },
+  E_AI_UNAVAILABLE: { status: 503, message: 'ai_unavailable' },
+  E_AI_ALIAS_UNAVAILABLE: { status: 500, message: 'ai_alias_unavailable' },
 }
 
 /**
@@ -67,6 +70,9 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   no_subscription: 'The organization has no subscription',
   invalid_webhook_signature: 'The signature of the webhook is not valid',
   plan_unavailable: 'This plan is not available',
+  ai_quota_exceeded: 'Your organization has used all the AI credits of its plan',
+  ai_unavailable: 'The AI is temporarily unavailable. Please try again',
+  ai_alias_unavailable: 'This feature is not available with the AI model it is configured with',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {

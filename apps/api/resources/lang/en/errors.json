@@ -22,5 +22,8 @@
   "no_subscription": "The organization has no subscription",
   "downgrade_blocked": "Remove {count} members before downgrading to {plan}",
   "invalid_webhook_signature": "The signature of the webhook is not valid",
-  "plan_unavailable": "This plan is not available"
+  "plan_unavailable": "This plan is not available",
+  "ai_quota_exceeded": "Your organization has used all the AI credits of its plan",
+  "ai_unavailable": "The AI is temporarily unavailable. Please try again",
+  "ai_alias_unavailable": "This feature is not available with the AI model it is configured with"
 }

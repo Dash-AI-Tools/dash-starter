@@ -120,11 +120,16 @@
 
 ## 12. AI provider
 
-- [ ] 12.1 Install AI SDK core and providers (anthropic, openai, google, deepseek, openrouter, openai-compatible); `config/ai.ts` registry from env with aliases, capabilities and credit pricing, plus stub provider fallback outside production; unit tests for alias resolution, capability mismatch error and stub selection
-- [ ] 12.2 `ai_usage_events` migration/model and `AiService` (`generateText`, `streamText`, `generateObject`, `generateImage`) with quota pre-check (402 `ai_quota_exceeded`), timeout, usage recording in `finally`, error mapping; unit tests with mock model for success, error and quota
-- [ ] 12.3 Image storage via `@adonisjs/drive` with org-scoped access URLs; functional test
-- [ ] 12.4 80%/100% threshold detection sending quota emails once per period; test
-- [ ] 12.5 Document provider configuration including DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama and custom endpoints in `docs/ai.md`; verify stub and one OpenAI-compatible config boot
+- [x] 12.1 Install AI SDK core and providers (anthropic, openai, google, deepseek, openrouter, openai-compatible); `config/ai.ts` registry from env with aliases, capabilities and credit pricing, plus stub provider fallback outside production; unit tests for alias resolution, capability mismatch error and stub selection
+  - NOTE: the registry is `apps/api/config/ai.ts`; `buildAiRegistry(input)` is a pure function and the default export is the registry built from `#start/env`. The providers are `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter`, `qwen`, `kimi`, `glm`, `ollama` and `compatible`; the aliases are `chat`, `fast`, `reasoning` and `image`. An alias can name its own provider (`AI_CHAT_PROVIDER` etc.). Outside production a provider without a key falls back to the stub; in production the stub and a provider without a key stop the boot. The unit tests are `tests/unit/ai_registry.spec.ts`.
+- [x] 12.2 `ai_usage_events` migration/model and `AiService` (`generateText`, `streamText`, `generateObject`, `generateImage`) with quota pre-check (402 `ai_quota_exceeded`), timeout, usage recording in `finally`, error mapping; unit tests with mock model for success, error and quota
+  - NOTE: the service is `apps/api/app/services/ai.ts` and is the only door to the provider; it takes the models as an argument so a test can give it a mock. `generateObject` is built on `generateText` with `Output.object`, because `generateObject` is deprecated in the AI SDK v7. The errors are `E_AI_QUOTA_EXCEEDED` (402), `E_AI_UNAVAILABLE` (503) and `E_AI_ALIAS_UNAVAILABLE` (500, the message names the alias). The table is `ai_usage_events`, with the model in `app/models/ai_usage_event.ts`. The unit tests are `tests/unit/ai_service.spec.ts`.
+- [x] 12.3 Image storage via `@adonisjs/drive` with org-scoped access URLs; functional test
+  - NOTE: the images are written to `organizations/<organization-id>/ai/<uuid>.<ext>` of the disk of `DRIVE_DISK`, and the service answers with the URL of the file. The functional test is `tests/functional/ai_images.spec.ts`.
+- [x] 12.4 80%/100% threshold detection sending quota emails once per period; test
+  - NOTE: the thresholds are detected when the usage of the period crosses them, so the email goes out once per period; it is sent to the owners and the admins of the organization with the existing `QuotaThreshold` mail. The period is the one of the subscription, and the calendar month for a free organization.
+- [x] 12.5 Document provider configuration including DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama and custom endpoints in `docs/ai.md`; verify stub and one OpenAI-compatible config boot
+  - NOTE: the boot was verified with `AI_PROVIDER=stub` and with `AI_PROVIDER=compatible` (a base URL, a key and a model of the alias), and both build their models.
 
 ## 13. Tool registry and AI chat
 

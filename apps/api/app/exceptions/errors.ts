@@ -133,3 +133,34 @@ export const E_PLAN_UNAVAILABLE = createError(
   'E_PLAN_UNAVAILABLE',
   422
 )
+
+/**
+ * The organization has used all the AI credits of its plan, so the call is
+ * refused before it reaches the provider.
+ */
+export const E_AI_QUOTA_EXCEEDED = createError(
+  'The organization has used all the AI credits of its plan',
+  'E_AI_QUOTA_EXCEEDED',
+  402
+)
+
+/**
+ * The provider did not answer, or answered with an error. The details of the
+ * provider never reach the client.
+ */
+export const E_AI_UNAVAILABLE = createError(
+  'The AI provider is not available',
+  'E_AI_UNAVAILABLE',
+  503
+)
+
+/**
+ * The alias of the request points at a model that cannot do what the feature
+ * needs, or at no model at all. The name of the alias is part of the message,
+ * so the misconfiguration is easy to find.
+ */
+export const E_AI_ALIAS_UNAVAILABLE = createError(
+  'The AI alias "%s" is not available for this request',
+  'E_AI_ALIAS_UNAVAILABLE',
+  500
+)
