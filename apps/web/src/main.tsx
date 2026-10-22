@@ -42,6 +42,7 @@ const routes: RouteObject[] = [
     ...page(() => import('./layouts/AppLayout')),
     children: [
       { index: true, ...page(() => import('./pages/DashboardPage')) },
+      { path: 'chat', ...page(() => import('./pages/ChatPage')) },
       { path: 'members', ...page(() => import('./pages/MembersPage')) },
       {
         path: 'settings',

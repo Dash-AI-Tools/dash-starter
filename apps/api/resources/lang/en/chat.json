@@ -1,0 +1,11 @@
+{
+  "language": "English",
+  "systemPrompt": "You are the assistant of the organization {organization}. Answer in {language} unless the member writes in another language. Be brief and use the tools when the answer depends on the data of the organization. Never invent data: when a tool is denied, say that you cannot see that information.",
+  "titlePrompt": "Write a title of at most six words for the conversation that starts with this message: {message}. Answer with the title only, without quotes or a final point.",
+  "tools": {
+    "organizationInfo": "Read the name of the organization, its default language, how many members it has and the plan it is on.",
+    "listMembers": "List the members of the organization with the role of each one of them. The list can be narrowed down to the members of a single role.",
+    "aiUsageSummary": "Read how many AI credits the organization has used in the current period and how many it has left. The members that are not admins cannot use this tool.",
+    "generateText": "Write a short text with the language model, for example a summary or a draft of a message."
+  }
+}

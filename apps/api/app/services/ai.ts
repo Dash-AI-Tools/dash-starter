@@ -41,6 +41,11 @@ export type AiPromptOptions =
 export type AiStreamOptions<TOOLS extends ToolSet> = AiPromptOptions & {
   /** The tools the model can call. */
   tools?: TOOLS
+  /**
+   * The signal that cancels the generation. It is aborted when the client
+   * stops the answer or goes away.
+   */
+  abortSignal?: AbortSignal
 }
 
 /**
@@ -168,7 +173,7 @@ export class AiService {
    * Generates text with the model of the alias, and streams it.
    *
    * The usage of a stream is only known when it ends, so the call is recorded
-   * when the stream ends and when it fails.
+   * when the stream ends, when it is aborted and when it fails.
    */
   async streamText<TOOLS extends ToolSet = ToolSet>(
     context: AiContext,
@@ -184,6 +189,24 @@ export class AiService {
       timeout: { firstChunkMs: this.registry.timeoutMs },
       onEnd: async (event) => {
         const usage = usageOf(event.usage)
+
+        await this.record({
+          context,
+          alias,
+          usage,
+          credits: creditsOf(alias, usage, 0),
+          images: 0,
+          latencyMs: Date.now() - startedAt,
+          outcome: 'success',
+          usedBefore: used,
+        })
+      },
+      onAbort: async ({ steps }) => {
+        /**
+         * The answer was stopped on purpose, so the tokens that were written
+         * are counted even though the stream never finished.
+         */
+        const usage = usageOf(steps[steps.length - 1]?.usage ?? {})
 
         await this.record({
           context,

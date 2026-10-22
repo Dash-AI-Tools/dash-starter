@@ -149,5 +149,20 @@ router
      * signature of the request is what proves that it comes from Creem.
      */
     router.post('webhooks/creem', [controllers.CreemWebhook, 'handle'])
+
+    /**
+     * The assistant of the organization: its conversations and the streamed
+     * answer of the model.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug/chat', [controllers.Chat, 'status'])
+        router.post('orgs/:orgSlug/chat', [controllers.Chat, 'send'])
+        router.get('orgs/:orgSlug/chat/conversations', [controllers.Chat, 'conversations'])
+        router.get('orgs/:orgSlug/chat/conversations/:id', [controllers.Chat, 'show'])
+        router.patch('orgs/:orgSlug/chat/conversations/:id', [controllers.Chat, 'rename'])
+        router.delete('orgs/:orgSlug/chat/conversations/:id', [controllers.Chat, 'destroy'])
+      })
+      .use([middleware.auth(), middleware.org()])
   })
   .prefix('/api/v1')

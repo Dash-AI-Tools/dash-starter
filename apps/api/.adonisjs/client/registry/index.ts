@@ -288,6 +288,42 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"webhooks"],[0,"creem"]],
     types: placeholder as Registry['creem_webhook']['types'],
   },
+  'chat.status': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/chat',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"]],
+    types: placeholder as Registry['chat.status']['types'],
+  },
+  'chat.send': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/chat',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"]],
+    types: placeholder as Registry['chat.send']['types'],
+  },
+  'chat.conversations': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"],[0,"conversations"]],
+    types: placeholder as Registry['chat.conversations']['types'],
+  },
+  'chat.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"],[0,"conversations"],[1,"id"]],
+    types: placeholder as Registry['chat.show']['types'],
+  },
+  'chat.rename': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"],[0,"conversations"],[1,"id"]],
+    types: placeholder as Registry['chat.rename']['types'],
+  },
+  'chat.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"],[0,"conversations"],[1,"id"]],
+    types: placeholder as Registry['chat.destroy']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

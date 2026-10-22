@@ -25,5 +25,6 @@
   "plan_unavailable": "This plan is not available",
   "ai_quota_exceeded": "Your organization has used all the AI credits of its plan",
   "ai_unavailable": "The AI is temporarily unavailable. Please try again",
-  "ai_alias_unavailable": "This feature is not available with the AI model it is configured with"
+  "ai_alias_unavailable": "This feature is not available with the AI model it is configured with",
+  "conversation_not_found": "The conversation was not found"
 }

@@ -164,3 +164,14 @@ export const E_AI_ALIAS_UNAVAILABLE = createError(
   'E_AI_ALIAS_UNAVAILABLE',
   500
 )
+
+/**
+ * The conversation does not exist, or it belongs to another member. Both
+ * answers are the same, so the API never reveals the conversations of the
+ * other members of the organization.
+ */
+export const E_CONVERSATION_NOT_FOUND = createError(
+  'The conversation was not found',
+  'E_CONVERSATION_NOT_FOUND',
+  404
+)

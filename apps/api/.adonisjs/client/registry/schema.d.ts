@@ -618,4 +618,82 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/creem_webhook_controller').default['handle']>>>
     }
   }
+  'chat.status': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/chat'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['status']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['status']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['status']>>>
+    }
+  }
+  'chat.send': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/chat'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/chat').sendMessageValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/chat').sendMessageValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['send']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['send']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['send']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'chat.conversations': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['conversations']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['conversations']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['conversations']>>>
+    }
+  }
+  'chat.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['show']>>>
+    }
+  }
+  'chat.rename': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/chat').renameConversationValidator)>>
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/chat').renameConversationValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['rename']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['rename']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['rename']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'chat.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
+    }
+  }
 }

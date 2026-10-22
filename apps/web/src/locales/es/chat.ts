@@ -23,6 +23,7 @@ export const chat = {
   stubNotice: 'No hay ningún proveedor de IA configurado, así que las respuestas vienen del simulador determinista.',
   creditsLeft: 'Quedan {remaining} créditos de IA',
   chatQuotaExhausted: 'Tu organización no tiene créditos de IA. Pide a un administrador que suba el plan.',
+  chatUpgradePlan: 'Subir el plan',
   chatRateLimited: 'Estás enviando mensajes demasiado rápido. Espera un momento e inténtalo de nuevo.',
   copyCode: 'Copiar código',
   copied: 'Copiado',

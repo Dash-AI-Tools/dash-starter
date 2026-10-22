@@ -23,6 +23,7 @@ export const chat = {
   stubNotice: 'No AI provider is configured, so replies come from the deterministic stub.',
   creditsLeft: '{remaining} AI credits left',
   chatQuotaExhausted: 'Your organization has no AI credits left. Ask an admin to upgrade the plan.',
+  chatUpgradePlan: 'Upgrade the plan',
   chatRateLimited: 'You are sending messages too quickly. Wait a moment and try again.',
   copyCode: 'Copy code',
   copied: 'Copied',

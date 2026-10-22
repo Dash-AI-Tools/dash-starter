@@ -5,6 +5,7 @@
 
 export const controllers = {
   Billing: () => import('#controllers/billing_controller'),
+  Chat: () => import('#controllers/chat_controller'),
   CreemWebhook: () => import('#controllers/creem_webhook_controller'),
   EmailChange: () => import('#controllers/email_change_controller'),
   EmailVerification: () => import('#controllers/email_verification_controller'),

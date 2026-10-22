@@ -51,6 +51,12 @@ export type ScannedRoutes = {
     'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'creem_webhook': { paramsTuple?: []; params?: {} }
+    'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.send': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'chat.rename': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'chat.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
   GET: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -68,6 +74,9 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
   HEAD: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -85,6 +94,9 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
   POST: {
     'auth.session.store': { paramsTuple?: []; params?: {} }
@@ -112,17 +124,20 @@ export type ScannedRoutes = {
     'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'creem_webhook': { paramsTuple?: []; params?: {} }
+    'chat.send': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }
     'organization.update': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.update': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'userId': ParamValue} }
+    'chat.rename': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
   DELETE: {
     'profile.destroy': { paramsTuple?: []; params?: {} }
     'organization.destroy': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'userId': ParamValue} }
     'invitation.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'chat.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

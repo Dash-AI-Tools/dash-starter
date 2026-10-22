@@ -79,4 +79,12 @@ export interface ApiDefinition {
     checkout: typeof routes['billing.checkout']
   }
   creemWebhook: typeof routes['creem_webhook']
+  chat: {
+    status: typeof routes['chat.status']
+    send: typeof routes['chat.send']
+    conversations: typeof routes['chat.conversations']
+    show: typeof routes['chat.show']
+    rename: typeof routes['chat.rename']
+    destroy: typeof routes['chat.destroy']
+  }
 }

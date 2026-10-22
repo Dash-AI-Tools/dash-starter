@@ -88,6 +88,23 @@ export class BillingEventSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class ConversationSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'organizationId', 'title', 'updatedAt', 'userId'] as const
+  $columns = ConversationSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare organizationId: number
+  @column()
+  declare title: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+  @column()
+  declare userId: number
+}
+
 export class InvitationSchema extends BaseModel {
   static $columns = [
     'acceptedAt',
@@ -142,6 +159,23 @@ export class MembershipSchema extends BaseModel {
   declare updatedAt: DateTime
   @column()
   declare userId: number
+}
+
+export class MessageSchema extends BaseModel {
+  static $columns = ['conversationId', 'createdAt', 'id', 'parts', 'role', 'updatedAt'] as const
+  $columns = MessageSchema.$columns
+  @column()
+  declare conversationId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare parts: any
+  @column()
+  declare role: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 }
 
 export class OrganizationSchema extends BaseModel {

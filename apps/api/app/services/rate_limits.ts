@@ -13,6 +13,10 @@ const EMAIL_WINDOW = '1 hour'
 const FAILED_LOGIN_REQUESTS = 5
 const FAILED_LOGIN_WINDOW = '15 minutes'
 
+/** Messages allowed per member and window in the chat. */
+const CHAT_REQUESTS = 20
+const CHAT_WINDOW = '1 minute'
+
 /**
  * The limiters are created on demand: the manager caches them by
  * configuration, so every call returns the same instance.
@@ -21,6 +25,7 @@ const ipLimiter = () => limiter.use({ requests: IP_REQUESTS, duration: IP_WINDOW
 const emailLimiter = () => limiter.use({ requests: EMAIL_REQUESTS, duration: EMAIL_WINDOW })
 const failedLoginLimiter = () =>
   limiter.use({ requests: FAILED_LOGIN_REQUESTS, duration: FAILED_LOGIN_WINDOW })
+const chatLimiter = () => limiter.use({ requests: CHAT_REQUESTS, duration: CHAT_WINDOW })
 
 /**
  * Normalizes an address, so `Ada@example.com` and `ada@example.com` share
@@ -63,4 +68,12 @@ export async function penalizeFailedLogin<T>(
   }
 
   return outcome[1]
+}
+
+/**
+ * Applies the per-member budget of the chat, so one member cannot spend the
+ * credits of the organization at once.
+ */
+export async function consumeChatBudget(userId: number): Promise<void> {
+  await chatLimiter().consume(`chat:user:${userId}`)
 }

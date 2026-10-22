@@ -41,6 +41,7 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_AI_QUOTA_EXCEEDED: { status: 402, message: 'ai_quota_exceeded' },
   E_AI_UNAVAILABLE: { status: 503, message: 'ai_unavailable' },
   E_AI_ALIAS_UNAVAILABLE: { status: 500, message: 'ai_alias_unavailable' },
+  E_CONVERSATION_NOT_FOUND: { status: 404, message: 'conversation_not_found' },
 }
 
 /**
@@ -73,6 +74,7 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   ai_quota_exceeded: 'Your organization has used all the AI credits of its plan',
   ai_unavailable: 'The AI is temporarily unavailable. Please try again',
   ai_alias_unavailable: 'This feature is not available with the AI model it is configured with',
+  conversation_not_found: 'The conversation was not found',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {

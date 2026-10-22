@@ -133,10 +133,14 @@
 
 ## 13. Tool registry and AI chat
 
-- [ ] 13.1 `ToolRegistry` with schema, localized description, `minRole`, `scope`, `execute(ctx)` and permission wrapper; ship tools: organization info, list members, AI usage summary, generate text; unit tests for role and scope denial
-- [ ] 13.2 Conversations/messages migrations and CRUD endpoints (owner-private, org-scoped); tests for privacy between members
-- [ ] 13.3 Streaming chat endpoint using `AiService.streamText` with registry tools, locale system prompt, abort handling, per-user rate limit, auto title via `fast`; functional tests with stub model
-- [ ] 13.4 Web chat page with `useChat`: conversation list, rename/delete, streaming, stop, sanitized Markdown/code/tables, tool-call display, stub badge, low-credit and quota-exhausted states; component tests including script sanitization
+- [x] 13.1 `ToolRegistry` with schema, localized description, `minRole`, `scope`, `execute(ctx)` and permission wrapper; ship tools: organization info, list members, AI usage summary, generate text; unit tests for role and scope denial
+  - NOTE: the registry is `apps/api/app/tools/registry.ts` and `ToolRegistry.call()` is the only place that checks the role and the scope of the caller, so no tool can be run without them. The tools are `organization_info` (member, `organization:read`), `list_members` (member, `members:read`), `ai_usage_summary` (admin, `billing:read`) and `generate_text` (member, `ai:write`, which calls `AiService.generateText` with the `fast` alias). The descriptions of the tools are localized in `resources/lang/{en,es}/chat.json`. The unit tests are `tests/unit/tool_registry.spec.ts`.
+- [x] 13.2 Conversations/messages migrations and CRUD endpoints (owner-private, org-scoped); tests for privacy between members
+  - NOTE: the tables are `conversations` and `messages`; a conversation belongs to an organization and to the member that wrote it, so the endpoints (`GET/POST /api/v1/orgs/:orgSlug/chat` and `GET/PATCH/DELETE .../chat/conversations/:id`) never answer with the conversation of somebody else: it is `E_CONVERSATION_NOT_FOUND` (404). The functional test is `tests/functional/chat.spec.ts`.
+- [x] 13.3 Streaming chat endpoint using `AiService.streamText` with registry tools, locale system prompt, abort handling, per-user rate limit, auto title via `fast`; functional tests with stub model
+  - NOTE: the endpoint is `POST /api/v1/orgs/:orgSlug/chat` and it streams with `AiService.streamText`; the tools come from the registry and the system prompt follows the locale of the member. The client can stop the generation: the abort signal cancels the call to the provider, the tokens written are still counted and the partial answer is kept. The rate limit is 20 messages a minute per member (`consumeChatBudget`) and the title of a new conversation is written with the `fast` alias when the answer ends. The functional test is `tests/functional/chat.spec.ts`.
+- [x] 13.4 Web chat page with `useChat`: conversation list, rename/delete, streaming, stop, sanitized Markdown/code/tables, tool-call display, stub badge, low-credit and quota-exhausted states; component tests including script sanitization
+  - NOTE: the page is `apps/web/src/pages/ChatPage.tsx` and the panel is `src/components/chat/chat-panel.tsx`; the transport (`src/lib/chat.ts`) sends the message and the conversation to the API and reads the identifier of a new conversation from the `x-conversation-id` header, because the stream of the answer does not carry it. The Markdown (`src/components/chat/markdown.tsx`) is sanitized and the raw HTML of the model is shown as text, so a `<script>` written by the model is never executed. The component test is `src/components/chat/chat.test.tsx`.
 
 ## 14. MCP server
 
