@@ -210,6 +210,40 @@ test.group('The setup of an organization', () => {
     fakeMailer.mails.assertQueued(Welcome)
   })
 
+  test('finishes the setup on the free plan when the checkout is cancelled', async ({
+    client,
+    assert,
+  }) => {
+    const user = await createUser('ada@example.com')
+    await createOrganization(user)
+
+    const browser = await signIn(client, 'ada@example.com')
+    await saveUseCase(browser)
+    await browser.post('/api/v1/onboarding/invites', { body: {} })
+
+    const plan = await browser.post('/api/v1/onboarding/plan', {
+      body: { plan: 'pro', interval: 'year' },
+    })
+
+    plan.assertStatus(200)
+    assert.deepEqual(plan.body().onboarding.plan, { key: 'pro', interval: 'year' })
+
+    const complete = await browser.post('/api/v1/onboarding/complete')
+
+    complete.assertStatus(200)
+    assert.equal(complete.body().onboarding.step, 'done')
+
+    /**
+     * The checkout was cancelled, so the organization has no subscription and
+     * keeps the free plan.
+     */
+    const billing = await browser.get('/api/v1/orgs/acme-labs/billing')
+
+    billing.assertStatus(200)
+    assert.equal(billing.body().billing.plan.key, 'free')
+    assert.isNull(billing.body().billing.subscription)
+  })
+
   test('does not show the setup again once the organization is ready', async ({
     client,
     assert,

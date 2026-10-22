@@ -1,5 +1,8 @@
 import { test } from '@japa/runner'
 import { buildAiRegistry } from '#config/ai'
+import { languageModelOf } from '#services/ai_models'
+import env from '#start/env'
+import { generateText } from 'ai'
 
 test.group('The registry of the AI models', () => {
   test('points every alias at the provider and the model of the environment', ({ assert }) => {
@@ -92,5 +95,43 @@ test.group('The registry of the AI models', () => {
         }),
       'The AI provider has to be configured in production'
     )
+  })
+})
+
+test.group('The models of the registry', () => {
+  test('maps any alias to a custom OpenAI-compatible endpoint', async ({ assert }) => {
+    const registry = buildAiRegistry({
+      nodeEnv: 'development',
+      provider: 'compatible',
+      aliases: { reasoning: { provider: 'compatible', model: 'my-own-model' } },
+      keys: { compatible: 'the-key' },
+    })
+
+    assert.equal(registry.aliases.reasoning.provider, 'compatible')
+    assert.equal(registry.aliases.reasoning.modelId, 'my-own-model')
+
+    const model = languageModelOf(registry.aliases.reasoning)
+
+    /**
+     * The model of the alias carries its id. A model can also be the id of a
+     * model of the registry of the provider, so both shapes are covered.
+     */
+    assert.equal(typeof model === 'string' ? model : model.modelId, 'my-own-model')
+
+    /**
+     * The call goes to the base URL of the environment, and not to a vendor.
+     */
+    const baseUrl = env.get('COMPATIBLE_BASE_URL')
+
+    if (!baseUrl) {
+      throw new Error('the environment does not point the compatible provider anywhere')
+    }
+
+    try {
+      await generateText({ model, prompt: 'Hello', maxRetries: 0 })
+      assert.fail('the call should have failed')
+    } catch (error) {
+      assert.include((error as { url: string }).url, baseUrl)
+    }
   })
 })

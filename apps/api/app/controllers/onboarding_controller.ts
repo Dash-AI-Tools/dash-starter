@@ -88,9 +88,9 @@ export default class OnboardingController {
   /**
    * Saves the plan the user chose.
    *
-   * shortcut: the paid plans start a checkout, which arrives with the
-   * billing group. Until then the choice is only recorded, and the setup
-   * finishes on the free plan.
+   * The choice is only recorded here: the web app opens the checkout of the
+   * paid plans and closes the setup, so an organization without a
+   * subscription stays on the free plan.
    */
   async plan(ctx: HttpContext) {
     const { request, auth, serialize } = ctx

@@ -85,6 +85,47 @@ export function failingModel() {
 }
 
 /**
+ * A model that never answers, as a provider that is stuck would do.
+ *
+ * The model gives up when the signal of the call is aborted, which is what
+ * the timeout of the registry does.
+ */
+export function hangingModel() {
+  return new MockLanguageModelV4({
+    provider: 'mock',
+    modelId: 'mock',
+    doGenerate: ({ abortSignal }) =>
+      new Promise<never>((_resolve, reject) => {
+        abortSignal?.addEventListener('abort', () => {
+          reject(new Error('The provider did not answer'))
+        })
+      }),
+  })
+}
+
+/**
+ * A model that streams a text and keeps the stream open, as a provider that
+ * is cut in the middle of an answer would do. The answer can be stopped
+ * before the provider reports the tokens it used.
+ */
+export function interruptedModel(text: string) {
+  return new MockLanguageModelV4({
+    provider: 'mock',
+    modelId: 'mock',
+    doStream: async () => ({
+      stream: new ReadableStream({
+        start(controller) {
+          controller.enqueue({ type: 'stream-start', warnings: [] })
+          controller.enqueue({ type: 'text-start', id: 'text-1' })
+          controller.enqueue({ type: 'text-delta', id: 'text-1', delta: text })
+          controller.enqueue({ type: 'text-end', id: 'text-1' })
+        },
+      }),
+    }),
+  })
+}
+
+/**
  * A model that draws a placeholder image.
  */
 export function mockImageModel() {

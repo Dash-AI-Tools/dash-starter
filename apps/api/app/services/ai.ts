@@ -186,6 +186,13 @@ export class AiService {
     const used = await this.assertQuota(context.organization)
     const startedAt = Date.now()
 
+    /**
+     * The text of the step that is in flight, to know how much of the answer
+     * was written when the call was stopped.
+     */
+    let inFlight = ''
+    let inStep = false
+
     return streamText({
       model: this.models.languageModel(alias),
       ...options,
@@ -204,12 +211,41 @@ export class AiService {
           usedBefore: used,
         })
       },
+      onChunk: ({ chunk }) => {
+        if (chunk.type === 'start-step') {
+          inFlight = ''
+          inStep = true
+        } else if (chunk.type === 'finish-step') {
+          inFlight = ''
+          inStep = false
+        } else if (chunk.type === 'text-delta') {
+          inFlight += chunk.text
+        }
+      },
       onAbort: async ({ steps }) => {
         /**
-         * The answer was stopped on purpose, so the tokens that were written
+         * The answer was stopped on purpose, so the tokens that were used
          * are counted even though the stream never finished.
          */
-        const usage = usageOf(steps[steps.length - 1]?.usage ?? {})
+        const reported = steps.reduce(
+          (total, step) => ({
+            inputTokens: total.inputTokens + (step.usage.inputTokens ?? 0),
+            outputTokens: total.outputTokens + (step.usage.outputTokens ?? 0),
+          }),
+          { inputTokens: 0, outputTokens: 0 }
+        )
+
+        /**
+         * The provider only reports the tokens of a call when it answers, so
+         * the tokens of the step that was cut are estimated with the size of
+         * the prompt and of the text that was written.
+         */
+        const usage = inStep
+          ? {
+              inputTokens: reported.inputTokens + estimateTokens(promptSize(options)),
+              outputTokens: reported.outputTokens + estimateTokens(inFlight.length),
+            }
+          : reported
 
         await this.record({
           context,
@@ -458,6 +494,33 @@ function creditsOf(alias: AiAliasConfig, usage: AiUsage, images: number): number
     images * alias.pricing.image
 
   return Math.round(credits * 10000) / 10000
+}
+
+/**
+ * The characters of the prompt of a call.
+ */
+function promptSize(options: AiPromptOptions): number {
+  const system = options.system?.length ?? 0
+
+  if (options.prompt) {
+    return options.prompt.length + system
+  }
+
+  return (
+    (options.messages ?? []).reduce((total, message) => total + JSON.stringify(message).length, 0) +
+    system
+  )
+}
+
+/**
+ * The tokens of a text of a known size.
+ *
+ * The provider only reports the tokens of a call when it answers, so the
+ * tokens of a call that was stopped are estimated with the usual rule of
+ * four characters per token.
+ */
+function estimateTokens(chars: number): number {
+  return Math.ceil(chars / 4)
 }
 
 /**

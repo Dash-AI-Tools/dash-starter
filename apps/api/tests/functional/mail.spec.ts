@@ -10,6 +10,7 @@ import SubscriptionStarted from '#mails/subscription_started'
 import VerifyEmail from '#mails/verify_email'
 import Welcome from '#mails/welcome'
 import User from '#models/user'
+import { Browser } from '#tests/helpers/browser'
 import mail from '@adonisjs/mail/services/main'
 
 const LINK = 'https://app.example.com/action?token=abc'
@@ -246,6 +247,47 @@ test.group('Transactional emails', () => {
     assert.include(html, 'support@dash-starter.test')
   })
 
+  test('the invitation carries the organization, the inviter and the accept link', async ({
+    assert,
+  }) => {
+    const fakeMailer = mail.fake()
+
+    await mail.sendLater(
+      new OrganizationInvitation({
+        email: 'invitee@example.com',
+        name: 'Grace Hopper',
+        organizationName: 'Acme',
+        inviterName: 'Ada',
+        acceptUrl: LINK,
+        expiresAt: new Date(),
+        locale: 'en',
+      })
+    )
+
+    const [queued] = fakeMailer.mails.queued()
+    const html = queued.message.nodeMailerMessage.html ?? ''
+
+    assert.include(html, 'Acme')
+    assert.include(html, 'Ada')
+    assert.include(html, LINK)
+  })
+
+  test('the email keeps the product name and the call to action without images', async ({
+    assert,
+  }) => {
+    const fakeMailer = mail.fake()
+    const user = await createUser()
+
+    await mail.sendLater(new ResetPassword(user, LINK, 'en'))
+
+    const [queued] = fakeMailer.mails.queued()
+    const html = queued.message.nodeMailerMessage.html ?? ''
+
+    assert.include(html, 'Dash')
+    assert.include(html, LINK)
+    assert.notInclude(html, '<img')
+  })
+
   test('the plain text body keeps the lines of the email', async ({ assert }) => {
     const fakeMailer = mail.fake()
     const user = await createUser()
@@ -259,5 +301,64 @@ test.group('Transactional emails', () => {
     assert.equal(lines[0], 'Dash')
     assert.include(lines, `Choose a new password: ${LINK}`)
     assert.isFalse(lines.some((line) => line.startsWith(' ')))
+  })
+})
+
+test.group('The delivery of the emails', () => {
+  test('the sign up does not wait for the delivery of the email', async ({ client, assert }) => {
+    /**
+     * The real mailer is needed: the fake one never delivers anything.
+     */
+    mail.restore()
+
+    const mailer = mail.use('primary')
+    const original = mailer.transport
+    let delivering = false
+
+    mailer.transport = {
+      async send() {
+        delivering = true
+
+        /**
+         * The provider never answers, so the request can only finish if it
+         * does not wait for the delivery.
+         */
+        await new Promise(() => {})
+
+        return { messageId: 'never' }
+      },
+    } as unknown as typeof mailer.transport
+
+    try {
+      /**
+       * The browser of the tests carries the token of the CSRF protection,
+       * the way the web app does.
+       */
+      const browser = new Browser(client)
+
+      const response = await browser.post('/api/v1/auth/signup', {
+        body: {
+          fullName: 'Ada Lovelace',
+          email: 'ada@example.com',
+          password: 'supersecret',
+          passwordConfirmation: 'supersecret',
+          terms: true,
+        },
+      })
+
+      response.assertStatus(201)
+    } finally {
+      mailer.transport = original
+    }
+
+    /**
+     * The delivery runs in the background, so the provider was already called
+     * when the visitor got the answer.
+     */
+    for (let attempt = 0; attempt < 50 && !delivering; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    }
+
+    assert.isTrue(delivering, 'the delivery of the email started in the background')
   })
 })

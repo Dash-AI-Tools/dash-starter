@@ -1,4 +1,5 @@
 import { publicPlans } from '#services/plans'
+import { supportedLocale } from '#app/locales'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class PlanController {
@@ -9,7 +10,7 @@ export default class PlanController {
    * organization read it before the visitor has an account.
    */
   async index({ i18n, serialize }: HttpContext) {
-    const locale = i18n.locale === 'es' ? 'es' : 'en'
+    const locale = supportedLocale(i18n.locale)
     const plans = await publicPlans()
 
     return serialize.withoutWrapping({

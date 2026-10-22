@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { supportedLocale } from '#app/locales'
 import {
   billingState,
   cancelSubscription,
@@ -13,11 +14,11 @@ export default class BillingController {
    * The state of the billing of the organization: the plan, the
    * subscription, the usage and the entitlements.
    */
-  async show({ organization, bouncer, membership, serialize }: HttpContext) {
+  async show({ organization, bouncer, membership, serialize, i18n }: HttpContext) {
     await bouncer.authorize('manageBilling', membership)
 
     return serialize.withoutWrapping({
-      billing: await billingState(organization),
+      billing: await billingState(organization, supportedLocale(i18n.locale)),
     })
   }
 

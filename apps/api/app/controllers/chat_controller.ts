@@ -1,4 +1,4 @@
-import { isSupportedLocale, type SupportedLocale } from '#app/locales'
+import { supportedLocale } from '#app/locales'
 import { E_CONVERSATION_NOT_FOUND } from '#exceptions/errors'
 import Conversation from '#models/conversation'
 import type { MessagePart } from '#models/message'
@@ -120,7 +120,7 @@ export default class ChatController {
       organization,
       membership,
       user,
-      locale: this.localeOf(ctx),
+      locale: supportedLocale(ctx.i18n.locale),
     }
 
     const tools = chatTools(toolContext)
@@ -189,12 +189,5 @@ export default class ChatController {
     }
 
     return conversation
-  }
-
-  /**
-   * The language the assistant answers in.
-   */
-  private localeOf(ctx: HttpContext): SupportedLocale {
-    return isSupportedLocale(ctx.i18n.locale) ? ctx.i18n.locale : 'en'
   }
 }

@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { supportedLocale, type SupportedLocale } from '#app/locales'
 import { E_NO_SUBSCRIPTION, E_PLAN_UNAVAILABLE, E_SUBSCRIPTION_EXISTS } from '#exceptions/errors'
 import type Organization from '#models/organization'
 import type PlanPrice from '#models/plan_price'
@@ -85,7 +86,7 @@ export async function changePlan(
         field: 'plan',
         message: i18n.t('errors.downgrade_blocked', {
           count: seats - limit,
-          plan: target.name[localeOf(organization)],
+          plan: target.name[supportedLocale(i18n.locale)],
         }),
         rule: 'downgrade_blocked',
       },
@@ -119,6 +120,25 @@ export async function cancelSubscription(
 }
 
 /**
+ * Cancels the subscription of the organization when it has one.
+ *
+ * The organizations that are deleted stop paying: the provider is told before
+ * the organization and its data disappear, so nobody is charged for a
+ * workspace that does not exist anymore.
+ */
+export async function cancelSubscriptionIfAny(organization: Organization): Promise<void> {
+  const subscription = await Subscription.query().where('organizationId', organization.id).first()
+
+  if (!subscription?.creemSubscriptionId) {
+    return
+  }
+
+  const creem = await app.container.make(CreemClient)
+
+  await creem.cancelSubscription(subscription.creemSubscriptionId, 'immediate')
+}
+
+/**
  * The link of the customer portal, where the invoices and the payment
  * methods live.
  */
@@ -135,8 +155,11 @@ export async function portalLink(organization: Organization): Promise<string> {
 
 /**
  * The state of the billing of the organization, as the billing page shows it.
+ *
+ * The plan content is written in the language of the request, the same way
+ * the public catalog of plans does.
  */
-export async function billingState(organization: Organization) {
+export async function billingState(organization: Organization, locale: SupportedLocale) {
   const plan = await EntitlementService.for(organization)
   const subscription = await Subscription.query()
     .where('organizationId', organization.id)
@@ -149,8 +172,8 @@ export async function billingState(organization: Organization) {
   return {
     plan: {
       key: plan.key,
-      name: plan.name[localeOf(organization)],
-      description: plan.description[localeOf(organization)],
+      name: plan.name[locale],
+      description: plan.description[locale],
       entitlements: plan.entitlements,
     },
     subscription: subscription
@@ -201,12 +224,4 @@ async function priceFor(planKey: string, interval: PlanInterval): Promise<PlanPr
   }
 
   return price
-}
-
-/**
- * The language the billing page and the billing emails of the organization
- * are written in.
- */
-function localeOf(organization: Organization): 'en' | 'es' {
-  return organization.defaultLocale === 'es' ? 'es' : 'en'
 }

@@ -102,4 +102,39 @@ test.group('Localized API responses', () => {
     const emailError = fieldError(assert, response, 'email')
     assert.equal(emailError.message, 'Introduce un correo electrónico válido')
   })
+
+  test('the preference of the user wins over the browser language', async ({ client, assert }) => {
+    const browser = new Browser(client)
+
+    const signup = await browser.post('/api/v1/auth/signup', {
+      body: {
+        fullName: 'Ada Lovelace',
+        email: 'ada@example.com',
+        password: 'supersecret',
+        passwordConfirmation: 'supersecret',
+        terms: true,
+      },
+    })
+
+    signup.assertStatus(201)
+
+    /**
+     * The browser asks for Spanish, but the account was created in English.
+     */
+    const response = await browser.post('/api/v1/auth/signup', {
+      headers: { 'Accept-Language': 'es' },
+      body: {
+        fullName: 'Ada Lovelace',
+        email: 'not-an-email',
+        password: 'supersecret',
+        passwordConfirmation: 'supersecret',
+        terms: true,
+      },
+    })
+
+    response.assertStatus(422)
+
+    const emailError = fieldError(assert, response, 'email')
+    assert.equal(emailError.message, 'Enter a valid email address')
+  })
 })

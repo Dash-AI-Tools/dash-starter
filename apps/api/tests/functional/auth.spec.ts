@@ -1,4 +1,5 @@
 import { test } from '@japa/runner'
+import { TERMS_VERSION } from '#legal'
 import ResetPassword from '#mails/reset_password'
 import VerifyEmail from '#mails/verify_email'
 import User from '#models/user'
@@ -98,6 +99,12 @@ test.group('Sign up', () => {
     assert.isNull(user!.emailVerifiedAt)
 
     /**
+     * The account records the version of the terms it accepted.
+     */
+    assert.equal(user!.termsVersion, TERMS_VERSION)
+    assert.isNotNull(user!.termsAcceptedAt)
+
+    /**
      * The verification email is on its way.
      */
     fakeMailer.mails.assertQueued(VerifyEmail)
@@ -108,6 +115,15 @@ test.group('Sign up', () => {
     const profile = await browser.get('/api/v1/account/profile')
     profile.assertStatus(200)
     assert.equal(profile.body().data.email, 'ada@example.com')
+
+    /**
+     * The payload of a user never carries the password nor its hash.
+     */
+    const keys = Object.keys(profile.body().data)
+    assert.equal(
+      keys.some((key) => key.toLowerCase().includes('password')),
+      false
+    )
   })
 
   test('rejects an email that already has an account', async ({ client, assert }) => {

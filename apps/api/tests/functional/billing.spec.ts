@@ -18,12 +18,12 @@ import { DateTime } from 'luxon'
 /**
  * Creates an account with a confirmed email address.
  */
-async function createUser(email: string, verified = true) {
+async function createUser(email: string, verified = true, locale = 'en') {
   return User.create({
     fullName: 'Test User',
     email,
     password: 'supersecret',
-    locale: 'en',
+    locale,
     termsVersion: '2026-01-01',
     emailVerifiedAt: verified ? DateTime.now() : null,
   })
@@ -117,6 +117,50 @@ test.group('The catalog of plans', () => {
     response.assertStatus(200)
     assert.equal(response.body().plans[0].name, 'Gratis')
     assert.equal(response.body().plans[0].features[0], 'Hasta 3 puestos')
+  })
+
+  test('adds a plan without code', async ({ client, assert }) => {
+    await seedCatalog()
+
+    /**
+     * The operator writes the plan in the database, without a deploy.
+     */
+    const plan = await Plan.create({
+      key: 'starter',
+      name: { en: 'Starter', es: 'Inicial' },
+      description: { en: 'A plan added by the operator.', es: 'Un plan del operador.' },
+      features: { en: ['Up to 5 seats'], es: ['Hasta 5 puestos'] },
+      entitlements: {
+        seats: 5,
+        aiCredits: 500,
+        mcpEnabled: false,
+        mcpCalls: 0,
+        mcpRpm: 0,
+      },
+      isPublic: true,
+      isActive: true,
+      isDefaultFree: false,
+      sortOrder: 40,
+    })
+
+    await PlanPrice.create({
+      planId: plan.id,
+      interval: 'month',
+      amountCents: 900,
+      currency: 'USD',
+      isActive: true,
+    })
+
+    const browser = new Browser(client)
+    const response = await browser.get('/api/v1/plans')
+
+    response.assertStatus(200)
+
+    const plans = response.body().plans
+    assert.lengthOf(plans, 4)
+    assert.equal(plans[3].key, 'starter')
+    assert.equal(plans[3].name, 'Starter')
+    assert.equal(plans[3].prices[0].amountCents, 900)
   })
 
   test('writes the catalog again without duplicating the plans', async ({ assert }) => {
@@ -307,6 +351,52 @@ test.group('The entitlements of the organization', () => {
     const plan = await EntitlementService.for(organization)
     assert.equal(plan.key, 'free')
   })
+
+  test('keeps the plan of the subscribers when the owner deactivates it', async ({
+    client,
+    assert,
+  }) => {
+    await seedCatalog()
+    useFakeCreem()
+
+    const owner = await createUser('ada@example.com')
+    const organization = await createOrganization(owner)
+    await createSubscription(organization, 'active')
+
+    const plan = await Plan.query().where('key', 'pro').firstOrFail()
+    plan.isActive = false
+    await plan.save()
+
+    /**
+     * The plan is not sold anymore, so it is not in the pricing page...
+     */
+    const browser = await signIn(client, 'ada@example.com')
+    const catalog = await browser.get('/api/v1/plans')
+
+    catalog.assertStatus(200)
+    assert.notInclude(
+      catalog.body().plans.map((entry: { key: string }) => entry.key),
+      'pro'
+    )
+
+    /**
+     * ...and a new checkout cannot pay for it.
+     */
+    const newcomer = await createOrganization(owner, 'Beta Labs')
+    const checkout = await browser.post(`/api/v1/orgs/${newcomer.slug}/billing/checkout`, {
+      body: { plan: 'pro', interval: 'month' },
+    })
+
+    checkout.assertStatus(422)
+    assert.equal(checkout.body().code, 'E_PLAN_UNAVAILABLE')
+
+    /**
+     * The organizations that already pay for it keep it, until they change
+     * plans.
+     */
+    const current = await EntitlementService.for(organization)
+    assert.equal(current.key, 'pro')
+  })
 })
 
 test.group('The checkout of a plan', (group) => {
@@ -427,6 +517,25 @@ test.group('The billing of the organization', (group) => {
     assert.equal(billing.plan.key, 'free')
     assert.isNull(billing.subscription)
     assert.equal(billing.usage.seats, 1)
+  })
+
+  test('writes the plan in the language of the member', async ({ client, assert }) => {
+    await seedCatalog()
+
+    const owner = await createUser('ada@example.com', true, 'es')
+    await createOrganization(owner)
+
+    const browser = await signIn(client, 'ada@example.com')
+    const response = await browser.get('/api/v1/orgs/acme-labs/billing')
+
+    response.assertStatus(200)
+
+    const billing = response.body().billing
+    assert.equal(billing.plan.name, 'Gratis')
+    assert.equal(
+      billing.plan.description,
+      'Todo lo necesario para probar el producto con tu equipo.'
+    )
   })
 
   test('moves the subscription to another plan', async ({ client, assert }) => {

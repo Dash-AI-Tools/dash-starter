@@ -3,8 +3,11 @@ import OrganizationInvitation from '#mails/organization_invitation'
 import Membership from '#models/membership'
 import Organization from '#models/organization'
 import Plan from '#models/plan'
+import PlanPrice from '#models/plan_price'
+import Subscription from '#models/subscription'
 import User from '#models/user'
 import { slugify } from '#services/organizations'
+import { restoreCreem, useFakeCreem } from '#tests/helpers/billing'
 import { Browser } from '#tests/helpers/browser'
 import type { ApiClient } from '@japa/api-client'
 import mail from '@adonisjs/mail/services/main'
@@ -709,5 +712,39 @@ test.group('Organization settings', () => {
     gone.assertStatus(404)
 
     assert.isNull(await Organization.findBy('slug', 'acme-labs'))
+  })
+
+  test('cancels the subscription of the provider before deleting the organization', async ({
+    client,
+    assert,
+  }) => {
+    const creem = useFakeCreem()
+
+    const owner = await createUser('ada@example.com')
+    const organization = await createOrganization(owner, 'Acme Labs')
+
+    const plan = await Plan.query().where('key', 'pro').firstOrFail()
+    const price = await PlanPrice.query()
+      .where('planId', plan.id)
+      .where('interval', 'month')
+      .firstOrFail()
+
+    await Subscription.create({
+      organizationId: organization.id,
+      planPriceId: price.id,
+      creemSubscriptionId: 'sub_1',
+      creemCustomerId: 'cus_1',
+      status: 'active',
+    })
+
+    const browser = await signIn(client, 'ada@example.com')
+    const response = await browser.delete('/api/v1/orgs/acme-labs', { body: { name: 'Acme Labs' } })
+
+    response.assertStatus(200)
+
+    assert.deepEqual(creem.cancellations, [{ id: 'sub_1', mode: 'immediate' }])
+    assert.isNull(await Organization.findBy('slug', 'acme-labs'))
+
+    restoreCreem()
   })
 })

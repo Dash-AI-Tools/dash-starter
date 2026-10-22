@@ -1,5 +1,6 @@
 import Membership from '#models/membership'
 import type User from '#models/user'
+import { EntitlementService } from '#services/entitlements'
 import db from '@adonisjs/lucid/services/db'
 import { errors as VineErrors, type ValidationError } from '@vinejs/vine'
 
@@ -55,34 +56,65 @@ export async function blockingOwnedOrganizations(user: User) {
   }
 
   /**
-   * The members of every organization of the user, in a single query, so the
-   * guard does not run one query per organization.
+   * The members and the owners of every organization of the user, in a single
+   * query, so the guard does not run one query per organization.
    */
   const counts = await db
     .query()
     .from('memberships')
     .select('organization_id')
+    .select(db.raw('count(*) as total'))
+    .select(db.raw("count(*) filter (where role = 'owner') as owners"))
     .whereIn(
       'organization_id',
       memberships.map((membership) => membership.organizationId)
     )
     .groupBy('organization_id')
-    .count('* as total')
 
   const byOrganization = new Map(
-    counts.map((row) => [Number(row.organization_id), Number(row.total)])
+    counts.map((row) => [
+      Number(row.organization_id),
+      { members: Number(row.total), owners: Number(row.owners) },
+    ])
   )
 
-  return memberships
-    .filter((membership) => (byOrganization.get(membership.organizationId) ?? 0) > 1)
-    .map((membership) => membership.organization)
+  /**
+   * The organization of the user blocks the deletion when nobody else owns it
+   * and it has other members inside.
+   */
+  const withMembers = memberships.filter((membership) => {
+    const tally = byOrganization.get(membership.organizationId)
+
+    return !!tally && tally.owners === 1 && tally.members > 1
+  })
+
+  if (withMembers.length > 0) {
+    return withMembers.map((membership) => membership.organization)
+  }
+
+  /**
+   * The subscription of an organization is lost when the account of its only
+   * owner is deleted, so a plan that is being paid for blocks the deletion.
+   */
+  for (const membership of memberships) {
+    const tally = byOrganization.get(membership.organizationId)
+
+    if (!tally || tally.owners !== 1) {
+      continue
+    }
+
+    const plan = await EntitlementService.for(membership.organization)
+
+    if (!plan.isDefaultFree) {
+      return [membership.organization]
+    }
+  }
+
+  return []
 }
 
 /**
  * Whether the account of the user can be deleted.
- *
- * shortcut: the paid subscriptions arrive with the billing group, so an
- * organization with an active subscription does not block the deletion yet.
  */
 export async function canDeleteAccount(user: User): Promise<boolean> {
   const blocking = await blockingOwnedOrganizations(user)

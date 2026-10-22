@@ -8,6 +8,8 @@ import {
   createMember,
   createOrganization,
   failingModel,
+  hangingModel,
+  interruptedModel,
   mockImageModel,
   mockModel,
   stubRegistry,
@@ -163,6 +165,76 @@ test.group('The service of the AI models', () => {
     assert.isObject(result.object)
     assert.property(result.object, 'title')
     assert.property(result.object, 'pages')
+  })
+
+  test('gives up on a provider that does not answer in time', async ({ assert }) => {
+    const { context } = await scenario()
+    const registry = { ...stubRegistry(), timeoutMs: 50 }
+    const service = new AiService(registry, {
+      languageModel: () => hangingModel(),
+      imageModel: () => mockImageModel(),
+    })
+
+    try {
+      await service.generateText(context, { prompt: 'Hello' })
+      assert.fail('the call should have failed')
+    } catch (error) {
+      const failure = error as { code: string; status: number; message: string }
+
+      assert.equal(failure.code, 'E_AI_UNAVAILABLE')
+      assert.equal(failure.status, 503)
+
+      /**
+       * The details of the provider never reach the member.
+       */
+      assert.notInclude(failure.message, 'did not answer')
+    }
+
+    const event = await AiUsageEvent.query().firstOrFail()
+
+    assert.equal(event.outcome, 'error')
+    assert.equal(event.credits, 0)
+  })
+
+  test('meters the tokens of an answer that was stopped', async ({ assert }) => {
+    const { context } = await scenario()
+    const service = new AiService(stubRegistry(), {
+      languageModel: () => interruptedModel('The answer of the mock'),
+      imageModel: () => mockImageModel(),
+    })
+
+    const abort = new AbortController()
+    const result = await service.streamText(context, {
+      prompt: 'Hello',
+      abortSignal: abort.signal,
+    })
+
+    /**
+     * The answer is read until the text arrives, and then it is stopped, the
+     * way the member stops it in the chat.
+     */
+    const reader = result.fullStream.getReader()
+
+    while (true) {
+      const { done, value } = await reader.read()
+
+      if (done || value.type === 'text-end') break
+    }
+
+    abort.abort()
+    await reader.read()
+
+    const event = await AiUsageEvent.query().firstOrFail()
+
+    assert.equal(event.outcome, 'success')
+
+    /**
+     * The provider was cut before it reported the tokens, so they are
+     * estimated with the size of the prompt and of the answer.
+     */
+    assert.equal(event.inputTokens, 2)
+    assert.equal(event.outputTokens, 6)
+    assert.isAbove(event.credits, 0)
   })
 })
 

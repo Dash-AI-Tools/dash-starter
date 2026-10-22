@@ -12,3 +12,10 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
 export function isSupportedLocale(value: unknown): value is SupportedLocale {
   return SUPPORTED_LOCALES.includes(value as SupportedLocale)
 }
+
+/**
+ * The supported locale of a value, falling back to English.
+ */
+export function supportedLocale(value: unknown): SupportedLocale {
+  return isSupportedLocale(value) ? value : 'en'
+}

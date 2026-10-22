@@ -2,6 +2,9 @@ import { test } from '@japa/runner'
 import EmailChange from '#mails/email_change'
 import Membership from '#models/membership'
 import Organization from '#models/organization'
+import Plan from '#models/plan'
+import PlanPrice from '#models/plan_price'
+import Subscription from '#models/subscription'
 import User from '#models/user'
 import { slugify } from '#services/organizations'
 import { Browser } from '#tests/helpers/browser'
@@ -316,6 +319,41 @@ test.group('Account deletion', () => {
       organizationId: organization.id,
       userId: member.id,
       role: 'member',
+    })
+
+    const browser = await signIn(client, 'ada@example.com')
+    const response = await browser.delete('/api/v1/account/profile', {
+      body: { password: 'supersecret' },
+    })
+
+    response.assertStatus(422)
+    const error = response
+      .body()
+      .errors.find((entry: { field: string }) => entry.field === 'password')
+    assert.equal(error.code, 'delete_blocked')
+
+    assert.isNotNull(await User.find(owner.id))
+  })
+
+  test('refuses the deletion while the organization pays for a plan', async ({
+    client,
+    assert,
+  }) => {
+    const owner = await createUser('ada@example.com')
+    const organization = await createOrganization(owner)
+
+    const plan = await Plan.query().where('key', 'pro').firstOrFail()
+    const price = await PlanPrice.query()
+      .where('planId', plan.id)
+      .where('interval', 'month')
+      .firstOrFail()
+
+    await Subscription.create({
+      organizationId: organization.id,
+      planPriceId: price.id,
+      creemSubscriptionId: 'sub_1',
+      creemCustomerId: 'cus_1',
+      status: 'active',
     })
 
     const browser = await signIn(client, 'ada@example.com')

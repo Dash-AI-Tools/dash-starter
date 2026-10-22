@@ -1,5 +1,6 @@
 import Membership from '#models/membership'
 import Organization from '#models/organization'
+import { cancelSubscriptionIfAny } from '#services/billing'
 import { availableSlug, slugify, slugTakenError } from '#services/organizations'
 import MembershipTransformer from '#transformers/membership_transformer'
 import { MembershipOrganizationTransformer } from '#transformers/organization_transformer'
@@ -115,8 +116,8 @@ export default class OrganizationController {
   /**
    * Deletes an organization and all of its data.
    *
-   * shortcut: the cancellation of the subscription arrives with the billing
-   * group, when the payments of the organization exist.
+   * The subscription is canceled with the payment provider first, so nobody
+   * is charged for an organization that does not exist anymore.
    */
   async destroy(ctx: HttpContext) {
     const { request, organization, membership, bouncer, i18n } = ctx
@@ -134,6 +135,8 @@ export default class OrganizationController {
         },
       ])
     }
+
+    await cancelSubscriptionIfAny(organization)
 
     await organization.delete()
 

@@ -120,9 +120,12 @@ export const envSchema = {
   COMPATIBLE_BASE_URL: Env.schema.string.optional(),
 
   /**
-   * File storage for avatars and generated images.
+   * File storage for avatars and generated images. Only the local disk is
+   * registered, so the environment refuses any other one: a deployment that
+   * stores the images outside of the machine registers the S3 disk of
+   * `config/drive.ts` and widens this list.
    */
-  DRIVE_DISK: Env.schema.enum(['local', 's3'] as const),
+  DRIVE_DISK: Env.schema.enum(['local'] as const),
   DRIVE_ROOT: Env.schema.string.optional(),
   S3_KEY: Env.schema.string.optional(),
   S3_SECRET: Env.schema.string.optional(),

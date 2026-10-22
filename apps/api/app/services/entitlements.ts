@@ -32,7 +32,12 @@ export class EntitlementService {
     if (subscription && this.hasAccess(subscription)) {
       const plan = subscription.planPrice?.plan
 
-      if (plan && plan.isActive) {
+      /**
+       * A plan that the owner deactivates stops being sold, but the
+       * organizations that already pay for it keep it until they change
+       * plans.
+       */
+      if (plan) {
         return plan
       }
     }
