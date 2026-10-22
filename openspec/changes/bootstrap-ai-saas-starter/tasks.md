@@ -64,14 +64,18 @@
 
 ## 8. Dashboard shell and profile
 
-- [ ] 8.1 App layout: collapsible sidebar (persisted), mobile drawer, top bar with breadcrumbs, search trigger, notifications slot, user menu with cookie-preferences entry; test drawer at mobile width
-- [ ] 8.2 `nav.ts` single declaration with `minRole`; sidebar and command palette consume it; test member sees no Billing/API keys
-- [ ] 8.3 Org switcher with "create organization"; remember last org on server; test switching navigates to new slug
-- [ ] 8.4 Command palette with search-provider registry and a members search provider backed by an API search endpoint; tests for Cmd+K and grouped results
-- [ ] 8.5 Dashboard home with KPI cards, chart, recent-activity table and getting-started checklist; render test
-- [ ] 8.6 Not-found, error boundary and 401 redirect handling; tests
-- [ ] 8.7 Profile page: name/avatar (drive, type/size limits), email change with verification, password change, locale/theme preferences, account deletion with ownership guard; API functional tests and web component tests
-- [ ] 8.8 Terms re-acceptance gate when `terms_version` is outdated; test
+- [x] 8.1 App layout: collapsible sidebar (persisted), mobile drawer, top bar with breadcrumbs, search trigger, notifications slot, user menu with cookie-preferences entry; test drawer at mobile width
+  - NOTE: the cookie-preferences entry fires the `dash:open-cookie-preferences` event; the consent module and its dialog arrive with the public site group (11.5).
+- [x] 8.2 `nav.ts` single declaration with `minRole`; sidebar and command palette consume it; test member sees no Billing/API keys
+- [x] 8.3 Org switcher with "create organization"; remember last org on server; test switching navigates to new slug
+  - NOTE: "create organization" goes to `/onboarding`, the route the onboarding group (9.x) owns.
+- [x] 8.4 Command palette with search-provider registry and a members search provider backed by an API search endpoint; tests for Cmd+K and grouped results
+- [x] 8.5 Dashboard home with KPI cards, chart, recent-activity table and getting-started checklist; render test
+  - NOTE: the numbers, the chart and the activity are examples, as the spec asks for a replaceable starting point; the real metrics arrive with the AI and billing groups.
+- [x] 8.6 Not-found, error boundary and 401 redirect handling; tests
+- [x] 8.7 Profile page: name/avatar (drive, type/size limits), email change with verification, password change, locale/theme preferences, account deletion with ownership guard; API functional tests and web component tests
+  - NOTE: the avatar is stored in the local drive; the S3 disk of the storage group (12.x) takes over in production.
+- [x] 8.8 Terms re-acceptance gate when `terms_version` is outdated; test
 
 ## 9. Organization onboarding
 

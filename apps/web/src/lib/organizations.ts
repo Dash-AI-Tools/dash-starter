@@ -27,6 +27,11 @@ export type Invitation = Awaited<
 const MANAGERS: OrganizationRole[] = ['owner', 'admin']
 
 /**
+ * The route where the setup of a new organization starts.
+ */
+export const ONBOARDING_PATH = '/onboarding'
+
+/**
  * Whether a role can manage the members and the settings of an organization.
  */
 export function canManage(role?: OrganizationRole | null): boolean {
@@ -42,6 +47,19 @@ export function useOrganization(orgSlug: string) {
     queryFn: async () => {
       const response = await client.api.organization.show({ params: { orgSlug } })
       return response.organization
+    },
+  })
+}
+
+/**
+ * Reads the organizations the visitor belongs to.
+ */
+export function useOrganizations() {
+  return useQuery({
+    queryKey: ['organizations'],
+    queryFn: async () => {
+      const response = await client.api.organization.index({})
+      return response.organizations
     },
   })
 }

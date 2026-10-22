@@ -6,6 +6,7 @@ import { I18nProvider } from './lib/i18n'
 import { AppProviders } from './providers/app-providers'
 import { ThemeProvider } from './providers/theme-provider'
 import Home from './pages/Home'
+import NotFoundPage, { NotFoundContent } from './pages/NotFoundPage'
 
 type Loader = () => Promise<{ default: React.ComponentType }>
 const page = (load: Loader) => ({
@@ -20,14 +21,21 @@ const routes = [
   { path: '/forgot-password', ...page(() => import('./pages/ForgotPasswordPage')) },
   { path: '/reset-password', ...page(() => import('./pages/ResetPasswordPage')) },
   { path: '/invitations/:token/accept', ...page(() => import('./pages/AcceptInvitationPage')) },
+  { path: '/app', ...page(() => import('./pages/AppIndexPage')) },
   {
-    path: '/',
+    path: '/app/:orgSlug',
     ...page(() => import('./layouts/AppLayout')),
     children: [
-      { path: 'app/:orgSlug/members', ...page(() => import('./pages/MembersPage')) },
+      { index: true, ...page(() => import('./pages/DashboardPage')) },
+      { path: 'members', ...page(() => import('./pages/MembersPage')) },
       {
-        path: 'app/:orgSlug/settings',
+        path: 'settings',
         ...page(() => import('./pages/OrganizationSettingsPage')),
+      },
+      { path: 'profile', ...page(() => import('./pages/ProfilePage')) },
+      {
+        path: '*',
+        element: <NotFoundContent />,
       },
     ],
   },
@@ -44,7 +52,7 @@ if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_SHOWCASE === 'true') {
   })
 }
 
-routes.push({ path: '*', ...page(() => import('./pages/NotFoundPage')) })
+routes.push({ path: '*', element: <NotFoundPage /> })
 
 const router = createBrowserRouter(routes)
 

@@ -18,7 +18,6 @@ export const profile = {
   confirmNewPassword: 'Confirma la nueva contraseña',
   changePassword: 'Cambiar la contraseña',
   passwordChanged: 'Contraseña actualizada. Las demás sesiones se han cerrado.',
-  currentPasswordWrong: 'Tu contraseña actual no es correcta.',
   preferences: 'Preferencias',
   language: 'Idioma',
   theme: 'Tema',
@@ -29,8 +28,6 @@ export const profile = {
   deleteAccount: 'Eliminar la cuenta',
   accountDeleteWarning: 'Esto elimina tu cuenta y sus datos de forma permanente.',
   accountDeleteConfirmLabel: 'Escribe tu contraseña para confirmar',
-  deleteBlocked:
-    'Eres la única persona propietaria de una organización con otros miembros o con una suscripción de pago activa. Transfiere la propiedad o elimina la organización primero.',
   accountDeleted: 'Tu cuenta se ha eliminado.',
   profileSaved: 'Perfil actualizado.',
   uploaded: 'Avatar actualizado.',

@@ -1,5 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { client } from '@/lib/api'
+import { useCallback, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router'
+import { client, SESSION_EXPIRED } from '@/lib/api'
 
 /**
  * The answer of the session endpoint. The type comes from the API registry,
@@ -37,4 +39,45 @@ export function useSetCurrentUser() {
   const queryClient = useQueryClient()
 
   return (user: CurrentUser | null) => queryClient.setQueryData(SESSION_QUERY_KEY, user)
+}
+
+/**
+ * Closes the session of the visitor and sends them to the login page.
+ */
+export function useSignOut() {
+  const navigate = useNavigate()
+  const setCurrentUser = useSetCurrentUser()
+
+  return useCallback(async () => {
+    try {
+      await client.api.auth.session.destroy({})
+    } catch {
+      /**
+       * The session is closed locally anyway, so a failed request does not
+       * keep the visitor inside the app.
+       */
+    }
+
+    setCurrentUser(null)
+    navigate('/login', { replace: true })
+  }, [navigate, setCurrentUser])
+}
+
+/**
+ * Sends the visitor to the login page when the session expires, so they come
+ * back to the page they were on once they sign in again.
+ */
+export function useSessionExpiredRedirect() {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    function onExpired() {
+      const redirectTo = `${location.pathname}${location.search}`
+      navigate(`/login?redirectTo=${encodeURIComponent(redirectTo)}`, { replace: true })
+    }
+
+    window.addEventListener(SESSION_EXPIRED, onExpired)
+    return () => window.removeEventListener(SESSION_EXPIRED, onExpired)
+  }, [navigate, location])
 }

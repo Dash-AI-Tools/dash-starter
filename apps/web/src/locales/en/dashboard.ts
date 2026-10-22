@@ -1,4 +1,5 @@
 export const dashboard = {
+  navMain: 'Main navigation',
   navDashboard: 'Dashboard',
   navChat: 'AI Chat',
   navSettings: 'Settings',
@@ -22,6 +23,10 @@ export const dashboard = {
   kpiSeatsHint: 'Members and pending invitations',
   activityTitle: 'Recent activity',
   activityEmpty: 'No activity yet. It will show up here as your team works.',
+  activityColumnWho: 'Who',
+  activityColumnWhat: 'What',
+  activityColumnWhen: 'When',
+  usageTitle: 'Usage',
   checklistTitle: 'Getting started',
   checklistInvite: 'Invite your teammates',
   checklistInviteHint: 'Bring your team into the workspace.',

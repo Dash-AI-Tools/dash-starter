@@ -1,6 +1,23 @@
 import '@testing-library/jest-dom/vitest'
+import { File } from 'node:buffer'
 import { afterAll, afterEach, beforeAll } from 'vitest'
 import { server } from './server'
+
+/**
+ * jsdom brings its own file classes, but the fetch of the tests is the one of
+ * node, which only sends the files of node in a multipart body. The globals
+ * of the environment are the ones of node, so the requests the tests make are
+ * the ones the browser sends.
+ *
+ * The form data of node is not exported, so it is taken from a request of the
+ * environment, which already builds its body with it.
+ */
+const { constructor: NodeFormData } = await new Request('http://localhost/', {
+  method: 'POST',
+  body: new FormData(),
+}).formData()
+
+Object.assign(globalThis, { File, FormData: NodeFormData } as unknown as typeof globalThis)
 
 // jsdom has no ResizeObserver, which cmdk and the charts rely on.
 if (!globalThis.ResizeObserver) {

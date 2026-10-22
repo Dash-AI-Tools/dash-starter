@@ -17,7 +17,6 @@ export const profile = {
   confirmNewPassword: 'Confirm new password',
   changePassword: 'Change password',
   passwordChanged: 'Password updated. Other sessions were signed out.',
-  currentPasswordWrong: 'Your current password is not correct.',
   preferences: 'Preferences',
   language: 'Language',
   theme: 'Theme',
@@ -28,8 +27,6 @@ export const profile = {
   deleteAccount: 'Delete account',
   accountDeleteWarning: 'This removes your account and its data permanently.',
   accountDeleteConfirmLabel: 'Type your password to confirm',
-  deleteBlocked:
-    'You are the only owner of an organization that has other members or an active paid subscription. Transfer ownership or delete the organization first.',
   accountDeleted: 'Your account has been deleted.',
   profileSaved: 'Profile updated.',
   uploaded: 'Avatar updated.',

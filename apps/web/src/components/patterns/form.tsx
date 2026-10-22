@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState, type ReactNode } from 'react'
+import { useId, useState, type ReactNode } from 'react'
 import {
   FormProvider,
   useForm,
@@ -76,6 +76,11 @@ export function Form<T extends FieldValues>({
   onError?: (message: string) => void
 }) {
   const [serverError, setServerError] = useState<string | null>(null)
+  /**
+   * The ids of the fields are unique per form, so two forms of the same page
+   * can use a field with the same name without breaking the label of the other.
+   */
+  const formId = useId().replaceAll(':', '')
   const methods = useForm<T>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -114,11 +119,11 @@ export function Form<T extends FieldValues>({
       <form onSubmit={submit} className={cn('space-y-4', className)} noValidate>
         {fields.map((field) => (
           <Field key={field.name} data-invalid={errors[field.name] ? 'true' : undefined}>
-            <FieldLabel htmlFor={field.name}>{field.label}</FieldLabel>
+            <FieldLabel htmlFor={`${formId}-${field.name}`}>{field.label}</FieldLabel>
             <FieldContent>
               {field.children ?? (
                 <Input
-                  id={field.name}
+                  id={`${formId}-${field.name}`}
                   type={field.type ?? 'text'}
                   placeholder={field.placeholder}
                   aria-invalid={errors[field.name] ? 'true' : undefined}

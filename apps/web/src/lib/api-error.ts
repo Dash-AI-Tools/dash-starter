@@ -128,3 +128,11 @@ export function toApiFailure(error: unknown): ApiFailure {
 
   return { kind: 'error', error: requestError }
 }
+
+/**
+ * Whether the request failed because the resource does not exist.
+ */
+export function isNotFound(error: unknown): boolean {
+  return toApiFailure(error).error.status === 404
+}
+

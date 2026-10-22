@@ -3,6 +3,13 @@ import { createTuyau } from '@tuyau/core/client'
 import { LOCALE_COOKIE, type Locale } from '@/lib/i18n'
 
 /**
+ * The event the client fires when a request is rejected because the session
+ * is missing or has expired. The shell listens to it and sends the visitor
+ * to the login page.
+ */
+export const SESSION_EXPIRED = 'dash:session-expired'
+
+/**
  * The API is served from the same origin as the web app: the Vite dev proxy
  * forwards `/api` and `/mcp` during development and nginx does it in
  * production. The origin is spelled out so the client also works when it is
@@ -39,10 +46,36 @@ export const client = createTuyau({
         }
       },
     ],
+    afterResponse: [
+      (_request, _options, response) => {
+        /**
+         * A rejected request means the session is gone: the app sends the
+         * visitor to the login page, from where they come back to the page
+         * they were on.
+         */
+        if (response.status === 401) {
+          window.dispatchEvent(new CustomEvent(SESSION_EXPIRED))
+        }
+      },
+    ],
   },
 })
 
 export const urlFor = client.urlFor
+
+/**
+ * Uploads the avatar of the user. The picture travels as a multipart form
+ * and the generated registry describes the JSON bodies only, so the body of
+ * this request is sent outside of the typed arguments.
+ */
+export function uploadAvatar(file: File) {
+  const body = new FormData()
+  body.append('avatar', file)
+
+  return client.api.profile.avatar({
+    body,
+  } as unknown as Parameters<typeof client.api.profile.avatar>[0])
+}
 
 /**
  * Reads the locale cookie written by the browser.

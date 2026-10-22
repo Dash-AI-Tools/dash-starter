@@ -1,4 +1,5 @@
 export const dashboard = {
+  navMain: 'Navegación principal',
   navDashboard: 'Panel',
   navChat: 'Chat con IA',
   navSettings: 'Ajustes',
@@ -22,6 +23,10 @@ export const dashboard = {
   kpiSeatsHint: 'Miembros e invitaciones pendientes',
   activityTitle: 'Actividad reciente',
   activityEmpty: 'Todavía no hay actividad. Aparecerá aquí a medida que tu equipo trabaje.',
+  activityColumnWho: 'Quién',
+  activityColumnWhat: 'Qué',
+  activityColumnWhen: 'Cuándo',
+  usageTitle: 'Uso',
   checklistTitle: 'Primeros pasos',
   checklistInvite: 'Invita a tu equipo',
   checklistInviteHint: 'Trae a tu equipo al espacio de trabajo.',
