@@ -30,7 +30,7 @@ export async function bootStack(dir, { run }) {
    * The API container installs the dependencies and runs the migrations before
    * it serves, so the stack is healthy once its probe answers.
    */
-  const ready = await run('docker', ['compose', 'up', '-d', '--wait', '--wait-timeout', '300'], {
+  const ready = await run('docker', ['compose', 'up', '-d', '--wait', '--wait-timeout', '900'], {
     cwd: dir,
   })
 

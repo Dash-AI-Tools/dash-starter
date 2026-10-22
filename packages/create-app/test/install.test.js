@@ -396,3 +396,46 @@ test('a failed installation leaves the stack alone', async () => {
     true
   )
 })
+
+test('a machine without Docker keeps the project and the commands to run later', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+  const commands = []
+  const messages = []
+
+  const code = await run([target, '--template', template, '--yes', '--no-git'], {
+    manifest,
+    version: '0.1.0',
+    log: (message) => messages.push(message),
+    run: async (command, args) => {
+      commands.push(`${command} ${args.join(' ')}`)
+
+      /**
+       * The daemon of Docker is not running.
+       */
+      return { code: command === 'docker' ? 1 : 0, output: '', error: null }
+    },
+  })
+
+  assert.equal(code, 0)
+  assert.equal(
+    commands.some((command) => command.startsWith('docker compose')),
+    false
+  )
+  assert.equal(
+    messages.some((message) => message.includes('Docker is not running')),
+    true
+  )
+  assert.equal(
+    messages.some((message) => message.includes('docker compose up -d')),
+    true
+  )
+
+  /**
+   * The project is whole, even without Docker: only the stack is missing.
+   */
+  const packageJson = await readFile(join(target, 'package.json'), 'utf8')
+
+  assert.equal(packageJson.includes('"name": "dash-starter"'), true)
+})

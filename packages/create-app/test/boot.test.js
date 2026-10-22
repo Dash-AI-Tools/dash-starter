@@ -42,7 +42,7 @@ test('the stack is started and seeded', async () => {
     calls.map((call) => call.args.join(' ')),
     [
       'compose up -d',
-      'compose up -d --wait --wait-timeout 300',
+      'compose up -d --wait --wait-timeout 900',
       'compose exec -T api node ace db:seed',
     ]
   )

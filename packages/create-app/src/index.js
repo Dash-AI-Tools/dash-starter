@@ -117,7 +117,9 @@ export async function run(argv, options = {}) {
     installed = result.code === 0
 
     if (!installed) {
-      logger('The dependencies could not be installed. Run "npm install" in the project and start the stack again.')
+      logger(
+        'The dependencies could not be installed. Run "npm install" in the project and start the stack again.'
+      )
     }
   }
 
@@ -140,10 +142,14 @@ export async function run(argv, options = {}) {
     }
   }
 
+  let booted = false
+
   if (steps.boot && installed) {
     if (await hasDocker({ run: runCommand })) {
       logger('Starting the stack...')
       const stack = await bootStack(dir, { run: runCommand })
+
+      booted = stack.ok
 
       if (!stack.ok) {
         logger(`The stack did not start: ${stack.reason}`)
@@ -167,7 +173,7 @@ export async function run(argv, options = {}) {
     logger('  npm install')
   }
 
-  if (!steps.boot || !installed) {
+  if (!booted) {
     logger('  docker compose up -d')
     logger('  docker compose exec api node ace db:seed')
   }
