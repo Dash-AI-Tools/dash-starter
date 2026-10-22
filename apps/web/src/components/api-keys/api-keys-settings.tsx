@@ -35,6 +35,12 @@ import { useI18n } from '@/lib/i18n'
 const SCOPES = ['mcp:read', 'mcp:write'] as const
 
 /**
+ * The name of the MCP server. The installer replaces it with the slug of the
+ * product, so it lives in a string and not in the key of an object.
+ */
+const MCP_SERVER_NAME = 'dash'
+
+/**
  * The values of the form that creates a key.
  */
 type CreateValues = {
@@ -175,7 +181,7 @@ function SecretDialog({ secret, onClose }: { secret: string | null; onClose: () 
   const snippet = JSON.stringify(
     {
       mcpServers: {
-        dash: {
+        [MCP_SERVER_NAME]: {
           url: `${API_BASE_URL}/mcp`,
           headers: { Authorization: `Bearer ${secret ?? ''}` },
         },

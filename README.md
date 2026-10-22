@@ -2,11 +2,7 @@
 
 A production-ready **AI SaaS starter**: accounts, organizations, billing, transactional email, a model-agnostic AI layer, in-app chat and an MCP server — wired together, in English and Spanish.
 
-Use it as the starting point for your next AI product, or run the installer to generate a rebranded project in one command.
-
-```bash
-npx create-dash-starter my-product
-```
+Use it as the starting point for your next AI product.
 
 ---
 
@@ -182,6 +178,18 @@ Flags (all optional, all work with `--yes` for a non-interactive run):
 --no-git               Skip `git init`
 --github               Create a private GitHub repository with `gh`
 ```
+
+### Releases
+
+The installer and the template are released together: the version of the installer is the version of the template, and the installer downloads the release tagged `v<version>`. To publish a new version, bump the version of the root `package.json`, the version of `packages/create-app/package.json` and the version of `packages/create-app/template.json`, then tag the commit:
+
+```bash
+npm version 0.2.0 --workspaces --include-workspace-root --no-git-tag-version
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+The tag is what the installer resolves, so a tag that does not exist makes the installer fail with a clear message instead of generating a project from an older release.
 
 ---
 

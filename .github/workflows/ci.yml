@@ -11,11 +11,27 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The signing key of the ephemeral databases of the pipeline. It protects
-  # nothing: the data of the pipeline lives and dies with the job.
+  # The environment of the API. The jobs that need a database override the
+  # name of it. The signing key protects nothing: the data of the pipeline
+  # lives and dies with the job.
   APP_KEY: ci-only-0123456789abcdef0123456789abcdef
   CREEM_ENV: test
   AI_PROVIDER: stub
+  PORT: 3333
+  HOST: localhost
+  LOG_LEVEL: info
+  APP_URL: http://localhost:3333
+  WEB_URL: http://localhost:5173
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_USER: dash
+  DB_PASSWORD: dash
+  SESSION_DRIVER: database
+  DEFAULT_LOCALE: en
+  MAIL_TRANSPORT: fake
+  DRIVE_DISK: local
+  LIMITER_STORE: memory
+  MAIL_FROM: Dash <no-reply@dash-starter.test>
 
 jobs:
   lint-typecheck:
@@ -30,6 +46,10 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Generate the types of the API
+        run: node ace codegen
+        working-directory: apps/api
 
       - name: Check the formatting
         run: npm run format:check
@@ -59,17 +79,7 @@ jobs:
           --health-retries 10
     env:
       NODE_ENV: test
-      PORT: 3333
-      HOST: localhost
-      LOG_LEVEL: info
-      APP_URL: http://localhost:3333
-      WEB_URL: http://localhost:5173
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USER: dash
-      DB_PASSWORD: dash
       DB_DATABASE: dash_test
-      MAIL_FROM: Dash <no-reply@dash-starter.test>
     steps:
       - uses: actions/checkout@v4
 
@@ -79,6 +89,10 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Generate the types of the API
+        run: node ace codegen
+        working-directory: apps/api
 
       - name: Run the migrations
         run: node ace migration:run --force
@@ -91,17 +105,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      PORT: 3333
-      HOST: localhost
-      LOG_LEVEL: info
-      APP_URL: http://localhost:3333
-      WEB_URL: http://localhost:5173
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USER: dash
-      DB_PASSWORD: dash
       DB_DATABASE: dash
-      MAIL_FROM: Dash <no-reply@dash-starter.test>
     steps:
       - uses: actions/checkout@v4
 
@@ -155,3 +159,58 @@ jobs:
           name: playwright-traces
           path: e2e/test-results
           retention-days: 7
+
+  installer:
+    name: Installer
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: dash
+          POSTGRES_PASSWORD: dash
+          POSTGRES_DB: dash_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dash -d dash_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      DB_DATABASE: dash_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate a project
+        run: >
+          node packages/create-app/bin/create-dash-starter.js "$RUNNER_TEMP/project"
+          --template . --name "Acme AI" --slug acme-ai --locale es
+          --yes --no-install --no-boot --no-git
+
+      - name: Install the dependencies of the project
+        working-directory: ${{ runner.temp }}/project
+        run: npm install
+
+      - name: Generate the types of the API of the project
+        working-directory: ${{ runner.temp }}/project/apps/api
+        run: node ace codegen
+
+      - name: Run the migrations of the project
+        working-directory: ${{ runner.temp }}/project/apps/api
+        run: node ace migration:run --force
+
+      - name: Lint, type-check and test the project
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test

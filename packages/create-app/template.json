@@ -1,7 +1,7 @@
 {
   "name": "dash-starter",
   "version": "0.1.0",
-  "description": "Replacement contract for the create-dash-starter installer. Every literal string in `tokens` is replaced by the matching field of the collected project identity.",
+  "description": "Replacement contract of the create-dash-starter installer. Every literal of `tokens` is replaced by the value of the collected identity, and the files of `removePaths`, `removeSections` and `removeLines` are taken out of the generated project.",
   "identity": {
     "name": {
       "description": "Product name shown in the UI, emails and page titles.",
@@ -22,15 +22,22 @@
     },
     "email": {
       "description": "Support contact shown in the footer and in every transactional email.",
-      "default": "support@dash-starter.test"
+      "default": "support@{slug}.test"
     }
   },
   "tokens": {
-    "Dash": "name",
+    "The AI SaaS starter for launching your next product": "description",
+    "support@dash-starter.test": "email",
+    "dash-test-storage": "storageTest",
+    "dash-storage": "storage",
+    "dash_consent": "consent",
+    "dash_test": "codeTest",
     "dash-starter": "slug",
     "dash starter": "name",
-    "The AI SaaS starter for launching your next product": "description",
-    "support@dash-starter.test": "email"
+    "dash_": "prefix",
+    "@dash/": "scope",
+    "Dash": "name",
+    "dash": "slug"
   },
   "files": ["**/*"],
   "exclude": [
@@ -40,11 +47,19 @@
     "**/dist/**",
     "**/build/**",
     "**/.adonisjs/**",
+    "**/.vitest/**",
+    ".claude/**",
+    ".serena/**",
+    ".opencode/**",
+    "**/.DS_Store",
+    "**/*.log",
     "package-lock.json",
     "**/package-lock.json",
     "openspec/changes/**",
     "packages/create-app/**"
   ],
   "removePaths": ["packages/create-app", "openspec/changes"],
+  "removeSections": [{ "file": "README.md", "heading": "## The installer" }],
+  "removeLines": [{ "file": "README.md", "text": "packages/create-app" }],
   "removeWorkflowJobs": ["installer"]
 }
