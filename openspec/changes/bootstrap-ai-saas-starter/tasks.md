@@ -108,11 +108,15 @@
 
 ## 11. Public site, legal pages and cookie consent
 
-- [ ] 11.1 Public layout (header with language switcher/auth-aware links, footer with terms/privacy/cookie preferences/contact) and per-page localized title/meta/OG; component tests
-- [ ] 11.2 Rewrite landing page as generic placeholder template (hero, features, pricing teaser, FAQ, CTA) reusing current layout and tokens; render test in both locales
-- [ ] 11.3 Pricing page from `/api/v1/plans` with interval toggle, yearly savings, unavailable-interval state and plan hand-off to signup/onboarding; component tests
-- [ ] 11.4 `/terms` and `/privacy` (with cookie table) in both locales, version + date, template notice; terms version constant shared with signup; render tests
-- [ ] 11.5 Consent module: cookie `{v, categories, ts}` with 12-month expiry, context/hook, banner (accept/reject/customize), preferences dialog, `ConsentScript` gating, version bump re-prompt; Vitest tests for gating, expiry and version bump
+- [x] 11.1 Public layout (header with language switcher/auth-aware links, footer with terms/privacy/cookie preferences/contact) and per-page localized title/meta/OG; component tests
+  - NOTE: the public pages share `PublicLayout` (header + `<Outlet/>` + footer) mounted on a route group in `main.tsx`; the app and auth pages keep their own layouts.
+- [x] 11.2 Rewrite landing page as generic placeholder template (hero, features, pricing teaser, FAQ, CTA) reusing current layout and tokens; render test in both locales
+- [x] 11.3 Pricing page from `/api/v1/plans` with interval toggle, yearly savings, unavailable-interval state and plan hand-off to signup/onboarding; component tests
+  - NOTE: the hand-off of a paid plan goes to `/signup?plan=<key>&interval=<interval>` and the free plan to a plain `/signup`; a signed-in visitor lands on `/app` instead.
+- [x] 11.4 `/terms` and `/privacy` (with cookie table) in both locales, version + date, template notice; terms version constant shared with signup; render tests
+  - NOTE: the shared constants live in `apps/api/app/legal.ts` (`TERMS_VERSION`, `TERMS_UPDATED_AT`, `PRIVACY_UPDATED_AT`), imported by the API through the `#legal` alias and by the web through the package export.
+- [x] 11.5 Consent module: cookie `{v, categories, ts}` with 12-month expiry, context/hook, banner (accept/reject/customize), preferences dialog, `ConsentScript` gating, version bump re-prompt; Vitest tests for gating, expiry and version bump
+  - NOTE: the cookie is `dash_consent` with the policy version `2026-01-01` and a 12-month expiry; a version bump clears the stored consent and re-prompts.
 
 ## 12. AI provider
 

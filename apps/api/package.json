@@ -7,7 +7,7 @@
   "exports": {
     "./data": "./.adonisjs/client/data.d.ts",
     "./registry": "./.adonisjs/client/registry/index.ts",
-    "./terms": "./app/terms.ts"
+    "./legal": "./app/legal.ts"
   },
   "scripts": {
     "start": "node bin/server.js",
@@ -22,7 +22,7 @@
   "imports": {
     "#app/*": "./app/*.js",
     "#brand": "./app/brand.js",
-    "#terms": "./app/terms.js",
+    "#legal": "./app/legal.js",
     "#controllers/*": "./app/controllers/*.js",
     "#exceptions/*": "./app/exceptions/*.js",
     "#models/*": "./app/models/*.js",

@@ -1,8 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router'
 import './index.css'
+import PublicLayout from './layouts/PublicLayout'
 import { I18nProvider } from './lib/i18n'
+import { ConsentProvider } from './providers/consent-provider'
 import { AppProviders } from './providers/app-providers'
 import { ThemeProvider } from './providers/theme-provider'
 import Home from './pages/Home'
@@ -13,8 +15,20 @@ const page = (load: Loader) => ({
   lazy: async () => ({ Component: (await load()).default }),
 })
 
-const routes = [
-  { path: '/', element: <Home /> },
+const routes: RouteObject[] = [
+  {
+    /**
+     * The public site: the landing page, the pricing and the legal pages
+     * share the header and the footer.
+     */
+    element: <PublicLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'pricing', ...page(() => import('./pages/PricingPage')) },
+      { path: 'terms', ...page(() => import('./pages/TermsPage')) },
+      { path: 'privacy', ...page(() => import('./pages/PrivacyPage')) },
+    ],
+  },
   { path: '/login', ...page(() => import('./pages/LoginPage')) },
   { path: '/signup', ...page(() => import('./pages/SignupPage')) },
   { path: '/verify-email', ...page(() => import('./pages/VerifyEmailPage')) },
@@ -64,11 +78,13 @@ const router = createBrowserRouter(routes)
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
-      <ThemeProvider>
-        <AppProviders>
-          <RouterProvider router={router} />
-        </AppProviders>
-      </ThemeProvider>
+      <ConsentProvider>
+        <ThemeProvider>
+          <AppProviders>
+            <RouterProvider router={router} />
+          </AppProviders>
+        </ThemeProvider>
+      </ConsentProvider>
     </I18nProvider>
   </StrictMode>,
 )

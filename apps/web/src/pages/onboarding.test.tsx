@@ -4,12 +4,23 @@ import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import type { ReactNode } from 'react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { API_BASE_URL } from '@/lib/api'
 import { I18nProvider } from '@/lib/i18n'
 import AppIndexPage from '@/pages/AppIndexPage'
 import OnboardingPage from '@/pages/OnboardingPage'
 import { server } from '@/test/server'
+
+/**
+ * The redirect to the payment provider leaves the application, so it is
+ * replaced here to follow the flow without leaving the browser of the test.
+ */
+const { redirectTo } = vi.hoisted(() => ({ redirectTo: vi.fn() }))
+
+vi.mock('@/lib/billing', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/billing')>()),
+  redirectTo,
+}))
 
 const SESSION = `${API_BASE_URL}/api/v1/auth/session`
 const ONBOARDING = `${API_BASE_URL}/api/v1/onboarding`
@@ -18,6 +29,7 @@ const INVITES = `${API_BASE_URL}/api/v1/onboarding/invites`
 const PLAN = `${API_BASE_URL}/api/v1/onboarding/plan`
 const COMPLETE = `${API_BASE_URL}/api/v1/onboarding/complete`
 const ORGANIZATIONS = `${API_BASE_URL}/api/v1/orgs`
+const CHECKOUT = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/checkout`
 
 const NOW = '2026-01-01T00:00:00.000Z'
 
@@ -277,6 +289,35 @@ describe('The setup of an organization', () => {
     await waitFor(() => {
       expect(screen.getByTestId('location')).toHaveTextContent('/app')
     })
+  })
+
+  it('sends the visitor to the payment provider when the plan is paid', async () => {
+    let body: unknown
+
+    serveOnboarding(
+      () => state('complete', { plan: { key: 'pro', interval: 'year' } }),
+      [
+        http.post(CHECKOUT, async ({ request }) => {
+          body = await request.json()
+          return HttpResponse.json({ checkoutUrl: 'https://checkout.test/prod_pro_year' })
+        }),
+        http.post(COMPLETE, () => HttpResponse.json({ onboarding: state('done') })),
+      ]
+    )
+
+    const visitor = userEvent.setup()
+    renderOnboarding()
+
+    expect(
+      await screen.findByText('You will be taken to the payment provider to pay for Pro.')
+    ).toBeInTheDocument()
+
+    await visitor.click(screen.getByRole('button', { name: 'Finish setup' }))
+
+    await waitFor(() => {
+      expect(redirectTo).toHaveBeenCalledWith('https://checkout.test/prod_pro_year')
+    })
+    expect(body).toEqual({ plan: 'pro', interval: 'year' })
   })
 
   it('does not show the setup again when the organization is ready', async () => {

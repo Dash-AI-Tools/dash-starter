@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
+import { redirectTo } from '@/lib/billing'
 import { useI18n, type TranslationKey } from '@/lib/i18n'
 import type { Onboarding, OnboardingStep } from '@/lib/onboarding'
 
@@ -512,11 +513,25 @@ function PlanStep({ onDone }: { onDone: (state: Onboarding) => void }) {
 /**
  * The last screen: the organization is ready and the visitor lands on its
  * dashboard.
+ *
+ * A paid plan goes to the payment provider from here: the checkout is opened
+ * before the setup is closed, so a refused payment leaves the setup open and
+ * the visitor can try again.
  */
-function CompleteStep({ onDone }: { onDone: (state: Onboarding) => void }) {
+function CompleteStep({
+  onboarding,
+  onDone,
+}: {
+  onboarding: Onboarding
+  onDone: (state: Onboarding) => void
+}) {
   const { t } = useI18n()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const plan = onboarding.plan
+  const slug = onboarding.organization?.slug
+  const paid = !!plan && plan.key !== 'free'
 
   return (
     <Card>
@@ -526,6 +541,12 @@ function CompleteStep({ onDone }: { onDone: (state: Onboarding) => void }) {
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {paid ? (
+          <p className="text-sm text-muted-foreground">
+            {t('planCheckoutHint', { plan: planName(plan.key) })}
+          </p>
+        ) : null}
+
         {error ? (
           <p role="alert" className="text-sm text-destructive">
             {error}
@@ -540,7 +561,31 @@ function CompleteStep({ onDone }: { onDone: (state: Onboarding) => void }) {
             setError(null)
 
             try {
+              let checkoutUrl: string | null = null
+
+              if (paid && slug) {
+                const checkout = await client.api.billing.checkout({
+                  params: { orgSlug: slug },
+                  body: {
+                    plan: plan.key,
+                    interval: plan.interval === 'year' ? ('year' as const) : ('month' as const),
+                  },
+                })
+
+                checkoutUrl = checkout.checkoutUrl
+              }
+
               const response = await client.api.onboarding.complete({})
+
+              /**
+               * The visitor leaves the application to pay, so the wizard is
+               * not moved: the setup is already closed in the server.
+               */
+              if (checkoutUrl) {
+                redirectTo(checkoutUrl)
+                return
+              }
+
               onDone(response.onboarding)
             } catch (failure) {
               setError(toApiFailure(failure).error.message || t('unknownError'))
@@ -594,7 +639,7 @@ export default function OnboardingWizard({ onboarding }: { onboarding: Onboardin
       {onboarding.step === 'use-case' ? <UseCaseStep onDone={onDone} /> : null}
       {onboarding.step === 'invites' ? <InvitesStep onDone={onDone} /> : null}
       {onboarding.step === 'plan' ? <PlanStep onDone={onDone} /> : null}
-      {onboarding.step === 'complete' ? <CompleteStep onDone={onDone} /> : null}
+      {onboarding.step === 'complete' ? <CompleteStep onboarding={onboarding} onDone={onDone} /> : null}
     </div>
   )
 }

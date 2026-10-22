@@ -28,6 +28,7 @@ export const onboarding = {
   planBody: 'Empieza con el plan gratuito y sube cuando quieras.',
   planFree: 'Continuar con el plan gratuito',
   planCheckout: 'Continuar con {plan}',
+  planCheckoutHint: 'Te llevaremos al proveedor de pagos para pagar {plan}.',
   planPreselected: 'Hemos preseleccionado {plan} desde la página de precios.',
   complete: 'Terminar la configuración',
   completing: 'Configurando…',

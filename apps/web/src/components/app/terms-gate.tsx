@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TERMS_VERSION } from '@dash/api/terms'
+import { TERMS_VERSION } from '@dash/api/legal'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

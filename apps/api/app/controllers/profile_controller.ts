@@ -11,7 +11,7 @@ import {
   canDeleteAccount,
 } from '#services/profile'
 import { destroyUserSessions, invalidateUserSessions } from '#services/sessions'
-import { TERMS_VERSION } from '#terms'
+import { TERMS_VERSION } from '#legal'
 import UserTransformer from '#transformers/user_transformer'
 import {
   changeEmailValidator,

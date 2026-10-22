@@ -11,15 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { OPEN_COOKIE_PREFERENCES } from '@/lib/consent'
 import { useI18n } from '@/lib/i18n'
 import { orgPath } from '@/lib/nav'
 import { useCurrentUser, useSignOut } from '@/lib/session'
-
-/**
- * The event the consent module listens to, so the preferences of the cookies
- * can be opened from anywhere in the app.
- */
-export const OPEN_COOKIE_PREFERENCES = 'dash:open-cookie-preferences'
 
 /**
  * The menu of the account of the visitor.

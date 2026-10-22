@@ -76,6 +76,10 @@ export const legal = {
   cookieSession: 'Cookie de sesión que mantiene tu acceso',
   cookieXsrf: 'Token CSRF que protege las peticiones que modifican estado',
   cookieLocale: 'Recuerda el idioma que elegiste',
-  cookieTheme: 'Recuerda tu tema claro u oscuro',
+  cookieTheme: 'Recuerda tu tema claro u oscuro en el almacenamiento del navegador',
   cookieConsent: 'Recuerda tus preferencias de cookies y cuándo las hiciste',
+  cookieDurationSession: 'Hasta cerrar el navegador',
+  cookieDurationYear: '1 año',
+  cookieDurationMonths: '12 meses',
+  cookieDurationUntilRevoked: 'Hasta que retires el consentimiento',
 } as const
