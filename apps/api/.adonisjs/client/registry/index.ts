@@ -210,6 +210,42 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"invitations"],[1,"token"],[0,"accept"]],
     types: placeholder as Registry['invitation.accept']['types'],
   },
+  'onboarding.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/onboarding',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"]],
+    types: placeholder as Registry['onboarding.show']['types'],
+  },
+  'onboarding.use_case': {
+    methods: ["POST"],
+    pattern: '/api/v1/onboarding/use-case',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"use-case"]],
+    types: placeholder as Registry['onboarding.use_case']['types'],
+  },
+  'onboarding.invites': {
+    methods: ["POST"],
+    pattern: '/api/v1/onboarding/invites',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"invites"]],
+    types: placeholder as Registry['onboarding.invites']['types'],
+  },
+  'onboarding.plan': {
+    methods: ["POST"],
+    pattern: '/api/v1/onboarding/plan',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"plan"]],
+    types: placeholder as Registry['onboarding.plan']['types'],
+  },
+  'onboarding.complete': {
+    methods: ["POST"],
+    pattern: '/api/v1/onboarding/complete',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"complete"]],
+    types: placeholder as Registry['onboarding.complete']['types'],
+  },
+  'onboarding.accept_invitation': {
+    methods: ["POST"],
+    pattern: '/api/v1/onboarding/invitations/:id/accept',
+    tokens: [[0,"api"],[0,"v1"],[0,"onboarding"],[0,"invitations"],[1,"id"],[0,"accept"]],
+    types: placeholder as Registry['onboarding.accept_invitation']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

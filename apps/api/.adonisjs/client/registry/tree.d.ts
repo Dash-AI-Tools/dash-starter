@@ -60,4 +60,12 @@ export interface ApiDefinition {
     show: typeof routes['invitation.show']
     accept: typeof routes['invitation.accept']
   }
+  onboarding: {
+    show: typeof routes['onboarding.show']
+    useCase: typeof routes['onboarding.use_case']
+    invites: typeof routes['onboarding.invites']
+    plan: typeof routes['onboarding.plan']
+    complete: typeof routes['onboarding.complete']
+    acceptInvitation: typeof routes['onboarding.accept_invitation']
+  }
 }

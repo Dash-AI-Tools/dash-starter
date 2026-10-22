@@ -21,6 +21,7 @@ const routes = [
   { path: '/forgot-password', ...page(() => import('./pages/ForgotPasswordPage')) },
   { path: '/reset-password', ...page(() => import('./pages/ResetPasswordPage')) },
   { path: '/invitations/:token/accept', ...page(() => import('./pages/AcceptInvitationPage')) },
+  { path: '/onboarding', ...page(() => import('./pages/OnboardingPage')) },
   { path: '/app', ...page(() => import('./pages/AppIndexPage')) },
   {
     path: '/app/:orgSlug',

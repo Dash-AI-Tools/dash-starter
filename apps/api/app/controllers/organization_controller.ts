@@ -37,7 +37,7 @@ export default class OrganizationController {
    */
   async store(ctx: HttpContext) {
     const { request, auth, response, serialize, i18n } = ctx
-    const { name, slug } = await request.validateUsing(createOrganizationValidator)
+    const { name, slug, defaultLocale } = await request.validateUsing(createOrganizationValidator)
 
     const wanted = slug ?? slugify(name)
     const taken = await Organization.query().where('slug', wanted).first()
@@ -51,7 +51,7 @@ export default class OrganizationController {
     const organization = await Organization.create({
       name,
       slug: taken ? await availableSlug(wanted) : wanted,
-      defaultLocale: i18n.locale,
+      defaultLocale: defaultLocale ?? i18n.locale,
     })
 
     const membership = await Membership.create({

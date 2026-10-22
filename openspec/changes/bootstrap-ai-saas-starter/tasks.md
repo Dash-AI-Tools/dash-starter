@@ -79,9 +79,12 @@
 
 ## 9. Organization onboarding
 
-- [ ] 9.1 API onboarding state endpoints (save step, complete) persisting progress; tests for resume
-- [ ] 9.2 Web onboarding wizard (details, use case, invites skippable, plan selection with preselect from pricing query) and redirect for users without memberships or with pending invites; component tests for resume and skip
-- [ ] 9.3 Completion: mark onboarded, send welcome email, land on dashboard with checklist; functional test
+- [x] 9.1 API onboarding state endpoints (save step, complete) persisting progress; tests for resume
+  - NOTE: the progress lives in `organizations.onboarding_state` (jsonb), so no migration is needed; the step is derived from the data saved so far.
+- [x] 9.2 Web onboarding wizard (details, use case, invites skippable, plan selection with preselect from pricing query) and redirect for users without memberships or with pending invites; component tests for resume and skip
+  - NOTE: the checkout of a paid plan lands with the billing group (10.6); until then the plan step records the choice and the setup finishes on the free plan. The catalog of the plans arrives with 10.4, so the plan key is shown as it is.
+- [x] 9.3 Completion: mark onboarded, send welcome email, land on dashboard with checklist; functional test
+  - NOTE: the welcome email is the one of the email catalog (6.3), rendered in the language of the user; the checklist is the one of the dashboard (8.5).
 
 ## 10. Billing plans and Creem payments
 

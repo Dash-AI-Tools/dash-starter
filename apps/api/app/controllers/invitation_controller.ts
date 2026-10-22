@@ -1,24 +1,10 @@
-import {
-  E_INVITATION_INVALID,
-  E_INVITATION_MISMATCH,
-  E_SEAT_LIMIT_REACHED,
-} from '#exceptions/errors'
-import OrganizationInvitation from '#mails/organization_invitation'
+import { E_INVITATION_INVALID } from '#exceptions/errors'
 import Invitation from '#models/invitation'
-import Membership from '#models/membership'
-import { entitlements } from '#services/entitlements'
-import {
-  generateInvitationToken,
-  hashInvitationToken,
-  INVITATION_TTL_DAYS,
-  invitationAcceptUrl,
-} from '#services/invitations'
-import { usedSeats } from '#services/organizations'
+import { acceptInvitation, hashInvitationToken, inviteMember } from '#services/invitations'
 import InvitationTransformer from '#transformers/invitation_transformer'
 import MembershipTransformer from '#transformers/membership_transformer'
 import { createInvitationValidator } from '#validators/organization'
 import type { HttpContext } from '@adonisjs/core/http'
-import mail from '@adonisjs/mail/services/main'
 import { errors as VineErrors } from '@vinejs/vine'
 import { DateTime } from 'luxon'
 
@@ -56,79 +42,7 @@ export default class InvitationController {
 
     const { email, role } = await request.validateUsing(createInvitationValidator)
 
-    /**
-     * A member of the organization cannot be invited again.
-     */
-    const member = await Membership.query()
-      .where('organizationId', organization.id)
-      .whereHas('user', (query) => query.where('email', email))
-      .first()
-
-    if (member) {
-      throw new VineErrors.E_VALIDATION_ERROR([
-        {
-          field: 'email',
-          message: i18n.t('organizations.already_member', { email }),
-          rule: 'already_member',
-        },
-      ])
-    }
-
-    /**
-     * Neither can somebody with a pending invitation.
-     */
-    const pending = await Invitation.query()
-      .where('organizationId', organization.id)
-      .where('email', email)
-      .whereNull('acceptedAt')
-      .whereNull('revokedAt')
-      .where('expiresAt', '>', new Date())
-      .first()
-
-    if (pending) {
-      throw new VineErrors.E_VALIDATION_ERROR([
-        {
-          field: 'email',
-          message: i18n.t('organizations.already_invited', { email }),
-          rule: 'already_invited',
-        },
-      ])
-    }
-
-    /**
-     * The invitation takes a seat of the plan, so the plan has to have one
-     * left.
-     */
-    if ((await usedSeats(organization)) >= entitlements(organization).seats) {
-      throw new E_SEAT_LIMIT_REACHED()
-    }
-
-    const inviter = auth.getUserOrFail()
-    const { token, hash } = generateInvitationToken()
-
-    const invitation = await Invitation.create({
-      organizationId: organization.id,
-      invitedById: inviter.id,
-      email,
-      role,
-      tokenHash: hash,
-      expiresAt: DateTime.now().plus({ days: INVITATION_TTL_DAYS }),
-    })
-
-    /**
-     * The invitation travels in the language of the organization, so every
-     * member of the team reads it in the same language.
-     */
-    await mail.sendLater(
-      new OrganizationInvitation({
-        email,
-        organizationName: organization.name,
-        inviterName: inviter.fullName,
-        acceptUrl: invitationAcceptUrl(token),
-        expiresAt: invitation.expiresAt.toJSDate(),
-        locale: organization.defaultLocale,
-      })
-    )
+    const invitation = await inviteMember(organization, auth.getUserOrFail(), email, role, i18n)
 
     response.status(201)
 
@@ -198,35 +112,10 @@ export default class InvitationController {
 
     const invitation = await this.findInvitation(ctx.params.token)
 
-    if (!invitation.isPending) {
-      throw new E_INVITATION_INVALID()
-    }
-
-    const user = auth.getUserOrFail()
-
-    if (String(invitation.email).toLowerCase() !== String(user.email).toLowerCase()) {
-      throw new E_INVITATION_MISMATCH()
-    }
-
-    const membership = await Membership.query()
-      .where('organizationId', invitation.organizationId)
-      .where('userId', user.id)
-      .first()
-
-    const joined =
-      membership ??
-      (await Membership.create({
-        organizationId: invitation.organizationId,
-        userId: user.id,
-        role: invitation.role,
-      }))
-
-    invitation.acceptedAt = DateTime.now()
-    await invitation.save()
-    await joined.load('user')
+    const membership = await acceptInvitation(invitation, auth.getUserOrFail())
 
     return serialize.withoutWrapping({
-      membership: MembershipTransformer.transform(joined),
+      membership: MembershipTransformer.transform(membership),
     })
   }
 

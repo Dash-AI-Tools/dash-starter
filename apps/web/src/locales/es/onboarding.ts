@@ -23,6 +23,7 @@ export const onboarding = {
   invitesBody: 'Invita a algunos compañeros ahora, o sáltalo y hazlo más tarde.',
   invitesSend: 'Enviar invitaciones',
   invitesSkip: 'Ahora no',
+  inviteAddAnother: 'Añadir otro correo',
   planTitle: 'Elige un plan',
   planBody: 'Empieza con el plan gratuito y sube cuando quieras.',
   planFree: 'Continuar con el plan gratuito',

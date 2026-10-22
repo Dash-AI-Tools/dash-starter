@@ -74,3 +74,13 @@ export const E_INVITATION_INVALID = createError(
   'E_INVITATION_INVALID',
   404
 )
+
+/**
+ * The setup of the organization has not started yet, so there is nothing to
+ * save the progress in.
+ */
+export const E_ONBOARDING_NOT_STARTED = createError(
+  'The setup of the organization has not started yet',
+  'E_ONBOARDING_NOT_STARTED',
+  422
+)

@@ -97,5 +97,28 @@ router
     router
       .post('invitations/:token/accept', [controllers.Invitation, 'accept'])
       .use(middleware.auth())
+
+    /**
+     * The setup of the first organization of the user: the progress is saved
+     * after every step, so the user can come back to it later.
+     */
+    router
+      .group(() => {
+        router.get('onboarding', [controllers.Onboarding, 'show'])
+        router.post('onboarding/use-case', [controllers.Onboarding, 'useCase'])
+        router.post('onboarding/invites', [controllers.Onboarding, 'invites'])
+        router.post('onboarding/plan', [controllers.Onboarding, 'plan'])
+        router.post('onboarding/complete', [controllers.Onboarding, 'complete'])
+      })
+      .use(middleware.auth())
+
+    /**
+     * The invitations of the user are accepted without the token of the
+     * link, because the address of the account is the one the invitation
+     * was sent to. The address has to be confirmed for that.
+     */
+    router
+      .post('onboarding/invitations/:id/accept', [controllers.Onboarding, 'acceptInvitation'])
+      .use([middleware.auth(), middleware.verified()])
   })
   .prefix('/api/v1')

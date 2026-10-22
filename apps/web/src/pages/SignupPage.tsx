@@ -67,6 +67,16 @@ export default function SignupPage() {
   const email = params.get('email') ?? ''
   const invitation = params.get('invitation')
 
+  /**
+   * A plan chosen in the pricing page travels to the setup of the workspace,
+   * so it comes preselected in the plan step.
+   */
+  const plan = params.get('plan')
+  const interval = params.get('interval')
+  const planQuery = plan
+    ? `?plan=${encodeURIComponent(plan)}${interval ? `&interval=${encodeURIComponent(interval)}` : ''}`
+    : ''
+
   const schema = useMemo(
     () =>
       z
@@ -121,7 +131,9 @@ export default function SignupPage() {
            * right away, instead of going through the onboarding.
            */
           navigate(
-            invitation ? `/invitations/${invitation}/accept` : (response.redirectTo ?? '/onboarding'),
+            invitation
+              ? `/invitations/${invitation}/accept`
+              : `${response.redirectTo ?? '/onboarding'}${planQuery}`,
             { replace: true }
           )
         }}

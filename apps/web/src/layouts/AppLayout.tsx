@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useParams } from 'react-router'
+import { Navigate, Outlet, useParams } from 'react-router'
 import { Toaster } from 'sonner'
 import { ErrorBoundary } from '@/components/app/error-boundary'
 import { SearchPalette } from '@/components/app/search-palette'
@@ -9,7 +9,7 @@ import { TopBar } from '@/components/app/top-bar'
 import { RequireAuth } from '@/components/auth/require-auth'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { isNotFound } from '@/lib/api-error'
-import { useOrganization } from '@/lib/organizations'
+import { ONBOARDING_PATH, useOrganization, useOrganizations } from '@/lib/organizations'
 import { useSessionExpiredRedirect } from '@/lib/session'
 import { useIsMobile } from '@/lib/use-is-mobile'
 import NotFoundPage from '@/pages/NotFoundPage'
@@ -39,6 +39,7 @@ function AppShell({ orgSlug }: { orgSlug: string }) {
   const [collapsed, setCollapsed] = useState(readCollapsed)
 
   const { error, isPending } = useOrganization(orgSlug)
+  const { data: organizations, isPending: organizationsPending } = useOrganizations()
 
   useSessionExpiredRedirect()
 
@@ -46,6 +47,16 @@ function AppShell({ orgSlug }: { orgSlug: string }) {
    * An organization the visitor does not belong to does not exist for them.
    */
   if (error && isNotFound(error)) {
+    /**
+     * A visitor without an organization has nothing to open: the setup of the
+     * first one starts instead.
+     */
+    if (organizationsPending) return null
+
+    if (!organizations?.length) {
+      return <Navigate to={ONBOARDING_PATH} replace />
+    }
+
     return <NotFoundPage />
   }
 

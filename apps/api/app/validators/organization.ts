@@ -19,11 +19,13 @@ const slug = () =>
 
 /**
  * The payload of the creation of an organization. The slug is optional: the
- * API suggests one built from the name.
+ * API suggests one built from the name, and so is the language, which
+ * defaults to the one of the request.
  */
 export const createOrganizationValidator = vine.create({
   name: vine.string().trim().minLength(1).maxLength(120),
   slug: slug().optional(),
+  defaultLocale: vine.enum(LOCALES).optional(),
 })
 
 /**

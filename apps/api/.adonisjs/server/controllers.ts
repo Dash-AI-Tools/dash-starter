@@ -9,6 +9,7 @@ export const controllers = {
   Health: () => import('#controllers/health_controller'),
   Invitation: () => import('#controllers/invitation_controller'),
   Member: () => import('#controllers/member_controller'),
+  Onboarding: () => import('#controllers/onboarding_controller'),
   Organization: () => import('#controllers/organization_controller'),
   PasswordReset: () => import('#controllers/password_reset_controller'),
   Profile: () => import('#controllers/profile_controller'),

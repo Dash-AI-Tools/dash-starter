@@ -23,6 +23,7 @@ export const onboarding = {
   invitesBody: 'Invite a few colleagues now, or skip this and do it later.',
   invitesSend: 'Send invitations',
   invitesSkip: 'Skip for now',
+  inviteAddAnother: 'Add another email',
   planTitle: 'Choose a plan',
   planBody: 'Start on the free plan and upgrade whenever you are ready.',
   planFree: 'Continue on the free plan',

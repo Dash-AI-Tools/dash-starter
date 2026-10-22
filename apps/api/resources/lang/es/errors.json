@@ -15,5 +15,6 @@
   "seat_limit_reached": "Tu plan no tiene más plazas. Mejora el plan para invitar a más personas",
   "invitation_mismatch": "Esta invitación se envió a un correo electrónico diferente",
   "invitation_invalid": "Este enlace de invitación no es válido",
+  "onboarding_not_started": "La configuración de la organización todavía no ha empezado",
   "membership_not_found": "No se encontró el miembro"
 }

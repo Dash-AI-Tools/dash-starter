@@ -38,6 +38,12 @@ export type ScannedRoutes = {
     'invitation.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
     'invitation.accept': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'onboarding.show': { paramsTuple?: []; params?: {} }
+    'onboarding.use_case': { paramsTuple?: []; params?: {} }
+    'onboarding.invites': { paramsTuple?: []; params?: {} }
+    'onboarding.plan': { paramsTuple?: []; params?: {} }
+    'onboarding.complete': { paramsTuple?: []; params?: {} }
+    'onboarding.accept_invitation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -51,6 +57,7 @@ export type ScannedRoutes = {
     'member.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'onboarding.show': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -64,6 +71,7 @@ export type ScannedRoutes = {
     'member.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.show': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'onboarding.show': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.session.store': { paramsTuple?: []; params?: {} }
@@ -82,6 +90,11 @@ export type ScannedRoutes = {
     'member.leave': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.store': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'invitation.accept': { paramsTuple: [ParamValue]; params: {'token': ParamValue} }
+    'onboarding.use_case': { paramsTuple?: []; params?: {} }
+    'onboarding.invites': { paramsTuple?: []; params?: {} }
+    'onboarding.plan': { paramsTuple?: []; params?: {} }
+    'onboarding.complete': { paramsTuple?: []; params?: {} }
+    'onboarding.accept_invitation': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }

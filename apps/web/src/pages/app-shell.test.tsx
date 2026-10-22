@@ -118,6 +118,7 @@ function renderShell(page = <DashboardPage />) {
               <Route index element={page} />
             </Route>
             <Route path="/login" element={<p>Login page</p>} />
+            <Route path="/onboarding" element={<p>Onboarding page</p>} />
           </Routes>
         </MemoryRouter>
       </I18nProvider>
@@ -285,6 +286,22 @@ describe('The shell of the app', () => {
     renderShell()
 
     expect(await screen.findByRole('heading', { name: 'Page not found' })).toBeInTheDocument()
+  })
+
+  it('sends a visitor without an organization to the setup', async () => {
+    server.use(
+      http.get(SESSION, () => HttpResponse.json({ user })),
+      http.get(ORGANIZATIONS, () => HttpResponse.json({ organizations: [] })),
+      http.get(ORGANIZATION, () =>
+        HttpResponse.json({ code: 'E_ORGANIZATION_NOT_FOUND', message: 'Not found' }, { status: 404 })
+      )
+    )
+
+    renderShell()
+
+    await waitFor(() => {
+      expect(screen.getByTestId('location')).toHaveTextContent('/onboarding')
+    })
   })
 
   it('sends the visitor to the login page when the session expires', async () => {

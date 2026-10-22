@@ -449,4 +449,82 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['accept']>>>
     }
   }
+  'onboarding.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/onboarding'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['show']>>>
+    }
+  }
+  'onboarding.use_case': {
+    methods: ["POST"]
+    pattern: '/api/v1/onboarding/use-case'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/onboarding').useCaseValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/onboarding').useCaseValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['useCase']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['useCase']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['useCase']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'onboarding.invites': {
+    methods: ["POST"]
+    pattern: '/api/v1/onboarding/invites'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/onboarding').onboardingInvitesValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/onboarding').onboardingInvitesValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['invites']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['invites']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['invites']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'onboarding.plan': {
+    methods: ["POST"]
+    pattern: '/api/v1/onboarding/plan'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/onboarding').onboardingPlanValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/onboarding').onboardingPlanValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['plan']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['plan']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['plan']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'onboarding.complete': {
+    methods: ["POST"]
+    pattern: '/api/v1/onboarding/complete'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['complete']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['complete']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['complete']>>>
+    }
+  }
+  'onboarding.accept_invitation': {
+    methods: ["POST"]
+    pattern: '/api/v1/onboarding/invitations/:id/accept'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['acceptInvitation']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['acceptInvitation']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/onboarding_controller').default['acceptInvitation']>>>
+    }
+  }
 }

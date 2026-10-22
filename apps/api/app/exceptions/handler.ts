@@ -32,6 +32,7 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_SEAT_LIMIT_REACHED: { status: 402, message: 'seat_limit_reached' },
   E_INVITATION_MISMATCH: { status: 403, message: 'invitation_mismatch' },
   E_INVITATION_INVALID: { status: 404, message: 'invitation_invalid' },
+  E_ONBOARDING_NOT_STARTED: { status: 422, message: 'onboarding_not_started' },
 }
 
 /**
@@ -55,6 +56,7 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   seat_limit_reached: 'Your plan has no seats left. Upgrade to invite more people',
   invitation_mismatch: 'This invitation was sent to a different email address',
   invitation_invalid: 'This invitation link is not valid',
+  onboarding_not_started: 'The setup of the organization has not started yet',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {
