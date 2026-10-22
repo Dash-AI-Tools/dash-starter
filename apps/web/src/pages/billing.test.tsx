@@ -308,9 +308,7 @@ describe('The billing of an organization', () => {
     const visitor = userEvent.setup()
     renderBilling()
 
-    await visitor.click(
-      await screen.findByRole('button', { name: 'Manage payment and invoices' })
-    )
+    await visitor.click(await screen.findByRole('button', { name: 'Manage payment and invoices' }))
 
     await waitFor(() => {
       expect(redirectTo).toHaveBeenCalledWith('https://portal.test/cus_1')

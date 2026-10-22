@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils'
 type UIPart = UIMessage['parts'][number]
 
 /** A part of a message that calls a tool of the product. */
-type ToolPart = Extract<UIPart, { type: `tool-${string}` }> | Extract<UIPart, { type: 'dynamic-tool' }>
+type ToolPart =
+  Extract<UIPart, { type: `tool-${string}` }> | Extract<UIPart, { type: 'dynamic-tool' }>
 
 /**
  * A message of the conversation: what the member wrote and what the assistant

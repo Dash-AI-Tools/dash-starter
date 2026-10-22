@@ -55,12 +55,14 @@ export const dashboard = {
   userMenu: 'Menú de la cuenta',
   cookiePreferences: 'Preferencias de cookies',
   termsOutdatedTitle: 'Acepta los términos actualizados',
-  termsOutdatedBody: 'Nuestros términos han cambiado. Revísalos y acéptalos para seguir usando el producto.',
+  termsOutdatedBody:
+    'Nuestros términos han cambiado. Revísalos y acéptalos para seguir usando el producto.',
   termsAccept: 'Aceptar y continuar',
   pastDueTitle: 'Tu último pago ha fallado',
   pastDueBody: 'Reintentaremos el cobro. Actualiza tu método de pago para no perder el acceso.',
   dashboardPastDueBanner: 'Pago fallido: el acceso continúa durante el periodo de gracia.',
-  dashboardQuotaExhausted: 'Tu organización ha agotado sus créditos de IA. Sube de plan para continuar.',
+  dashboardQuotaExhausted:
+    'Tu organización ha agotado sus créditos de IA. Sube de plan para continuar.',
   quotaExhaustedAdmin: 'Tu organización ha agotado sus créditos de IA.',
   lowCredits: 'Te quedan pocos créditos de IA ({remaining}).',
 } as const

@@ -16,7 +16,28 @@ export const SESSION_EXPIRED = 'dash:session-expired'
  * called with an absolute URL from a test.
  */
 export const API_BASE_URL =
-  import.meta.env.VITE_API_URL ?? (typeof window === 'undefined' ? 'http://localhost' : window.location.origin)
+  import.meta.env.VITE_API_URL ??
+  (typeof window === 'undefined' ? 'http://localhost' : window.location.origin)
+
+/**
+ * The methods that Shield does not check, because they do not change anything.
+ */
+const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
+
+/**
+ * Shield checks the state-changing requests with a token that travels in the
+ * `XSRF-TOKEN` cookie, which the API sets on its answers. A visitor that
+ * lands straight on the login or the signup page has not talked to the API
+ * yet, so the cookie is not there and the first request would be rejected.
+ * Asking for the session brings the cookie with it.
+ */
+async function ensureCsrfToken(): Promise<void> {
+  if (document.cookie.includes('XSRF-TOKEN=')) {
+    return
+  }
+
+  await fetch(`${API_BASE_URL}/api/v1/auth/session`, { credentials: 'include' })
+}
 
 /**
  * The typed client. Tuyau derives the route names, parameters, bodies and
@@ -34,7 +55,7 @@ export const client = createTuyau({
   headers: { Accept: 'application/json' },
   hooks: {
     beforeRequest: [
-      (request) => {
+      async (request) => {
         /**
          * The locale travels with the request so the API answers with the
          * messages of the active language. The cookie wins over the browser
@@ -43,6 +64,14 @@ export const client = createTuyau({
         const locale = readLocaleCookie()
         if (locale) {
           request.headers.set('Accept-Language', locale)
+        }
+
+        /**
+         * The token of the CSRF protection has to be in the cookie before the
+         * request leaves, or Shield rejects it.
+         */
+        if (!SAFE_METHODS.includes(request.method.toUpperCase())) {
+          await ensureCsrfToken()
         }
       },
     ],

@@ -33,14 +33,8 @@ describe('LanguageSwitcher', () => {
   it('marks the active locale as pressed', () => {
     renderSwitcher()
 
-    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    )
-    expect(screen.getByRole('button', { name: 'Spanish' })).toHaveAttribute(
-      'aria-pressed',
-      'false'
-    )
+    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Spanish' })).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('switches the locale, persists the cookie and syncs the html lang attribute', async () => {
@@ -49,10 +43,7 @@ describe('LanguageSwitcher', () => {
 
     await user.click(screen.getByRole('button', { name: 'Spanish' }))
 
-    expect(screen.getByRole('button', { name: 'Español' })).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    )
+    expect(screen.getByRole('button', { name: 'Español' })).toHaveAttribute('aria-pressed', 'true')
     expect(document.documentElement.lang).toBe('es')
     expect(document.cookie).toContain('locale=es')
   })

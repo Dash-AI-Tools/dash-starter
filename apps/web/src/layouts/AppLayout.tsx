@@ -83,18 +83,9 @@ function AppShell({ orgSlug }: { orgSlug: string }) {
           </SheetContent>
         </Sheet>
       ) : (
-        <aside
-          className={cn(
-            'shrink-0 border-r transition-[width]',
-            collapsed ? 'w-16' : 'w-64'
-          )}
-        >
-          <Sidebar
-            orgSlug={orgSlug}
-            collapsed={collapsed}
-            onToggle={toggleCollapsed}
-          />
-        </aside>
+        <div className={cn('shrink-0 border-r transition-[width]', collapsed ? 'w-16' : 'w-64')}>
+          <Sidebar orgSlug={orgSlug} collapsed={collapsed} onToggle={toggleCollapsed} />
+        </div>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">

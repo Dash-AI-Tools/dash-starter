@@ -63,9 +63,7 @@ describe('RequireAuth', () => {
     await waitFor(() => {
       expect(screen.getByText(/Login page/)).toBeInTheDocument()
     })
-    expect(screen.getByText(/Login page/)).toHaveTextContent(
-      'Login page: /app/acme?tab=members'
-    )
+    expect(screen.getByText(/Login page/)).toHaveTextContent('Login page: /app/acme?tab=members')
   })
 
   it('shows the page to a signed-in visitor', async () => {

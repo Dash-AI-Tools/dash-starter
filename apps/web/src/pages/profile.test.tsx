@@ -325,9 +325,7 @@ describe('ProfilePage', () => {
     await visitor.type(dialog.getByLabelText('Type your password to confirm'), 'supersecret')
     await visitor.click(dialog.getByRole('button', { name: 'Delete account' }))
 
-    expect(
-      await dialog.findByText(/You are the only owner of an organization/)
-    ).toBeInTheDocument()
+    expect(await dialog.findByText(/You are the only owner of an organization/)).toBeInTheDocument()
   })
 })
 
@@ -356,9 +354,7 @@ describe('TermsGate', () => {
     renderPage(<TermsGate />)
 
     const visitor = userEvent.setup()
-    await visitor.click(
-      await screen.findByRole('button', { name: 'Accept and continue' })
-    )
+    await visitor.click(await screen.findByRole('button', { name: 'Accept and continue' }))
 
     await waitFor(() => {
       expect(called).toBe(true)

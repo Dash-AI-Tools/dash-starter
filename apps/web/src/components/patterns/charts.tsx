@@ -72,13 +72,7 @@ function ChartTooltip({
 /**
  * The axes shared by every chart.
  */
-function ChartAxes({
-  locale,
-  dataKey,
-}: {
-  locale: Locale
-  dataKey: keyof ChartDatum
-}) {
+function ChartAxes({ locale, dataKey }: { locale: Locale; dataKey: keyof ChartDatum }) {
   return (
     <>
       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
@@ -215,13 +209,7 @@ export function PieChartCard({
     <figure className={cn('w-full', className)} aria-label={seriesName}>
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="label"
-            innerRadius="50%"
-            outerRadius="80%"
-          >
+          <Pie data={data} dataKey="value" nameKey="label" innerRadius="50%" outerRadius="80%">
             {data.map((entry, index) => (
               <Cell key={entry.label} fill={SERIES_COLORS[index % SERIES_COLORS.length]} />
             ))}

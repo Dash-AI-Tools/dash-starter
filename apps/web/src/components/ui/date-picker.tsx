@@ -36,7 +36,11 @@ export function DatePicker({
           <Button
             type="button"
             variant="outline"
-            className={cn('w-full justify-start font-normal', !value && 'text-muted-foreground', className)}
+            className={cn(
+              'w-full justify-start font-normal',
+              !value && 'text-muted-foreground',
+              className
+            )}
           />
         }
       >

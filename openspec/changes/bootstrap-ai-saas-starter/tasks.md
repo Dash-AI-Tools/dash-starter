@@ -159,10 +159,14 @@
 
 ## 15. Quality tooling and CI
 
-- [ ] 15.1 Shared Prettier config, ESLint for API (adonis config) and web (typescript-eslint, react-hooks, jsx-a11y); make template pass `lint`, `format:check`, `typecheck` at root
-- [ ] 15.2 Vitest + Testing Library + MSW setup for web; Japa suites configured with global DB transaction; verify `npm test` runs all suites
-- [ ] 15.3 Playwright project in `e2e/` with Mailpit helper, signed Creem webhook helper and axe checks; journeys: signup+verify, login, onboarding, invite+accept, language switch, cookie consent, chat with stub, API key + MCP call, simulated paid subscription; verify all pass locally against Compose
-- [ ] 15.4 GitHub Actions: `lint-typecheck`, `test` (Postgres service), `build`, `e2e` (Compose, traces on failure); verify workflow passes on a PR
+- [x] 15.1 Shared Prettier config, ESLint for API (adonis config) and web (typescript-eslint, react-hooks, jsx-a11y); make template pass `lint`, `format:check`, `typecheck` at root
+  - NOTE: the Prettier config is the root `prettier.config.js` (with `.prettierignore`), and the root `format` and `format:check` fan out to the workspaces. The web ESLint adds `eslint-plugin-jsx-a11y`; the API keeps the config of AdonisJS. The template passes `npm run lint`, `npm run format:check` and `npm run typecheck` at the root (the only warning left is the pre-existing `react-hooks/incompatible-library` of TanStack in `apps/web/src/components/patterns/data-table.tsx`).
+- [x] 15.2 Vitest + Testing Library + MSW setup for web; Japa suites configured with global DB transaction; verify `npm test` runs all suites
+  - NOTE: the web runs Vitest with jsdom, Testing Library, jest-dom and MSW (`apps/web/src/test/{setup,server}.ts`); the API runs Japa with a global transaction that rolls back after every test (`apps/api/tests/bootstrap.ts`). The root `npm test` runs the two suites: 204 API tests and 143 web tests.
+- [x] 15.3 Playwright project in `e2e/` with Mailpit helper, signed Creem webhook helper and axe checks; journeys: signup+verify, login, onboarding, invite+accept, language switch, cookie consent, chat with stub, API key + MCP call, simulated paid subscription; verify all pass locally against Compose
+  - NOTE: the suite is `e2e/` (Playwright, Chromium, one worker) and the helpers are `e2e/support/{app,mailpit,creem,axe}.ts`. The stack runs on other ports through `docker-compose.e2e.yml` (web 5174, API 3334, Mailpit 8026, Postgres 5434) so it never collides with the development session. The nine journeys pass against the Compose stack: the signup with the verification email, the sign in, the onboarding, the invitation, the language switch, the cookies, the chat with the stub, the API key with a call to the MCP server, and the paid subscription with a webhook signed by the provider. The accessibility of every page is checked with axe. The paid prices of the catalog carry a placeholder `creemProductId` that `savePrice()` only fills when it is missing.
+- [x] 15.4 GitHub Actions: `lint-typecheck`, `test` (Postgres service), `build`, `e2e` (Compose, traces on failure); verify workflow passes on a PR
+  - NOTE: the workflow is `.github/workflows/ci.yml` with the four jobs (`lint-typecheck`, `test` with a Postgres 17 service, `build` and `e2e` with Compose and the traces of Playwright uploaded when the journey fails). Every step was reproduced locally with the same environment (`APP_KEY`, `CREEM_ENV=test`, `AI_PROVIDER=stub` and the database of the job), so the only thing left for the branch is the run of the pipeline itself when it is pushed.
 
 ## 16. Installer
 

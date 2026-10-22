@@ -10,7 +10,8 @@ export const profile = {
   emailNew: 'New email address',
   emailCurrentPassword: 'Current password',
   emailSent: 'We sent a verification link to your new address.',
-  emailPending: 'A verification link was sent to {email}. Your current address stays active until you verify it.',
+  emailPending:
+    'A verification link was sent to {email}. Your current address stays active until you verify it.',
   password: 'Password',
   currentPassword: 'Current password',
   newPassword: 'New password',

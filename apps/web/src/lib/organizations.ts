@@ -7,14 +7,10 @@ import { client } from '@/lib/api'
 export type OrganizationRole = 'owner' | 'admin' | 'member'
 
 /** An organization, as the API returns it. */
-export type Organization = Awaited<
-  ReturnType<typeof client.api.organization.show>
->['organization']
+export type Organization = Awaited<ReturnType<typeof client.api.organization.show>>['organization']
 
 /** A member of an organization. */
-export type Member = Awaited<
-  ReturnType<typeof client.api.member.index>
->['members'][number]
+export type Member = Awaited<ReturnType<typeof client.api.member.index>>['members'][number]
 
 /** A pending invitation of an organization. */
 export type Invitation = Awaited<

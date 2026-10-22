@@ -48,6 +48,13 @@ if (!window.matchMedia) {
     }) as MediaQueryList
 }
 
+/**
+ * The API sets the token of the CSRF protection in a cookie. The tests
+ * pretend the browser already carries it, so the client does not have to ask
+ * the API for it before every request.
+ */
+document.cookie = 'XSRF-TOKEN=test-token'
+
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())

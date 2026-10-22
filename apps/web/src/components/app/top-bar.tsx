@@ -79,7 +79,6 @@ export function TopBar({
           variant="outline"
           size="sm"
           onClick={onOpenSearch}
-          aria-label={t('searchDialogLabel')}
           className="gap-2 text-muted-foreground"
         >
           <Search className="size-4" />

@@ -64,10 +64,7 @@ const organization = {
 /**
  * The state of the setup, as the API returns it.
  */
-function state(
-  step: string,
-  overrides: Record<string, unknown> = {}
-): Record<string, unknown> {
+function state(step: string, overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     step,
     organization: step === 'details' ? null : organization,
@@ -276,9 +273,7 @@ describe('The setup of an organization', () => {
   it('lands on the dashboard when the setup is finished', async () => {
     serveOnboarding(
       () => state('complete'),
-      [
-        http.post(COMPLETE, () => HttpResponse.json({ onboarding: state('done') })),
-      ]
+      [http.post(COMPLETE, () => HttpResponse.json({ onboarding: state('done') }))]
     )
 
     const visitor = userEvent.setup()
@@ -333,9 +328,10 @@ describe('The setup of an organization', () => {
 
 describe('The entry of the app', () => {
   it('sends a visitor without an organization to the setup', async () => {
-    serveOnboarding(() => state('details'), [
-      http.get(ORGANIZATIONS, () => HttpResponse.json({ organizations: [] })),
-    ])
+    serveOnboarding(
+      () => state('details'),
+      [http.get(ORGANIZATIONS, () => HttpResponse.json({ organizations: [] }))]
+    )
 
     renderOnboarding('/app')
 

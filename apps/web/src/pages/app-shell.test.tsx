@@ -147,8 +147,10 @@ describe('The shell of the app', () => {
     const nav = await navigation()
 
     expect(await nav.findByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Account menu' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Search…⌘K' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Account menu: AL Ada Lovelace' })
+    ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
   })
 
@@ -159,9 +161,7 @@ describe('The shell of the app', () => {
     renderShell()
 
     const menu = await screen.findByRole('button', { name: 'Open navigation' })
-    expect(
-      screen.queryByRole('navigation', { name: 'Main navigation' })
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Main navigation' })).not.toBeInTheDocument()
 
     await userEvent.setup().click(menu)
 
@@ -225,7 +225,9 @@ describe('The shell of the app', () => {
     const visitor = userEvent.setup()
     renderShell()
 
-    await visitor.click(await screen.findByRole('button', { name: 'Switch organization' }))
+    await visitor.click(
+      await screen.findByRole('button', { name: 'Switch organization: Acme Labs' })
+    )
     await visitor.click(await screen.findByRole('menuitem', { name: 'Other Labs' }))
 
     await waitFor(() => {
@@ -238,7 +240,7 @@ describe('The shell of the app', () => {
     serveApp()
     renderShell()
 
-    await screen.findByRole('button', { name: 'Search' })
+    await screen.findByRole('button', { name: 'Search…⌘K' })
     await userEvent.setup().keyboard('{Meta>}k{/Meta}')
 
     const input = await screen.findByRole('combobox')
@@ -264,7 +266,7 @@ describe('The shell of the app', () => {
     const visitor = userEvent.setup()
     renderShell()
 
-    await visitor.click(await screen.findByRole('button', { name: 'Search' }))
+    await visitor.click(await screen.findByRole('button', { name: 'Search…⌘K' }))
     await visitor.type(await screen.findByRole('combobox'), 'grace')
 
     const palette = within(await screen.findByRole('dialog'))
@@ -279,7 +281,10 @@ describe('The shell of the app', () => {
       http.get(SESSION, () => HttpResponse.json({ user })),
       http.get(ORGANIZATIONS, () => HttpResponse.json({ organizations })),
       http.get(ORGANIZATION, () =>
-        HttpResponse.json({ code: 'E_ORGANIZATION_NOT_FOUND', message: 'Not found' }, { status: 404 })
+        HttpResponse.json(
+          { code: 'E_ORGANIZATION_NOT_FOUND', message: 'Not found' },
+          { status: 404 }
+        )
       )
     )
 
@@ -293,7 +298,10 @@ describe('The shell of the app', () => {
       http.get(SESSION, () => HttpResponse.json({ user })),
       http.get(ORGANIZATIONS, () => HttpResponse.json({ organizations: [] })),
       http.get(ORGANIZATION, () =>
-        HttpResponse.json({ code: 'E_ORGANIZATION_NOT_FOUND', message: 'Not found' }, { status: 404 })
+        HttpResponse.json(
+          { code: 'E_ORGANIZATION_NOT_FOUND', message: 'Not found' },
+          { status: 404 }
+        )
       )
     )
 

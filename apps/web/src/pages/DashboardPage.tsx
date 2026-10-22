@@ -116,9 +116,7 @@ export default function DashboardPage() {
       <PageHeader
         title={t('dashboardTitle')}
         description={t('dashboardSubtitle')}
-        actions={
-          organization ? <Badge variant="secondary">{organization.name}</Badge> : null
-        }
+        actions={organization ? <Badge variant="secondary">{organization.name}</Badge> : null}
       />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

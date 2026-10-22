@@ -125,19 +125,10 @@ export function CommandPalette({
   }, [query, search])
 
   return (
-    <CommandDialog
-      open={isOpen}
-      onOpenChange={setOpen}
-      title={title}
-      description={description}
-    >
+    <CommandDialog open={isOpen} onOpenChange={setOpen} title={title} description={description}>
       <Command>
-        <CommandInput
-          placeholder={placeholder}
-          value={query}
-          onValueChange={setQuery}
-          autoFocus
-        />
+        {/* eslint-disable-next-line jsx-a11y/no-autofocus -- the palette only exists while the user is typing in it */}
+        <CommandInput placeholder={placeholder} value={query} onValueChange={setQuery} autoFocus />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           {[...groups, ...found].map((group) => (

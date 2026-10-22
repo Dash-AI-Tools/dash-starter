@@ -243,10 +243,7 @@ describe('AcceptInvitationPage', () => {
     renderInvitation()
 
     const link = await screen.findByRole('link', { name: 'Create an account to join Acme Labs' })
-    expect(link).toHaveAttribute(
-      'href',
-      '/signup?email=pending%40example.com&invitation=tok-123'
-    )
+    expect(link).toHaveAttribute('href', '/signup?email=pending%40example.com&invitation=tok-123')
   })
 
   it('says that the invitation has expired', async () => {

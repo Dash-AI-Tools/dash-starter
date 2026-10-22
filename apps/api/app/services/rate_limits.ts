@@ -1,8 +1,9 @@
+import env from '#start/env'
 import type { HttpContext } from '@adonisjs/core/http'
 import limiter from '@adonisjs/limiter/services/main'
 
 /** Requests allowed per IP and window on every auth endpoint. */
-const IP_REQUESTS = 30
+const IP_REQUESTS = env.get('AUTH_IP_REQUESTS') ?? 30
 const IP_WINDOW = '15 minutes'
 
 /** Requests allowed per email and window on the endpoints that touch one address. */

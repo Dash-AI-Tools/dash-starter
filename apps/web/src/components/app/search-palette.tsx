@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
-import {
-  CommandPalette,
-  type CommandGroupConfig,
-} from '@/components/patterns/command-palette'
+import { CommandPalette, type CommandGroupConfig } from '@/components/patterns/command-palette'
 import { client } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
 import { NAV_GROUPS, canAccess, orgPath } from '@/lib/nav'

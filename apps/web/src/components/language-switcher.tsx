@@ -1,11 +1,6 @@
 import { Languages } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { LOCALES, useI18n, type Locale } from '@/lib/i18n'
-
-const LABELS: Record<Locale, string> = {
-  en: 'EN',
-  es: 'ES',
-}
+import { LOCALES, useI18n } from '@/lib/i18n'
 
 /**
  * Switches the active language. The current route is untouched: only the
@@ -28,10 +23,9 @@ export function LanguageSwitcher() {
           size="xs"
           variant={option === locale ? 'secondary' : 'ghost'}
           aria-pressed={option === locale}
-          aria-label={option === 'en' ? t('english') : t('spanish')}
           onClick={() => setLocale(option)}
         >
-          {LABELS[option]}
+          {option === 'en' ? t('english') : t('spanish')}
         </Button>
       ))}
     </div>

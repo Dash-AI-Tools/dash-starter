@@ -9,7 +9,8 @@ export const consent = {
   preferencesBody: 'Elige qué categorías de cookies permites.',
   preferencesSave: 'Guardar preferencias',
   necessary: 'Necesarias',
-  necessaryDescription: 'Siempre activas. Imprescindibles para el acceso, la seguridad y tus preferencias.',
+  necessaryDescription:
+    'Siempre activas. Imprescindibles para el acceso, la seguridad y tus preferencias.',
   analytics: 'Analíticas',
   analyticsDescription: 'Medición anónima del uso del producto.',
   marketing: 'Marketing',

@@ -97,7 +97,11 @@ export default function PrivacyPage() {
       title={t('privacyTitle')}
       notice={t('privacyPlaceholderNotice')}
       meta={
-        <p>{t('privacyUpdated', { date: formatDate(PRIVACY_UPDATED_AT, { dateStyle: 'medium', timeZone: 'UTC' }) })}</p>
+        <p>
+          {t('privacyUpdated', {
+            date: formatDate(PRIVACY_UPDATED_AT, { dateStyle: 'medium', timeZone: 'UTC' }),
+          })}
+        </p>
       }
       intro={t('privacyIntro')}
       sections={sections}

@@ -380,9 +380,7 @@ function InvitesStep({ onDone }: { onDone: (state: Onboarding) => void }) {
               value={email}
               onChange={(event) =>
                 setEmails(
-                  emails.map((value, position) =>
-                    position === index ? event.target.value : value
-                  )
+                  emails.map((value, position) => (position === index ? event.target.value : value))
                 )
               }
             />
@@ -628,8 +626,7 @@ export default function OnboardingWizard({ onboarding }: { onboarding: Onboardin
 
       {onboarding.step !== 'details' && onboarding.step !== 'complete' ? (
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{t('resumeTitle')}</span>{' '}
-          {t('resumeBody')}
+          <span className="font-medium text-foreground">{t('resumeTitle')}</span> {t('resumeBody')}
         </p>
       ) : null}
 
@@ -639,7 +636,9 @@ export default function OnboardingWizard({ onboarding }: { onboarding: Onboardin
       {onboarding.step === 'use-case' ? <UseCaseStep onDone={onDone} /> : null}
       {onboarding.step === 'invites' ? <InvitesStep onDone={onDone} /> : null}
       {onboarding.step === 'plan' ? <PlanStep onDone={onDone} /> : null}
-      {onboarding.step === 'complete' ? <CompleteStep onboarding={onboarding} onDone={onDone} /> : null}
+      {onboarding.step === 'complete' ? (
+        <CompleteStep onboarding={onboarding} onDone={onDone} />
+      ) : null}
     </div>
   )
 }

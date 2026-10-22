@@ -18,9 +18,7 @@ export const server = setupServer()
  */
 export const validationBody = {
   code: 'E_VALIDATION_ERROR',
-  errors: [
-    { field: 'email', code: 'email', message: 'Introduce un correo electrónico válido' },
-  ],
+  errors: [{ field: 'email', code: 'email', message: 'Introduce un correo electrónico válido' }],
 }
 
 /**

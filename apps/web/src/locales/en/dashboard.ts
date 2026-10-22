@@ -60,7 +60,8 @@ export const dashboard = {
   pastDueTitle: 'Your last payment failed',
   pastDueBody: 'We will retry the payment. Update your payment method to avoid losing access.',
   dashboardPastDueBanner: 'Payment failed — access continues during the grace period.',
-  dashboardQuotaExhausted: 'Your organization has used all its AI credits. Upgrade the plan to continue.',
+  dashboardQuotaExhausted:
+    'Your organization has used all its AI credits. Upgrade the plan to continue.',
   quotaExhaustedAdmin: 'Your organization has used all its AI credits.',
   lowCredits: 'You are running low on AI credits ({remaining} left).',
 } as const

@@ -148,9 +148,7 @@ function CreateKeyDialog({
             const response = await create.mutateAsync({
               name: values.name,
               scopes: values.scopes,
-              expiresAt: values.expiresAt
-                ? new Date(values.expiresAt).toISOString()
-                : undefined,
+              expiresAt: values.expiresAt ? new Date(values.expiresAt).toISOString() : undefined,
             })
 
             toast.success(t('keyCreated'))
@@ -309,7 +307,9 @@ export function ApiKeysSettings({ orgSlug }: { orgSlug: string }) {
       <PageHeader
         title={t('apiKeysTitle')}
         description={t('apiKeysSubtitle')}
-        actions={data.mcpEnabled ? <CreateKeyDialog orgSlug={orgSlug} onCreated={setSecret} /> : null}
+        actions={
+          data.mcpEnabled ? <CreateKeyDialog orgSlug={orgSlug} onCreated={setSecret} /> : null
+        }
       />
 
       {data.mcpEnabled ? null : (

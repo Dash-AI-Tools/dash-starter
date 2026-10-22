@@ -127,6 +127,50 @@ test.group('The catalog of plans', () => {
     assert.lengthOf(await PlanPrice.query().where('isActive', true), 6)
   })
 
+  test('gives the paid prices the product of the provider', async ({ assert }) => {
+    await seedPlans()
+
+    const plan = await Plan.query().where('key', 'pro').firstOrFail()
+    const price = await PlanPrice.query()
+      .where('planId', plan.id)
+      .where('interval', 'month')
+      .where('isActive', true)
+      .firstOrFail()
+
+    assert.equal(price.creemProductId, 'prod_pro_month')
+
+    /**
+     * The free plan is not sold, so it has no product.
+     */
+    const free = await Plan.query().where('key', 'free').firstOrFail()
+    const freePrice = await PlanPrice.query()
+      .where('planId', free.id)
+      .where('interval', 'month')
+      .where('isActive', true)
+      .firstOrFail()
+
+    assert.isNull(freePrice.creemProductId)
+  })
+
+  test('keeps the product the owner configured', async ({ assert }) => {
+    await seedPlans()
+
+    const plan = await Plan.query().where('key', 'pro').firstOrFail()
+    const price = await PlanPrice.query()
+      .where('planId', plan.id)
+      .where('interval', 'month')
+      .where('isActive', true)
+      .firstOrFail()
+
+    price.creemProductId = 'prod_the_real_one'
+    await price.save()
+
+    await seedPlans()
+
+    const updated = await PlanPrice.query().where('id', price.id).firstOrFail()
+    assert.equal(updated.creemProductId, 'prod_the_real_one')
+  })
+
   test('keeps the price of the subscribers when the price of the catalog changes', async ({
     assert,
   }) => {

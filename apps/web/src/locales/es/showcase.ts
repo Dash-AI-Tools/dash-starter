@@ -4,9 +4,11 @@ export const showcase = {
   buttons: 'Botones',
   buttonsDescription: 'Variantes, tamaños y el estado de carga.',
   inputs: 'Entradas',
-  inputsDescription: 'Texto, área de texto, select, combobox, casilla, radio, interruptor, fecha y archivo.',
+  inputsDescription:
+    'Texto, área de texto, select, combobox, casilla, radio, interruptor, fecha y archivo.',
   overlays: 'Superposiciones',
-  overlaysDescription: 'Diálogo, panel, menú desplegable, menú contextual, popover, tooltip y pestañas.',
+  overlaysDescription:
+    'Diálogo, panel, menú desplegable, menú contextual, popover, tooltip y pestañas.',
   feedback: 'Retroalimentación',
   feedbackDescription: 'Toast, badge, esqueleto y estado vacío.',
   data: 'Datos',

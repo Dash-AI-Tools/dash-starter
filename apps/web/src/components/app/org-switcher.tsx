@@ -46,7 +46,11 @@ export function OrgSwitcher({ orgSlug }: { orgSlug: string }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" className="w-full justify-between" aria-label={t('switchOrganization')} />
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            aria-label={`${t('switchOrganization')}: ${current?.name ?? t('organizations')}`}
+          />
         }
       >
         <span className="flex items-center gap-2 truncate">

@@ -22,15 +22,25 @@ export type PlanSeed = {
   isDefaultFree: boolean
   /** The order of the plan in the pricing page. */
   sortOrder: number
-  /** The prices of the plan, one per interval. */
-  prices: { interval: PlanInterval; amountCents: number; currency: string }[]
+  /**
+   * The prices of the plan, one per interval. A price that costs something
+   * names the product of the payment provider.
+   */
+  prices: {
+    interval: PlanInterval
+    amountCents: number
+    currency: string
+    creemProductId?: string
+  }[]
 }
 
 /**
  * The plans the template ships with.
  *
- * The amounts are placeholders: the product owner replaces them with the real
- * ones, either here before the first deploy or in the database afterwards.
+ * The amounts and the product ids are placeholders: the product owner
+ * replaces them with the real ones, either here before the first deploy or
+ * in the database afterwards. The command `node ace billing:sync` creates the
+ * products of the payment provider and writes their ids on the prices.
  */
 export const PLAN_CATALOG: PlanSeed[] = [
   {
@@ -84,8 +94,18 @@ export const PLAN_CATALOG: PlanSeed[] = [
     isDefaultFree: false,
     sortOrder: 20,
     prices: [
-      { interval: 'month', amountCents: 1900, currency: 'USD' },
-      { interval: 'year', amountCents: 19000, currency: 'USD' },
+      {
+        interval: 'month',
+        amountCents: 1900,
+        currency: 'USD',
+        creemProductId: 'prod_pro_month',
+      },
+      {
+        interval: 'year',
+        amountCents: 19000,
+        currency: 'USD',
+        creemProductId: 'prod_pro_year',
+      },
     ],
   },
   {
@@ -119,8 +139,18 @@ export const PLAN_CATALOG: PlanSeed[] = [
     isDefaultFree: false,
     sortOrder: 30,
     prices: [
-      { interval: 'month', amountCents: 4900, currency: 'USD' },
-      { interval: 'year', amountCents: 49000, currency: 'USD' },
+      {
+        interval: 'month',
+        amountCents: 4900,
+        currency: 'USD',
+        creemProductId: 'prod_business_month',
+      },
+      {
+        interval: 'year',
+        amountCents: 49000,
+        currency: 'USD',
+        creemProductId: 'prod_business_year',
+      },
     ],
   },
 ]
@@ -193,7 +223,12 @@ async function savePlan(seed: PlanSeed): Promise<void> {
  */
 async function savePrice(
   planKey: string,
-  price: { interval: PlanInterval; amountCents: number; currency: string }
+  price: {
+    interval: PlanInterval
+    amountCents: number
+    currency: string
+    creemProductId?: string
+  }
 ): Promise<void> {
   const plan = await Plan.query().where('key', planKey).firstOrFail()
   const current = await PlanPrice.query()
@@ -202,18 +237,29 @@ async function savePrice(
     .where('isActive', true)
     .first()
 
+  /**
+   * The product the owner configured wins: the placeholder of the catalog
+   * only fills the gap of a price that has none.
+   */
+  const productId = current?.creemProductId ?? price.creemProductId ?? null
+
   if (!current) {
     await PlanPrice.create({
       planId: plan.id,
       interval: price.interval,
       amountCents: price.amountCents,
       currency: price.currency,
+      creemProductId: productId,
       isActive: true,
     })
     return
   }
 
   if (current.amountCents === price.amountCents && current.currency === price.currency) {
+    if (current.creemProductId !== productId) {
+      current.creemProductId = productId
+      await current.save()
+    }
     return
   }
 
@@ -229,6 +275,7 @@ async function savePrice(
     interval: price.interval,
     amountCents: price.amountCents,
     currency: price.currency,
+    creemProductId: productId,
     isActive: true,
   })
 }

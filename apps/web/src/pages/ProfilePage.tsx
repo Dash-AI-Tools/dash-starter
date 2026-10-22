@@ -47,10 +47,7 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  const nameSchema = useMemo(
-    () => z.object({ fullName: z.string().min(1, t('required')) }),
-    [t]
-  )
+  const nameSchema = useMemo(() => z.object({ fullName: z.string().min(1, t('required')) }), [t])
 
   const emailSchema = useMemo(
     () =>
@@ -76,10 +73,7 @@ export default function ProfilePage() {
     [t]
   )
 
-  const deleteSchema = useMemo(
-    () => z.object({ password: z.string().min(1, t('required')) }),
-    [t]
-  )
+  const deleteSchema = useMemo(() => z.object({ password: z.string().min(1, t('required')) }), [t])
 
   /**
    * Uploads the picture the visitor picked. The type and the size are checked

@@ -233,7 +233,9 @@ describe('The pricing page', () => {
   it('lists the plans of the catalog with their monthly price', async () => {
     renderPublic('/pricing')
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Plans and pricing' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Plans and pricing' })
+    ).toBeInTheDocument()
     expect(
       await screen.findByText('For teams that need the AI and the API in their day to day.')
     ).toBeInTheDocument()
@@ -334,7 +336,9 @@ describe('The legal pages', () => {
 
     renderPublic('/terms')
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Términos del Servicio' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Términos del Servicio' })
+    ).toBeInTheDocument()
     expect(screen.getByText(/Versión 2026-01-01/)).toBeInTheDocument()
     expect(screen.getByText(/Última actualización: 1 ene 2026/)).toBeInTheDocument()
   })

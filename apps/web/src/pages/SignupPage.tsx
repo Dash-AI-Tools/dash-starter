@@ -4,12 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field'
 import { client } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
 import { useSetCurrentUser } from '@/lib/session'

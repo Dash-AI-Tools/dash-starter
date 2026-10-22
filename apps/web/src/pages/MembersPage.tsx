@@ -149,9 +149,7 @@ export default function MembersPage() {
                 type="button"
                 size="xs"
                 variant="outline"
-                onClick={() =>
-                  setPending({ kind: 'remove', userId: member.userId, name })
-                }
+                onClick={() => setPending({ kind: 'remove', userId: member.userId, name })}
               >
                 {t('removeMember')}
               </Button>

@@ -25,15 +25,29 @@ export function UserMenu({ orgSlug }: { orgSlug: string }) {
   const { data: user } = useCurrentUser()
   const signOut = useSignOut()
 
+  /**
+   * The name of the account, as it is shown: the initials and the full name.
+   * The label of the button carries it, so the name of the button is the one
+   * the visitor reads.
+   */
+  const name = [user?.initials, user?.fullName].filter(Boolean).join(' ')
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" className="gap-2" aria-label={t('userMenu')} />}
+        render={
+          <Button
+            variant="ghost"
+            className="gap-2"
+            aria-label={name ? `${t('userMenu')}: ${name}` : t('userMenu')}
+          />
+        }
       >
         <Avatar size="sm">
           {user?.avatarPath ? <AvatarImage src={user.avatarPath} alt="" /> : null}
           <AvatarFallback>{user?.initials ?? '?'}</AvatarFallback>
         </Avatar>
+        {/* The space keeps the initials apart from the name. */}{' '}
         <span className="hidden max-w-32 truncate text-sm sm:inline">{user?.fullName}</span>
       </DropdownMenuTrigger>
 

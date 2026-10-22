@@ -245,4 +245,19 @@ test.group('Transactional emails', () => {
     assert.include(html, 'Dash')
     assert.include(html, 'support@dash-starter.test')
   })
+
+  test('the plain text body keeps the lines of the email', async ({ assert }) => {
+    const fakeMailer = mail.fake()
+    const user = await createUser()
+
+    await mail.sendLater(new ResetPassword(user, LINK, 'en'))
+
+    const [queued] = fakeMailer.mails.queued()
+    const text = String(queued.message.nodeMailerMessage.text ?? '')
+    const lines = text.split('\n')
+
+    assert.equal(lines[0], 'Dash')
+    assert.include(lines, `Choose a new password: ${LINK}`)
+    assert.isFalse(lines.some((line) => line.startsWith(' ')))
+  })
 })

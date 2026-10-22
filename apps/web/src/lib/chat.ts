@@ -4,9 +4,7 @@ import { LOCALE_COOKIE } from '@/lib/i18n'
 import { DefaultChatTransport, APICallError, type UIMessage } from 'ai'
 
 /** The state of the chat before the first message. */
-export type ChatStatus = Awaited<
-  ReturnType<typeof client.api.chat.status>
->['chat']
+export type ChatStatus = Awaited<ReturnType<typeof client.api.chat.status>>['chat']
 
 /** A conversation of the member. */
 export type Conversation = Awaited<
@@ -14,9 +12,7 @@ export type Conversation = Awaited<
 >['conversations'][number]
 
 /** A message of a conversation, as the API stores it. */
-export type StoredMessage = Awaited<
-  ReturnType<typeof client.api.chat.show>
->['messages'][number]
+export type StoredMessage = Awaited<ReturnType<typeof client.api.chat.show>>['messages'][number]
 
 /**
  * Reads the state of the chat: the provider in use and the credits left.
@@ -89,8 +85,7 @@ export function useDeleteConversation(orgSlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (id: number) =>
-      client.api.chat.destroy({ params: { orgSlug, id } }),
+    mutationFn: async (id: number) => client.api.chat.destroy({ params: { orgSlug, id } }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['chat', 'conversations', orgSlug] }),
   })
@@ -172,9 +167,7 @@ function chatHeaders(): Record<string, string> {
 function readCookie(name: string): string | null {
   if (typeof document === 'undefined') return null
 
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${name}=([^;]*)`)
-  )
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
 
   return match?.[1] ? decodeURIComponent(match[1]) : null
 }

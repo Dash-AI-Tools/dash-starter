@@ -1,0 +1,38 @@
+# The stack the end-to-end suite runs against.
+#
+# It is the development stack with other ports and its own project name, so
+# both can run at the same time on the same machine. The suite only talks to
+# the web origin: the dev server proxies `/api` and `/mcp` to the API, so the
+# browser never leaves a single origin.
+name: dash-e2e
+
+services:
+  db:
+    # The list of the ports replaces the one of the development stack, it is
+    # not appended to it.
+    ports: !override
+      - '5434:5432'
+
+  mailpit:
+    ports: !override
+      - '8026:8025' # web UI and the API of the catcher
+      - '1026:1025' # SMTP
+
+  api:
+    environment:
+      # The links that travel by email have to open the ports the host
+      # publishes, not the ones of the container.
+      APP_URL: http://localhost:3334
+      WEB_URL: http://localhost:5174
+      # The secret the suite signs the webhooks of the payment provider with.
+      CREEM_WEBHOOK_SECRET: e2e-webhook-secret
+      # The suite creates several accounts from the same address, so the
+      # budget of the auth endpoints has to be bigger than the one of the
+      # product.
+      AUTH_IP_REQUESTS: 1000
+    ports: !override
+      - '3334:3333'
+
+  web:
+    ports: !override
+      - '5174:5173'

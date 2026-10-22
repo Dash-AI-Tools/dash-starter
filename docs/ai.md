@@ -29,12 +29,12 @@ The keys never leave the server: they are read from the environment when a model
 
 ## The aliases
 
-| Alias      | What it is for                                  | Can write | Can stream | Can answer with an object | Can draw |
-| ---------- | ----------------------------------------------- | :-------: | :--------: | :-----------------------: | :------: |
-| `chat`     | The default of the product: the long answers.   |     ✓     |     ✓      |             ✓             |          |
-| `fast`     | The short answers: summaries, classifications.  |     ✓     |     ✓      |             ✓             |          |
-| `reasoning`| The answers that need to think before answering. |     ✓     |     ✓      |             ✓             |          |
-| `image`    | The pictures of the product.                    |           |            |                           |    ✓     |
+| Alias       | What it is for                                   | Can write | Can stream | Can answer with an object | Can draw |
+| ----------- | ------------------------------------------------ | :-------: | :--------: | :-----------------------: | :------: |
+| `chat`      | The default of the product: the long answers.    |     ✓     |     ✓      |             ✓             |          |
+| `fast`      | The short answers: summaries, classifications.   |     ✓     |     ✓      |             ✓             |          |
+| `reasoning` | The answers that need to think before answering. |     ✓     |     ✓      |             ✓             |          |
+| `image`     | The pictures of the product.                     |           |            |                           |    ✓     |
 
 An alias is a promise: the feature asks for a purpose and the registry points it at a model. The capabilities of a model are the intersection of what the alias promises and what the provider can do, so an alias that points at a provider without images simply cannot draw.
 
@@ -72,18 +72,18 @@ DEEPSEEK_API_KEY=your-api-key
 AI_CHAT_MODEL=deepseek-chat
 ```
 
-| Provider    | Variable                     | Base URL                                        |
-| ----------- | ---------------------------- | ----------------------------------------------- |
-| Anthropic   | `ANTHROPIC_API_KEY`          | —                                               |
-| OpenAI      | `OPENAI_API_KEY`             | —                                               |
-| Google      | `GOOGLE_GENERATIVE_AI_API_KEY` | —                                             |
-| DeepSeek    | `DEEPSEEK_API_KEY`           | —                                               |
-| OpenRouter  | `OPENROUTER_API_KEY`         | —                                               |
-| Qwen        | `QWEN_API_KEY`               | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| Kimi        | `KIMI_API_KEY`               | `https://api.moonshot.cn/v1`                    |
-| GLM         | `GLM_API_KEY`                | `https://open.bigmodel.cn/api/paas/v4`          |
-| Ollama      | `OLLAMA_API_KEY`             | `http://localhost:11434/v1`                     |
-| Compatible  | `COMPATIBLE_API_KEY`         | `COMPATIBLE_BASE_URL`                           |
+| Provider   | Variable                       | Base URL                                            |
+| ---------- | ------------------------------ | --------------------------------------------------- |
+| Anthropic  | `ANTHROPIC_API_KEY`            | —                                                   |
+| OpenAI     | `OPENAI_API_KEY`               | —                                                   |
+| Google     | `GOOGLE_GENERATIVE_AI_API_KEY` | —                                                   |
+| DeepSeek   | `DEEPSEEK_API_KEY`             | —                                                   |
+| OpenRouter | `OPENROUTER_API_KEY`           | —                                                   |
+| Qwen       | `QWEN_API_KEY`                 | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| Kimi       | `KIMI_API_KEY`                 | `https://api.moonshot.cn/v1`                        |
+| GLM        | `GLM_API_KEY`                  | `https://open.bigmodel.cn/api/paas/v4`              |
+| Ollama     | `OLLAMA_API_KEY`               | `http://localhost:11434/v1`                         |
+| Compatible | `COMPATIBLE_API_KEY`           | `COMPATIBLE_BASE_URL`                               |
 
 `AI_TIMEOUT_MS` bounds every call to the provider. The default is 60 seconds.
 
@@ -166,12 +166,12 @@ The stub uses no tokens, so the calls of the stub cost no credits.
 
 Every call costs credits, according to the prices of its alias:
 
-| Alias      | Credits per 1,000 input tokens | Credits per 1,000 output tokens | Credits per image |
-| ---------- | ------------------------------ | ------------------------------- | ----------------- |
-| `chat`     | 1                              | 3                               | —                 |
-| `fast`     | 0.25                           | 0.75                            | —                 |
-| `reasoning`| 3                              | 9                               | —                 |
-| `image`    | —                              | —                               | 10                |
+| Alias       | Credits per 1,000 input tokens | Credits per 1,000 output tokens | Credits per image |
+| ----------- | ------------------------------ | ------------------------------- | ----------------- |
+| `chat`      | 1                              | 3                               | —                 |
+| `fast`      | 0.25                           | 0.75                            | —                 |
+| `reasoning` | 3                              | 9                               | —                 |
+| `image`     | —                              | —                               | 10                |
 
 > The prices are placeholders: replace them with the ones of the models the aliases point at, in `apps/api/config/ai.ts`.
 
@@ -195,11 +195,11 @@ The URL is served by the API under `/api/uploads`, the same origin as the web ap
 
 ## The errors
 
-| Code                    | Status | When                                                    |
-| ----------------------- | ------ | ------------------------------------------------------- |
-| `ai_quota_exceeded`     | 402    | The organization has used all the credits of its plan.   |
-| `ai_unavailable`        | 503    | The provider did not answer, or answered with an error.  |
-| `ai_alias_unavailable`  | 500    | The alias points at a model that cannot do the request.  |
+| Code                   | Status | When                                                    |
+| ---------------------- | ------ | ------------------------------------------------------- |
+| `ai_quota_exceeded`    | 402    | The organization has used all the credits of its plan.  |
+| `ai_unavailable`       | 503    | The provider did not answer, or answered with an error. |
+| `ai_alias_unavailable` | 500    | The alias points at a model that cannot do the request. |
 
 The details of the provider never reach the client: a timeout, a rate limit or a rejected key is always the same "the AI is temporarily unavailable" answer. The details stay in the log of the server.
 

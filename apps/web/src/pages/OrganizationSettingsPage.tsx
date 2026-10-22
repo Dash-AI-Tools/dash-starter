@@ -75,9 +75,7 @@ export default function OrganizationSettingsPage() {
     () =>
       z.object({
         name: z.string().min(1, t('required')),
-        slug: z
-          .string()
-          .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t('slugHint')),
+        slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, t('slugHint')),
         logoPath: z.string(),
         defaultLocale: z.enum(['en', 'es']),
       }),

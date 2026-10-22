@@ -21,7 +21,11 @@ export default function AcceptInvitationPage() {
    * The details of the invitation. The token is the secret of the invitation,
    * so the holder of the link is the person it was sent to.
    */
-  const { data: invitation, isPending, isError } = useQuery({
+  const {
+    data: invitation,
+    isPending,
+    isError,
+  } = useQuery({
     queryKey: ['invitation', token],
     queryFn: async () => {
       const response = await client.api.invitation.show({ params: { token } })

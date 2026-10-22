@@ -3,7 +3,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { usePlans, type Plan, type PlanInterval } from '@/lib/billing'
 import { useI18n } from '@/lib/i18n'
 import { useCurrentUser } from '@/lib/session'
@@ -118,13 +125,11 @@ export default function PricingPage() {
               <CardContent className="flex-1 space-y-4">
                 <div>
                   <p className="text-3xl font-semibold">
-                    {!price ? (
-                      t('pricingUnavailable')
-                    ) : price.amountCents === 0 ? (
-                      t('free')
-                    ) : (
-                      formatCurrency(price.amountCents, price.currency)
-                    )}
+                    {!price
+                      ? t('pricingUnavailable')
+                      : price.amountCents === 0
+                        ? t('free')
+                        : formatCurrency(price.amountCents, price.currency)}
                   </p>
                   {price && price.amountCents > 0 ? (
                     <p className="text-sm text-muted-foreground">

@@ -40,12 +40,7 @@ export class ApiRequestError extends Error {
   /** The validation errors, when the request failed validation. */
   readonly errors: FieldError[]
 
-  constructor(
-    status: number,
-    code: string,
-    message: string,
-    errors: FieldError[] = []
-  ) {
+  constructor(status: number, code: string, message: string, errors: FieldError[] = []) {
     super(message)
     this.name = 'ApiRequestError'
     this.status = status
@@ -135,4 +130,3 @@ export function toApiFailure(error: unknown): ApiFailure {
 export function isNotFound(error: unknown): boolean {
   return toApiFailure(error).error.status === 404
 }
-

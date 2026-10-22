@@ -47,9 +47,7 @@ function renderConsent() {
  * policy or as a choice made long ago would be.
  */
 function storeRaw(consent: { v: string; categories: unknown; ts: number }) {
-  document.cookie = `${CONSENT_COOKIE}=${encodeURIComponent(
-    JSON.stringify(consent)
-  )}; path=/`
+  document.cookie = `${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(consent))}; path=/`
 }
 
 describe('The consent of the cookies', () => {

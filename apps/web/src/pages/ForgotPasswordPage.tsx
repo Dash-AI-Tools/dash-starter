@@ -9,10 +9,7 @@ export default function ForgotPasswordPage() {
   const { t } = useI18n()
   const [sent, setSent] = useState(false)
 
-  const schema = useMemo(
-    () => z.object({ email: z.string().email(t('invalidEmail')) }),
-    [t]
-  )
+  const schema = useMemo(() => z.object({ email: z.string().email(t('invalidEmail')) }), [t])
 
   return (
     <div className="mx-auto flex min-h-svh max-w-md flex-col justify-center px-4">

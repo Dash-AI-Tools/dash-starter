@@ -134,6 +134,13 @@ export const envSchema = {
    * Rate limiting store.
    */
   LIMITER_STORE: Env.schema.enum(['database', 'memory'] as const),
+
+  /**
+   * Requests allowed per IP and window on the auth endpoints. The stack of
+   * the end-to-end tests raises it, because the suite creates several
+   * accounts from the same address.
+   */
+  AUTH_IP_REQUESTS: Env.schema.number.optional(),
 }
 
 export default await Env.create(new URL('../', import.meta.url), envSchema)

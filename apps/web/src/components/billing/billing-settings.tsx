@@ -43,15 +43,7 @@ const STATUS_KEYS: Record<string, TranslationKey> = {
 /**
  * A meter of the usage of the organization against the limits of its plan.
  */
-function Meter({
-  label,
-  used,
-  limit,
-}: {
-  label: string
-  used: number
-  limit: number
-}) {
+function Meter({ label, used, limit }: { label: string; used: number; limit: number }) {
   const { t } = useI18n()
 
   /**
@@ -263,11 +255,7 @@ export function BillingSettings({ orgSlug }: { orgSlug: string }) {
             <CardTitle>{t('usage')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Meter
-              label={t('usageSeats')}
-              used={billing.usage.seats}
-              limit={entitlements.seats}
-            />
+            <Meter label={t('usageSeats')} used={billing.usage.seats} limit={entitlements.seats} />
             <Meter
               label={t('usageAiCredits')}
               used={billing.usage.aiCredits}
@@ -344,15 +332,13 @@ export function BillingSettings({ orgSlug }: { orgSlug: string }) {
                     <p className="text-sm text-muted-foreground">{plan.description}</p>
 
                     <p className="text-sm">
-                      {!price ? (
-                        t('intervalUnavailable')
-                      ) : price.amountCents === 0 ? (
-                        t('free')
-                      ) : (
-                        `${formatCurrency(price.amountCents, price.currency)}${
-                          interval === 'year' ? t('perYear') : t('perMonth')
-                        }`
-                      )}
+                      {!price
+                        ? t('intervalUnavailable')
+                        : price.amountCents === 0
+                          ? t('free')
+                          : `${formatCurrency(price.amountCents, price.currency)}${
+                              interval === 'year' ? t('perYear') : t('perMonth')
+                            }`}
                     </p>
 
                     <Button

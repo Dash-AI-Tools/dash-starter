@@ -40,10 +40,7 @@ export default function PublicLayout() {
               </Link>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
+                <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground">
                   {t('signIn')}
                 </Link>
                 <Link to="/signup">
@@ -91,11 +88,7 @@ export default function PublicLayout() {
                 </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  className="hover:text-foreground"
-                  onClick={openPreferences}
-                >
+                <button type="button" className="hover:text-foreground" onClick={openPreferences}>
                   {t('footerCookies')}
                 </button>
               </li>

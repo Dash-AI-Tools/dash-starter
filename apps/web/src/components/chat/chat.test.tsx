@@ -124,7 +124,10 @@ describe('The chat of an organization', () => {
     const visitor = userEvent.setup()
     renderChat()
 
-    await visitor.type(await screen.findByLabelText('Ask anything about your organization…'), 'How many admins?')
+    await visitor.type(
+      await screen.findByLabelText('Ask anything about your organization…'),
+      'How many admins?'
+    )
     await visitor.click(screen.getByRole('button', { name: 'Send' }))
 
     expect(await screen.findByText('There are 2 admins.')).toBeInTheDocument()
@@ -133,9 +136,7 @@ describe('The chat of an organization', () => {
 
   it('shows the script of the model as text and never runs it', async () => {
     server.use(
-      http.get(CONVERSATIONS, () =>
-        HttpResponse.json({ conversations: [conversation()] })
-      ),
+      http.get(CONVERSATIONS, () => HttpResponse.json({ conversations: [conversation()] })),
       http.get(`${CONVERSATIONS}/7`, () =>
         HttpResponse.json({
           conversation: conversation(),
@@ -162,9 +163,7 @@ describe('The chat of an organization', () => {
 
   it('shows the call of a tool', async () => {
     server.use(
-      http.get(CONVERSATIONS, () =>
-        HttpResponse.json({ conversations: [conversation()] })
-      ),
+      http.get(CONVERSATIONS, () => HttpResponse.json({ conversations: [conversation()] })),
       http.get(`${CONVERSATIONS}/7`, () =>
         HttpResponse.json({
           conversation: conversation(),
@@ -240,9 +239,7 @@ describe('The chat of an organization', () => {
     let body: unknown
 
     server.use(
-      http.get(CONVERSATIONS, () =>
-        HttpResponse.json({ conversations: [conversation()] })
-      ),
+      http.get(CONVERSATIONS, () => HttpResponse.json({ conversations: [conversation()] })),
       http.patch(`${CONVERSATIONS}/7`, async ({ request }) => {
         body = await request.json()
         return HttpResponse.json({ conversation: conversation({ title: 'A new name' }) })
@@ -266,9 +263,7 @@ describe('The chat of an organization', () => {
     let deleted = false
 
     server.use(
-      http.get(CONVERSATIONS, () =>
-        HttpResponse.json({ conversations: [conversation()] })
-      ),
+      http.get(CONVERSATIONS, () => HttpResponse.json({ conversations: [conversation()] })),
       http.delete(`${CONVERSATIONS}/7`, () => {
         deleted = true
         return HttpResponse.json({ success: true })

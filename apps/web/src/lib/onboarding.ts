@@ -11,9 +11,7 @@ export type OnboardingStep = 'details' | 'use-case' | 'invites' | 'plan' | 'comp
  * returns it. The step says where the setup is, so the wizard can pick it up
  * where the visitor left it.
  */
-export type Onboarding = Awaited<
-  ReturnType<typeof client.api.onboarding.show>
->['onboarding']
+export type Onboarding = Awaited<ReturnType<typeof client.api.onboarding.show>>['onboarding']
 
 /**
  * Reads the state of the setup of the organization of the visitor.

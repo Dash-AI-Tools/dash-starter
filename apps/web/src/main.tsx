@@ -91,5 +91,5 @@ createRoot(document.getElementById('root')!).render(
         </ThemeProvider>
       </ConsentProvider>
     </I18nProvider>
-  </StrictMode>,
+  </StrictMode>
 )

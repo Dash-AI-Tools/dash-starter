@@ -72,10 +72,7 @@ function Categories({
       </div>
 
       <DialogFooter>
-        <Button
-          type="button"
-          onClick={() => onSave({ necessary: true, analytics, marketing })}
-        >
+        <Button type="button" onClick={() => onSave({ necessary: true, analytics, marketing })}>
           {t('preferencesSave')}
         </Button>
       </DialogFooter>

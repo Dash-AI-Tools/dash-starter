@@ -39,9 +39,7 @@ export default function Home() {
     <>
       <section className="mx-auto max-w-6xl px-4 py-20 text-center">
         <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">{t('heroTitle')}</h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-          {t('heroSubtitle')}
-        </p>
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">{t('heroSubtitle')}</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link to="/signup">
             <Button size="lg">

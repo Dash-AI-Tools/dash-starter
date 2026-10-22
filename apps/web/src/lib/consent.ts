@@ -159,11 +159,7 @@ const scripts = new Map<string, ConsentScript>()
 /**
  * Registers a script that only loads when the visitor grants its category.
  */
-export function registerScript(
-  id: string,
-  category: ConsentScript['category'],
-  src: string
-): void {
+export function registerScript(id: string, category: ConsentScript['category'], src: string): void {
   scripts.set(id, { id, category, src })
 }
 

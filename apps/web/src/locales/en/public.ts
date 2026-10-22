@@ -13,17 +13,23 @@ export const publicSite = {
   featuresTitle: 'Everything a SaaS needs on day one',
   featuresSubtitle: 'Replace the demo code with your product logic and ship.',
   featureAuthTitle: 'Accounts that behave',
-  featureAuthBody: 'Session cookies, CSRF protection, email verification, password reset and rate limiting out of the box.',
+  featureAuthBody:
+    'Session cookies, CSRF protection, email verification, password reset and rate limiting out of the box.',
   featureOrgsTitle: 'Multi-tenant by default',
-  featureOrgsBody: 'Organizations, roles, invitations and tenant isolation enforced on the server, not in the UI.',
+  featureOrgsBody:
+    'Organizations, roles, invitations and tenant isolation enforced on the server, not in the UI.',
   featureBillingTitle: 'Billing that bills',
-  featureBillingBody: 'Database-configured plans, hosted checkout, webhooks, entitlements and a customer portal.',
+  featureBillingBody:
+    'Database-configured plans, hosted checkout, webhooks, entitlements and a customer portal.',
   featureAiTitle: 'Any model, one service',
-  featureAiBody: 'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama or any OpenAI-compatible endpoint.',
+  featureAiBody:
+    'Anthropic, OpenAI, Google, DeepSeek, Qwen, Kimi, GLM, OpenRouter, Ollama or any OpenAI-compatible endpoint.',
   featureEmailTitle: 'Emails that arrive',
-  featureEmailBody: 'Localized transactional templates delivered through Brevo, with a local SMTP catcher for development.',
+  featureEmailBody:
+    'Localized transactional templates delivered through Brevo, with a local SMTP catcher for development.',
   featureMcpTitle: 'MCP built in',
-  featureMcpBody: 'Expose your product capabilities to external agents with scoped, metered, rate-limited API keys.',
+  featureMcpBody:
+    'Expose your product capabilities to external agents with scoped, metered, rate-limited API keys.',
   pricingTitle: 'Simple pricing that scales with you',
   pricingSubtitle: 'Start free. Upgrade when your team and usage grow.',
   pricingTeaserCta: 'See all plans',
@@ -43,7 +49,8 @@ export const publicSite = {
   faq3Q: 'Is the code mine?',
   faq3A: 'Yes. This is a starter template you own and can extend freely.',
   faq4Q: 'Can I use my own AI provider?',
-  faq4A: 'Yes. Point any OpenAI-compatible endpoint at the AI configuration, no code changes required.',
+  faq4A:
+    'Yes. Point any OpenAI-compatible endpoint at the AI configuration, no code changes required.',
   ctaTitle: 'Ready to build?',
   ctaSubtitle: 'Create an account and get a working workspace in minutes.',
   ctaButton: 'Create your account',

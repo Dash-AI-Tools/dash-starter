@@ -42,11 +42,10 @@ export const http = defineConfig({
    */
   redirect: {
     /**
-     * When enabled, all redirects automatically carry over the current
-     * request's query string parameters to the redirect destination.
-     * Use withQs(false) to opt out for a specific redirect.
+     * The redirects of the API go back to the web app with their own
+     * parameters, so the query string of the request is not carried over.
      */
-    forwardQueryString: true,
+    forwardQueryString: false,
   },
 
   /**

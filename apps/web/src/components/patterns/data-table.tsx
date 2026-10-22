@@ -270,7 +270,10 @@ export function DataTable<T>({
       ) : null}
 
       {error ? (
-        <div role="alert" className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive">
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive"
+        >
           {error}
         </div>
       ) : (
@@ -285,11 +288,13 @@ export function DataTable<T>({
                         <button
                           type="button"
                           className="inline-flex items-center gap-1"
-                          onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
-                          aria-label={
+                          onClick={
                             header.column.getCanSort()
-                              ? `Sort by ${header.column.id}`
+                              ? header.column.getToggleSortingHandler()
                               : undefined
+                          }
+                          aria-label={
+                            header.column.getCanSort() ? `Sort by ${header.column.id}` : undefined
                           }
                         >
                           {flexRender(header.column.columnDef.header, header.getContext())}
@@ -312,13 +317,19 @@ export function DataTable<T>({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {labels?.loading ?? 'Loading…'}
                   </TableCell>
                 </TableRow>
               ) : data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground"
+                  >
                     {emptyState}
                   </TableCell>
                 </TableRow>

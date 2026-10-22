@@ -12,21 +12,21 @@ npx create-dash-starter my-product
 
 ## What is inside
 
-| Path | What it is |
-| --- | --- |
-| `apps/api` | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks |
-| `apps/web` | React 19 SPA: public site, dashboard, admin, chat, design system |
-| `packages/create-app` | The `create-dash-starter` installer |
-| `e2e` | Playwright end-to-end journeys against the running stack |
+| Path                  | What it is                                                       |
+| --------------------- | ---------------------------------------------------------------- |
+| `apps/api`            | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks    |
+| `apps/web`            | React 19 SPA: public site, dashboard, admin, chat, design system |
+| `packages/create-app` | The `create-dash-starter` installer                              |
+| `e2e`                 | Playwright end-to-end journeys against the running stack         |
 
 Every external integration has a local fallback, so the whole product boots and the whole test suite passes **with zero third-party keys**:
 
-| Integration | Local / test fallback | Production |
-| --- | --- | --- |
-| Email | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API |
-| Payments | Creem test mode + signed simulated webhooks | Creem live |
-| AI | Deterministic stub provider | Any configured provider |
-| Storage | Local disk | S3-compatible |
+| Integration | Local / test fallback                          | Production              |
+| ----------- | ---------------------------------------------- | ----------------------- |
+| Email       | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API |
+| Payments    | Creem test mode + signed simulated webhooks    | Creem live              |
+| AI          | Deterministic stub provider                    | Any configured provider |
+| Storage     | Local disk                                     | S3-compatible           |
 
 ---
 
@@ -63,13 +63,13 @@ Then boot the stack:
 docker compose up -d
 ```
 
-| Service | URL |
-| --- | --- |
-| Web app | http://localhost:5173 |
-| API | http://localhost:3333 |
-| API health | http://localhost:3333/api/v1/health |
-| Mailpit inbox | http://localhost:8025 |
-| Postgres | `localhost:5433` (`dash` / `dash` / `dash`) |
+| Service       | URL                                         |
+| ------------- | ------------------------------------------- |
+| Web app       | http://localhost:5173                       |
+| API           | http://localhost:3333                       |
+| API health    | http://localhost:3333/api/v1/health         |
+| Mailpit inbox | http://localhost:8025                       |
+| Postgres      | `localhost:5433` (`dash` / `dash` / `dash`) |
 
 Run the migrations and seed the default plans:
 
@@ -101,16 +101,40 @@ cd apps/api && NODE_ENV=test node ace migration:run --force
 
 Run at the repository root; each one fans out to every workspace.
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the API and the web app with hot reload |
-| `npm run build` | Build the API and the web app |
-| `npm run lint` | Lint every workspace |
-| `npm run format` | Format every workspace with Prettier |
-| `npm run format:check` | Check formatting without writing |
-| `npm run typecheck` | Type-check every workspace |
-| `npm test` | Run the API (Japa) and web (Vitest) unit suites |
-| `npm run test:e2e` | Run the Playwright suite against the running stack |
+| Command                | What it does                                       |
+| ---------------------- | -------------------------------------------------- |
+| `npm run dev`          | Start the API and the web app with hot reload      |
+| `npm run build`        | Build the API and the web app                      |
+| `npm run lint`         | Lint every workspace                               |
+| `npm run format`       | Format every workspace with Prettier               |
+| `npm run format:check` | Check formatting without writing                   |
+| `npm run typecheck`    | Type-check every workspace                         |
+| `npm test`             | Run the API (Japa) and web (Vitest) unit suites    |
+| `npm run test:e2e`     | Run the Playwright suite against the running stack |
+
+---
+
+## End-to-end tests
+
+The journeys live in `e2e/` and drive a real browser against the real stack: the API, the database, Mailpit and a signed webhook of the payment provider. They need the stack up, so they use their own ports and never touch the ones of your development session.
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace migration:run --force
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
+docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+
+npm run test:e2e
+```
+
+| Service    | URL                   |
+| ---------- | --------------------- |
+| Web app    | http://localhost:5174 |
+| API        | http://localhost:3334 |
+| Mailpit    | http://localhost:8026 |
+| PostgreSQL | localhost:5434        |
+
+`e2e/README.md` documents the helpers, the variables (`E2E_WEB_URL`, `E2E_MAILPIT_URL`, `E2E_CREEM_WEBHOOK_SECRET`) and the journeys.
 
 ---
 
@@ -120,16 +144,16 @@ All API configuration lives in `apps/api/.env` and is validated at boot: a missi
 
 The variables you are most likely to change:
 
-| Variable | Meaning |
-| --- | --- |
-| `APP_KEY` | Signing key. Required. |
-| `APP_URL` | Public URL of the API, used to build links in emails. |
-| `DEFAULT_LOCALE` | `en` or `es`. |
-| `MAIL_TRANSPORT` | `smtp`, `brevo` or `fake`. |
-| `BREVO_API_KEY` | Required in production. |
-| `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET` | Creem credentials and the webhook signing secret. |
-| `AI_PROVIDER` | Default provider of the aliases: `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter`, `qwen`, `kimi`, `glm`, `ollama` or `compatible`. |
-| `AI_CHAT_PROVIDER`, `AI_CHAT_MODEL` etc. | The provider and the model of each alias. |
+| Variable                                 | Meaning                                                                                                                                              |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `APP_KEY`                                | Signing key. Required.                                                                                                                               |
+| `APP_URL`                                | Public URL of the API, used to build links in emails.                                                                                                |
+| `DEFAULT_LOCALE`                         | `en` or `es`.                                                                                                                                        |
+| `MAIL_TRANSPORT`                         | `smtp`, `brevo` or `fake`.                                                                                                                           |
+| `BREVO_API_KEY`                          | Required in production.                                                                                                                              |
+| `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`  | Creem credentials and the webhook signing secret.                                                                                                    |
+| `AI_PROVIDER`                            | Default provider of the aliases: `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter`, `qwen`, `kimi`, `glm`, `ollama` or `compatible`. |
+| `AI_CHAT_PROVIDER`, `AI_CHAT_MODEL` etc. | The provider and the model of each alias.                                                                                                            |
 
 See `docs/ai.md`, `docs/billing.md` and `docs/mcp.md` for the details of each integration.
 

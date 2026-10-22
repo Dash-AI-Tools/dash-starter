@@ -14,9 +14,7 @@ export function ConsentScripts() {
   return (
     <>
       {registeredScripts().map((script) =>
-        isAllowed(script.category) ? (
-          <script key={script.id} src={script.src} async />
-        ) : null
+        isAllowed(script.category) ? <script key={script.id} src={script.src} async /> : null
       )}
     </>
   )

@@ -26,7 +26,8 @@ export const apiKeys = {
   lastUsedNever: 'Nunca',
   createdAt: 'Creada',
   keyRevoke: 'Revocar',
-  keyRevokeConfirm: '¿Revocar esta clave? Los clientes que la usen dejarán de funcionar al instante.',
+  keyRevokeConfirm:
+    '¿Revocar esta clave? Los clientes que la usen dejarán de funcionar al instante.',
   keyRevoked: 'Clave API revocada.',
   keyRevokedBadge: 'Revocada',
   scopeRequired: 'Elige al menos un permiso.',
@@ -34,5 +35,6 @@ export const apiKeys = {
   allowance: 'Límite',
   mcpSnippetTitle: 'Conecta tu agente',
   mcpSnippetBody: 'Añade esto a la configuración de tu cliente MCP:',
-  planRequired: 'Las claves API no están disponibles en tu plan. Sube de plan para desbloquear MCP.',
+  planRequired:
+    'Las claves API no están disponibles en tu plan. Sube de plan para desbloquear MCP.',
 } as const

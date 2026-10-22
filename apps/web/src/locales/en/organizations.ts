@@ -50,8 +50,7 @@ export const organizations = {
   revoke: 'Revoke',
   revokeConfirm: 'Revoke this invitation?',
   revoked: 'Invitation revoked.',
-  seatLimitReached:
-    'You have reached the seat limit of your plan. Upgrade to invite more people.',
+  seatLimitReached: 'You have reached the seat limit of your plan. Upgrade to invite more people.',
   transferOwnership: 'Transfer ownership',
   transferConfirm: 'Transfer ownership to {name}? You will become an admin.',
   selectMember: 'Select a member',

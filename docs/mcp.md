@@ -49,11 +49,11 @@ curl -X POST https://api.example.com/mcp \
 
 A key belongs to an organization and is managed by its owners and its admins. The endpoints are under the organization:
 
-| Method   | Path                                     | What it does                                    |
-| -------- | ---------------------------------------- | ----------------------------------------------- |
-| `GET`    | `/api/v1/orgs/:orgSlug/api-keys`         | The keys of the organization and the calls they made |
-| `POST`   | `/api/v1/orgs/:orgSlug/api-keys`         | Creates a key and answers with its secret       |
-| `DELETE` | `/api/v1/orgs/:orgSlug/api-keys/:id`      | Revokes a key                                    |
+| Method   | Path                                 | What it does                                         |
+| -------- | ------------------------------------ | ---------------------------------------------------- |
+| `GET`    | `/api/v1/orgs/:orgSlug/api-keys`     | The keys of the organization and the calls they made |
+| `POST`   | `/api/v1/orgs/:orgSlug/api-keys`     | Creates a key and answers with its secret            |
+| `DELETE` | `/api/v1/orgs/:orgSlug/api-keys/:id` | Revokes a key                                        |
 
 The secret of a key is **never stored**: the database keeps its hash, so a leaked database does not leak the credentials of the clients. The listing shows the prefix of the key — `dash_ab12cd34` — and the scopes, its creator, the date of its last use and its expiry.
 
@@ -65,9 +65,9 @@ A revoked key keeps its row, so the history of its calls is preserved. The clien
 
 The scopes of a key are the abilities of the key. They are stored as the abilities of the token, so the same check runs on every surface.
 
-| Scope      | What it allows                                                    |
-| ---------- | ----------------------------------------------------------------- |
-| `mcp:read` | Reading the data of the organization                              |
+| Scope       | What it allows                                                      |
+| ----------- | ------------------------------------------------------------------- |
+| `mcp:read`  | Reading the data of the organization                                |
 | `mcp:write` | Acting on it — today, generating text with the model of the product |
 
 A key with only `mcp:read` that calls a tool that needs `mcp:write` gets an MCP error that says so, and the tool does not run. The tools are always advertised, so the client learns that the tool exists and that it is not allowed to use it.
@@ -78,12 +78,12 @@ The scopes are declared by the tools themselves, in `apps/api/app/tools/`, and t
 
 ## The tools
 
-| Tool                 | Scope       | What it answers                                            |
-| -------------------- | ----------- | ---------------------------------------------------------- |
-| `organization_info`  | `mcp:read`  | The name of the organization, its plan and how many members it has |
-| `list_members`       | `mcp:read`  | The members of the organization and their role             |
-| `ai_usage_summary`   | `mcp:read`  | The credits of the organization and how many are left      |
-| `generate_text`      | `mcp:write` | A short text written with the model of the `fast` alias    |
+| Tool                | Scope       | What it answers                                                    |
+| ------------------- | ----------- | ------------------------------------------------------------------ |
+| `organization_info` | `mcp:read`  | The name of the organization, its plan and how many members it has |
+| `list_members`      | `mcp:read`  | The members of the organization and their role                     |
+| `ai_usage_summary`  | `mcp:read`  | The credits of the organization and how many are left              |
+| `generate_text`     | `mcp:write` | A short text written with the model of the `fast` alias            |
 
 The answer of a tool is JSON inside the text of the result:
 
@@ -102,7 +102,12 @@ A tool that fails answers with `isError: true` and a text that starts with the c
 
 ```json
 {
-  "content": [{ "type": "text", "text": "E_TOOL_SCOPE: The scope \"mcp:write\" is needed to use the tool \"generate_text\"." }],
+  "content": [
+    {
+      "type": "text",
+      "text": "E_TOOL_SCOPE: The scope \"mcp:write\" is needed to use the tool \"generate_text\"."
+    }
+  ],
   "isError": true,
   "_meta": { "code": "E_TOOL_SCOPE" }
 }
@@ -114,11 +119,11 @@ A tool that fails answers with `isError: true` and a text that starts with the c
 
 The limits come from the plan of the organization, so they are read with `EntitlementService.for(organization)` and never from the plan directly.
 
-| Limit                | Entitlement | What it does                                                |
-| -------------------- | ----------- | ----------------------------------------------------------- |
-| MCP access           | `mcpEnabled` | Whether the server is reachable at all                       |
-| Calls per month      | `mcpCalls`  | How many tool calls the organization can make in the period  |
-| Requests per minute  | `mcpRpm`    | How many requests a key can make in a minute                 |
+| Limit               | Entitlement  | What it does                                                |
+| ------------------- | ------------ | ----------------------------------------------------------- |
+| MCP access          | `mcpEnabled` | Whether the server is reachable at all                      |
+| Calls per month     | `mcpCalls`   | How many tool calls the organization can make in the period |
+| Requests per minute | `mcpRpm`     | How many requests a key can make in a minute                |
 
 The calls of the period are the ones of the current billing period, and they are counted per key and in total. The page of the keys shows both against the allowance.
 
@@ -157,22 +162,22 @@ The server is reachable from the outside only when the API is, so the URL of the
 
 The errors of the protocol itself travel inside the result of the call. The errors of the request answer with an HTTP status and a body with a `code`:
 
-| Status | Code                | When                                                       |
-| ------ | ------------------- | ---------------------------------------------------------- |
-| 401    | `E_INVALID_API_KEY` | The key is unknown, was revoked or has expired             |
-| 403    | `E_MCP_NOT_ENABLED` | The plan of the organization does not include the server    |
+| Status | Code                  | When                                                        |
+| ------ | --------------------- | ----------------------------------------------------------- |
+| 401    | `E_INVALID_API_KEY`   | The key is unknown, was revoked or has expired              |
+| 403    | `E_MCP_NOT_ENABLED`   | The plan of the organization does not include the server    |
 | 429    | `E_TOO_MANY_REQUESTS` | The key or the organization is over its requests per minute |
-| 405    | –                   | A `GET /mcp`: the server has no stream of events            |
+| 405    | –                     | A `GET /mcp`: the server has no stream of events            |
 
 The codes of the tools travel in `_meta.code`:
 
-| Code                | When                                                     |
-| ------------------- | -------------------------------------------------------- |
-| `E_TOOL_SCOPE`      | The key does not hold the scope the tool needs            |
-| `E_TOOL_FORBIDDEN`  | The caller has no permissions in the organization         |
-| `E_TOOL_INPUT`      | The arguments of the tool do not match its schema         |
-| `E_TOOL_UNKNOWN`    | There is no tool with that name                           |
-| `mcp_quota_exceeded` | The organization has used all the calls of its plan       |
+| Code                 | When                                                |
+| -------------------- | --------------------------------------------------- |
+| `E_TOOL_SCOPE`       | The key does not hold the scope the tool needs      |
+| `E_TOOL_FORBIDDEN`   | The caller has no permissions in the organization   |
+| `E_TOOL_INPUT`       | The arguments of the tool do not match its schema   |
+| `E_TOOL_UNKNOWN`     | There is no tool with that name                     |
+| `mcp_quota_exceeded` | The organization has used all the calls of its plan |
 
 ---
 

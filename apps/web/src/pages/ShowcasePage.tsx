@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { Loader2Icon } from 'lucide-react'
 import { Toaster, toast } from 'sonner'
 import { CommandPalette, type CommandGroupConfig } from '@/components/patterns/command-palette'
-import { AreaChartCard, BarChartCard, LineChartCard, PieChartCard } from '@/components/patterns/charts'
+import {
+  AreaChartCard,
+  BarChartCard,
+  LineChartCard,
+  PieChartCard,
+} from '@/components/patterns/charts'
 import { DataTable } from '@/components/patterns/data-table'
 import { EmptyState } from '@/components/patterns/empty-state'
 import { PageHeader } from '@/components/patterns/page-header'
@@ -64,7 +69,13 @@ import {
 } from '@/components/ui/pagination'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import {
   Sheet,
@@ -76,7 +87,14 @@ import {
 } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -235,7 +253,11 @@ export default function ShowcasePage() {
             </div>
             <div className="space-y-2">
               <Label>File upload</Label>
-              <FileUpload onFilesChange={() => {}} label="Attachment" hint="PDF or PNG, up to 5 MB" />
+              <FileUpload
+                onFilesChange={() => {}}
+                label="Attachment"
+                hint="PDF or PNG, up to 5 MB"
+              />
             </div>
           </div>
         </section>
@@ -324,10 +346,7 @@ export default function ShowcasePage() {
             >
               Toast
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => toast.error('Something went wrong')}
-            >
+            <Button variant="outline" onClick={() => toast.error('Something went wrong')}>
               Toast error
             </Button>
           </div>

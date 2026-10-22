@@ -20,11 +20,14 @@ export const chat = {
   toolResult: '{tool} ha terminado',
   toolDenied: 'No tienes permiso para usar {tool}.',
   stubBadge: 'Proveedor simulado',
-  stubNotice: 'No hay ningún proveedor de IA configurado, así que las respuestas vienen del simulador determinista.',
+  stubNotice:
+    'No hay ningún proveedor de IA configurado, así que las respuestas vienen del simulador determinista.',
   creditsLeft: 'Quedan {remaining} créditos de IA',
-  chatQuotaExhausted: 'Tu organización no tiene créditos de IA. Pide a un administrador que suba el plan.',
+  chatQuotaExhausted:
+    'Tu organización no tiene créditos de IA. Pide a un administrador que suba el plan.',
   chatUpgradePlan: 'Subir el plan',
-  chatRateLimited: 'Estás enviando mensajes demasiado rápido. Espera un momento e inténtalo de nuevo.',
+  chatRateLimited:
+    'Estás enviando mensajes demasiado rápido. Espera un momento e inténtalo de nuevo.',
   copyCode: 'Copiar código',
   copied: 'Copiado',
   chatErrorTitle: 'El asistente no ha podido responder',

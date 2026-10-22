@@ -19,6 +19,16 @@ export type EmailContent = {
 }
 
 /**
+ * The footer shared by every email.
+ */
+type EmailFooter = {
+  sentBy: string
+  support: string
+  legal: string
+  automated: string
+}
+
+/**
  * The base of every transactional email: it renders the shared layout in the
  * language of the recipient and translates the messages of the API catalogs.
  */
@@ -67,16 +77,43 @@ export default abstract class AppMail extends BaseMail {
    * Renders the shared layout, as HTML and as plain text.
    */
   protected render(content: EmailContent): void {
-    const data = { locale: this.locale, ...content, ...this.footer() }
+    const footer = this.footer()
 
-    this.message.htmlView('emails/layout', data)
-    this.message.textView('emails/layout_text', data)
+    this.message.htmlView('emails/layout', {
+      locale: this.locale,
+      productName: PRODUCT_NAME,
+      ...content,
+      ...footer,
+    })
+    this.message.text(this.textBody(content, footer))
+  }
+
+  /**
+   * The plain text version of the email. It is built here and not in a template
+   * because the body has no markup: the formatter of the templates would indent
+   * its lines and break the layout of the plain text.
+   */
+  private textBody(content: EmailContent, footer: EmailFooter): string {
+    const blocks = [
+      PRODUCT_NAME,
+      content.title,
+      ...content.paragraphs,
+      ...(content.details?.length
+        ? [content.details.map((detail) => `${detail.label}: ${detail.value}`).join('\n')]
+        : []),
+      ...(content.cta ? [`${content.cta.label}: ${content.cta.url}`] : []),
+      ...(content.footnote ? [content.footnote] : []),
+    ]
+
+    const lines = [footer.sentBy, footer.support, footer.legal, footer.automated]
+
+    return `${blocks.join('\n\n')}\n\n--\n${lines.join('\n')}\n`
   }
 
   /**
    * The footer shared by every email.
    */
-  private footer() {
+  private footer(): EmailFooter {
     return {
       sentBy: this.t('mail.layout.sent_by', { app: PRODUCT_NAME }),
       support: this.t('mail.layout.support', { email: SUPPORT_EMAIL }),

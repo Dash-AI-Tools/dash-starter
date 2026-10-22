@@ -189,6 +189,7 @@ export function ChatPanel({ orgSlug }: { orgSlug: string }) {
                         onChange={(event) => setTitle(event.target.value)}
                         placeholder={t('renamePlaceholder')}
                         aria-label={t('renamePlaceholder')}
+                        // eslint-disable-next-line jsx-a11y/no-autofocus -- the user asked to rename, the field takes the focus
                         autoFocus
                       />
                       <Button type="submit" size="icon-sm" aria-label={t('save')}>
@@ -293,9 +294,7 @@ export function ChatPanel({ orgSlug }: { orgSlug: string }) {
                 className="border-dashed"
               />
             ) : (
-              messages.map((message) => (
-                <ChatMessage key={message.id} message={message} />
-              ))
+              messages.map((message) => <ChatMessage key={message.id} message={message} />)
             )}
           </div>
 

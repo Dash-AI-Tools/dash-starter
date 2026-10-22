@@ -37,7 +37,9 @@ export default function TermsPage() {
         <p>
           {t('termsVersion', { version: TERMS_VERSION })}
           {' · '}
-          {t('termsUpdated', { date: formatDate(TERMS_UPDATED_AT, { dateStyle: 'medium', timeZone: 'UTC' }) })}
+          {t('termsUpdated', {
+            date: formatDate(TERMS_UPDATED_AT, { dateStyle: 'medium', timeZone: 'UTC' }),
+          })}
         </p>
       }
       intro={t('termsIntro')}

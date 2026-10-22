@@ -14,7 +14,6 @@ export function ConsentBanner() {
 
   return (
     <section
-      role="region"
       aria-label={t('bannerTitle')}
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-popover/95 p-4 backdrop-blur"
     >

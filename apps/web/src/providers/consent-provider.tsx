@@ -69,8 +69,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ConsentContextValue>(
     () => ({
       choices,
-      isAllowed: (category) =>
-        category === 'necessary' ? true : (choices?.[category] ?? false),
+      isAllowed: (category) => (category === 'necessary' ? true : (choices?.[category] ?? false)),
       acceptAll: () => save({ necessary: true, analytics: true, marketing: true }),
       rejectNonEssential: () => save(DEFAULT_CHOICES),
       save,

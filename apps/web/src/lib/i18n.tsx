@@ -24,10 +24,7 @@ const dictionaries: Record<Locale, Messages> = { en, es }
 /**
  * Interpolate `{placeholder}` tokens in a translated string.
  */
-export function interpolate(
-  text: string,
-  params?: Record<string, string | number>
-): string {
+export function interpolate(text: string, params?: Record<string, string | number>): string {
   if (!params) return text
   return text.replace(/\{(\w+)\}/g, (match, token: string) =>
     token in params ? String(params[token]) : match
@@ -92,9 +89,7 @@ export function detectLocale(navigatorLanguages?: readonly string[]): Locale {
 
 function readLocaleCookie(): Locale | null {
   if (typeof document === 'undefined') return null
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${LOCALE_COOKIE}=([^;]*)`)
-  )
+  const match = document.cookie.match(new RegExp(`(?:^|; )${LOCALE_COOKIE}=([^;]*)`))
   const value = match?.[1]
   return value === 'en' || value === 'es' ? value : null
 }
@@ -112,10 +107,7 @@ type I18nContextValue = {
   t: (key: TranslationKey, params?: Record<string, string | number>) => string
   /** Translate a key and select its plural form. */
   plural: (forms: { one: string; other: string }, count: number) => string
-  formatDate: (
-    value: Date | string | number,
-    options?: Intl.DateTimeFormatOptions
-  ) => string
+  formatDate: (value: Date | string | number, options?: Intl.DateTimeFormatOptions) => string
   formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string
   formatCurrency: (
     amountInMinorUnits: number,

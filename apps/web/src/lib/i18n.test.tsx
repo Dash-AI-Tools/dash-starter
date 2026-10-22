@@ -48,9 +48,7 @@ describe('formatting', () => {
   it('formats a date with the locale conventions', () => {
     const date = new Date('2026-01-10T12:00:00Z')
 
-    expect(formatDate('en', date, { dateStyle: 'long', timeZone: 'UTC' })).toBe(
-      'January 10, 2026'
-    )
+    expect(formatDate('en', date, { dateStyle: 'long', timeZone: 'UTC' })).toBe('January 10, 2026')
     expect(formatDate('es', date, { dateStyle: 'long', timeZone: 'UTC' })).toBe(
       '10 de enero de 2026'
     )

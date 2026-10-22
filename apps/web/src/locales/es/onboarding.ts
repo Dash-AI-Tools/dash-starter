@@ -37,7 +37,8 @@ export const onboarding = {
   resumeBody: 'Continúa donde lo dejaste.',
   resume: 'Seguir con la configuración',
   pendingInvitesTitle: 'Tienes invitaciones pendientes',
-  pendingInvitesBody: 'Acepta una invitación para unirte a un equipo existente o crea tu propia organización.',
+  pendingInvitesBody:
+    'Acepta una invitación para unirte a un equipo existente o crea tu propia organización.',
   accept: 'Aceptar',
   decline: 'Rechazar',
   welcomeTitle: 'Tu espacio de trabajo está listo',
