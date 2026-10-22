@@ -151,6 +151,18 @@ router
     router.post('webhooks/creem', [controllers.CreemWebhook, 'handle'])
 
     /**
+     * The keys of the organization that let an external agent reach the MCP
+     * server.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug/api-keys', [controllers.ApiKey, 'index'])
+        router.post('orgs/:orgSlug/api-keys', [controllers.ApiKey, 'store'])
+        router.delete('orgs/:orgSlug/api-keys/:id', [controllers.ApiKey, 'destroy'])
+      })
+      .use([middleware.auth(), middleware.org()])
+
+    /**
      * The assistant of the organization: its conversations and the streamed
      * answer of the model.
      */
@@ -166,3 +178,13 @@ router
       .use([middleware.auth(), middleware.org()])
   })
   .prefix('/api/v1')
+
+/**
+ * The MCP server of the organizations.
+ *
+ * It lives at the root of the API because the clients of the protocol
+ * address it directly, and it authenticates with the key of the
+ * organization instead of with a session.
+ */
+router.post('/mcp', [controllers.Mcp, 'handle'])
+router.get('/mcp', [controllers.Mcp, 'stream'])

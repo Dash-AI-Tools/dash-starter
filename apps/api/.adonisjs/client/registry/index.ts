@@ -288,6 +288,24 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"webhooks"],[0,"creem"]],
     types: placeholder as Registry['creem_webhook']['types'],
   },
+  'api_key.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/api-keys',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"api-keys"]],
+    types: placeholder as Registry['api_key.index']['types'],
+  },
+  'api_key.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/api-keys',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"api-keys"]],
+    types: placeholder as Registry['api_key.store']['types'],
+  },
+  'api_key.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/orgs/:orgSlug/api-keys/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"api-keys"],[1,"id"]],
+    types: placeholder as Registry['api_key.destroy']['types'],
+  },
   'chat.status': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/orgs/:orgSlug/chat',
@@ -323,6 +341,18 @@ const routes = {
     pattern: '/api/v1/orgs/:orgSlug/chat/conversations/:id',
     tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"chat"],[0,"conversations"],[1,"id"]],
     types: placeholder as Registry['chat.destroy']['types'],
+  },
+  'mcp': {
+    methods: ["POST"],
+    pattern: '/mcp',
+    tokens: [[0,"mcp"]],
+    types: placeholder as Registry['mcp']['types'],
+  },
+  'mcp.stream': {
+    methods: ["GET","HEAD"],
+    pattern: '/mcp',
+    tokens: [[0,"mcp"]],
+    types: placeholder as Registry['mcp.stream']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

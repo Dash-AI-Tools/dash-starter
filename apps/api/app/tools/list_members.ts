@@ -16,7 +16,7 @@ export const listMembersTool: ToolDefinition = {
     role: z.enum(ROLES).optional(),
   }),
   minRole: 'member',
-  scope: 'members:read',
+  scope: 'mcp:read',
   async execute(input, ctx) {
     const query = ctx.organization
       .related('memberships')

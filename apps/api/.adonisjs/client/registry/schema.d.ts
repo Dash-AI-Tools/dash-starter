@@ -618,6 +618,45 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/creem_webhook_controller').default['handle']>>>
     }
   }
+  'api_key.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/api-keys'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['index']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['index']>>>
+    }
+  }
+  'api_key.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/api-keys'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/api_key').createApiKeyValidator)>>
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/api_key').createApiKeyValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'api_key.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/orgs/:orgSlug/api-keys/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['destroy']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/api_key_controller').default['destroy']>>>
+    }
+  }
   'chat.status': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/orgs/:orgSlug/chat'
@@ -694,6 +733,32 @@ export interface Registry {
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/chat_controller').default['destroy']>>>
+    }
+  }
+  'mcp': {
+    methods: ["POST"]
+    pattern: '/mcp'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['handle']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['handle']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['handle']>>>
+    }
+  }
+  'mcp.stream': {
+    methods: ["GET","HEAD"]
+    pattern: '/mcp'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['stream']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['stream']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/mcp_controller').default['stream']>>>
     }
   }
 }

@@ -42,6 +42,13 @@ export const manageBilling = Bouncer.ability((user: User, membership: Membership
 )
 
 /**
+ * The API keys of the organization are managed by the admins and the owner.
+ */
+export const manageApiKeys = Bouncer.ability((user: User, membership: Membership) =>
+  allowed(user, membership, 'admin')
+)
+
+/**
  * The two members of a change of a member: the one that asks for it and the
  * one that is affected by it.
  */

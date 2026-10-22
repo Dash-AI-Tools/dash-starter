@@ -175,3 +175,28 @@ export const E_CONVERSATION_NOT_FOUND = createError(
   'E_CONVERSATION_NOT_FOUND',
   404
 )
+
+/**
+ * The key of the request is unknown, was revoked or has expired. Every
+ * answer is the same, so the API never reveals which keys exist.
+ */
+export const E_INVALID_API_KEY = createError('The API key is not valid', 'E_INVALID_API_KEY', 401)
+
+/**
+ * The key does not belong to the organization of the request.
+ */
+export const E_API_KEY_NOT_FOUND = createError(
+  'The API key was not found',
+  'E_API_KEY_NOT_FOUND',
+  404
+)
+
+/**
+ * The plan of the organization does not include the MCP server, so the keys
+ * cannot be created and the server cannot be reached.
+ */
+export const E_MCP_NOT_ENABLED = createError(
+  'The MCP server is not available on your plan. Upgrade to unlock it',
+  'E_MCP_NOT_ENABLED',
+  403
+)

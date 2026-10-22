@@ -14,7 +14,7 @@ export const organizationInfoTool: ToolDefinition = {
   descriptionKey: 'chat.tools.organizationInfo',
   schema: z.object({}),
   minRole: 'member',
-  scope: 'organization:read',
+  scope: 'mcp:read',
   async execute(_input, ctx) {
     const members = await db
       .query()

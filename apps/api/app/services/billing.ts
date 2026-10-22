@@ -6,8 +6,10 @@ import type { PlanInterval } from '#models/plan_price'
 import Subscription from '#models/subscription'
 import type { SubscriptionStatus } from '#models/subscription'
 import type User from '#models/user'
+import { usedCredits } from '#services/ai_usage'
 import { CreemClient } from '#services/creem'
 import { EntitlementService } from '#services/entitlements'
+import { mcpUsage } from '#services/mcp_usage'
 import { usedSeats } from '#services/organizations'
 import { activePrice } from '#services/plans'
 import env from '#start/env'
@@ -142,6 +144,7 @@ export async function billingState(organization: Organization) {
     .first()
 
   const seats = await usedSeats(organization)
+  const mcp = await mcpUsage(organization)
 
   return {
     plan: {
@@ -163,12 +166,8 @@ export async function billingState(organization: Organization) {
       : null,
     usage: {
       seats,
-      /**
-       * The counters of the AI and of the MCP arrive with the groups that
-       * spend them, so they are read as zero until then.
-       */
-      aiCredits: 0,
-      mcpCalls: 0,
+      aiCredits: await usedCredits(organization),
+      mcpCalls: mcp.total,
     },
   }
 }

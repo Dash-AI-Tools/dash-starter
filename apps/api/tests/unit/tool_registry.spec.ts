@@ -74,13 +74,33 @@ test.group('The registry of tools', () => {
     const outcome = await toolRegistry.call(
       'list_members',
       {},
-      { ...contextOf(context), scopes: ['organization:read'] }
+      { ...contextOf(context), scopes: ['mcp:write'] }
     )
 
     assert.equal(outcome.status, 'denied')
 
     if (outcome.status === 'denied') {
       assert.equal(outcome.code, 'E_TOOL_SCOPE')
+    }
+  })
+
+  test('denies a caller that has neither a membership nor scopes', async ({ assert }) => {
+    const context = await scenario()
+
+    const outcome = await toolRegistry.call(
+      'organization_info',
+      {},
+      {
+        organization: context.organization,
+        user: context.user,
+        locale: 'en',
+      }
+    )
+
+    assert.equal(outcome.status, 'denied')
+
+    if (outcome.status === 'denied') {
+      assert.equal(outcome.code, 'E_TOOL_FORBIDDEN')
     }
   })
 

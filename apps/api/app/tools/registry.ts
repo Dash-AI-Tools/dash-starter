@@ -11,10 +11,17 @@ import { type z } from 'zod'
 export type ToolContext = {
   /** The organization the tool acts on. */
   organization: Organization
-  /** The membership of the caller, with the role it holds in the organization. */
-  membership: Membership
-  /** The user that made the call. */
-  user: User
+  /**
+   * The membership of the caller, with the role it holds in the organization.
+   * An API key has no membership: the scopes of the key are what grant the
+   * permission in that case.
+   */
+  membership?: Membership
+  /**
+   * The user that made the call. A key of an organization whose creator was
+   * removed has none.
+   */
+  user: User | null
   /** The language the tool answers in. */
   locale: SupportedLocale
   /**
@@ -111,7 +118,15 @@ export class ToolRegistry {
       }
     }
 
-    if (!hasRole(ctx.membership.role, tool.minRole)) {
+    if (!ctx.membership && !ctx.scopes) {
+      return {
+        status: 'denied',
+        code: 'E_TOOL_FORBIDDEN',
+        message: 'The caller has no permissions in this organization.',
+      }
+    }
+
+    if (ctx.membership && !hasRole(ctx.membership.role, tool.minRole)) {
       return {
         status: 'denied',
         code: 'E_TOOL_FORBIDDEN',

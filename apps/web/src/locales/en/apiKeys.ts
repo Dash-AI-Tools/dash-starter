@@ -28,6 +28,8 @@ export const apiKeys = {
   keyRevoke: 'Revoke',
   keyRevokeConfirm: 'Revoke this key? Clients using it will stop working immediately.',
   keyRevoked: 'API key revoked.',
+  keyRevokedBadge: 'Revoked',
+  scopeRequired: 'Pick at least one scope.',
   calls: 'Calls this period',
   allowance: 'Allowance',
   mcpSnippetTitle: 'Connect your agent',

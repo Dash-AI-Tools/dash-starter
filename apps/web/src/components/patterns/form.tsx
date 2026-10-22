@@ -34,7 +34,7 @@ export type FormFieldConfig<T extends FieldValues> = {
   /** The help text shown under the field. */
   description?: ReactNode
   /** The type of the input. */
-  type?: 'text' | 'email' | 'password' | 'number'
+  type?: 'text' | 'email' | 'password' | 'number' | 'date'
   /** The placeholder of the input. */
   placeholder?: string
   /** Rendered instead of the default input, for example a select. */

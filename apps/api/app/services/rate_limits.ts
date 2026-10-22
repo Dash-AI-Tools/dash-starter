@@ -17,6 +17,9 @@ const FAILED_LOGIN_WINDOW = '15 minutes'
 const CHAT_REQUESTS = 20
 const CHAT_WINDOW = '1 minute'
 
+/** Window of the budgets of the MCP server. */
+const MCP_WINDOW = '1 minute'
+
 /**
  * The limiters are created on demand: the manager caches them by
  * configuration, so every call returns the same instance.
@@ -26,6 +29,11 @@ const emailLimiter = () => limiter.use({ requests: EMAIL_REQUESTS, duration: EMA
 const failedLoginLimiter = () =>
   limiter.use({ requests: FAILED_LOGIN_REQUESTS, duration: FAILED_LOGIN_WINDOW })
 const chatLimiter = () => limiter.use({ requests: CHAT_REQUESTS, duration: CHAT_WINDOW })
+/**
+ * The limiter of the MCP server depends on the plan of the organization, so
+ * the manager keeps one for every limit it is asked for.
+ */
+const mcpLimiter = (requests: number) => limiter.use({ requests, duration: MCP_WINDOW })
 
 /**
  * Normalizes an address, so `Ada@example.com` and `ada@example.com` share
@@ -76,4 +84,20 @@ export async function penalizeFailedLogin<T>(
  */
 export async function consumeChatBudget(userId: number): Promise<void> {
   await chatLimiter().consume(`chat:user:${userId}`)
+}
+
+/**
+ * Applies the budgets of the MCP server: one for the key and one for the
+ * organization, so a key cannot spend the whole allowance of the
+ * organization at once.
+ */
+export async function consumeMcpBudget(
+  keyId: number,
+  organizationId: number,
+  requests: number
+): Promise<void> {
+  const budget = mcpLimiter(requests)
+
+  await budget.consume(`mcp:key:${keyId}`)
+  await budget.consume(`mcp:org:${organizationId}`)
 }

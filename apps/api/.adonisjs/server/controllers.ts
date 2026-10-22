@@ -4,6 +4,7 @@
  */
 
 export const controllers = {
+  ApiKey: () => import('#controllers/api_key_controller'),
   Billing: () => import('#controllers/billing_controller'),
   Chat: () => import('#controllers/chat_controller'),
   CreemWebhook: () => import('#controllers/creem_webhook_controller'),
@@ -11,6 +12,7 @@ export const controllers = {
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Health: () => import('#controllers/health_controller'),
   Invitation: () => import('#controllers/invitation_controller'),
+  Mcp: () => import('#controllers/mcp_controller'),
   Member: () => import('#controllers/member_controller'),
   Onboarding: () => import('#controllers/onboarding_controller'),
   Organization: () => import('#controllers/organization_controller'),

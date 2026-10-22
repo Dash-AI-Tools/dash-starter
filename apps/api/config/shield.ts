@@ -43,6 +43,13 @@ const shieldConfig = defineConfig({
        * from, so it does not carry a token of the session.
        */
       '/api/v1/webhooks/creem',
+
+      /**
+       * The MCP server is called by an external agent with the key of the
+       * organization, not by a browser with a session: there is no token of
+       * the session to carry.
+       */
+      '/mcp',
     ],
 
     /**

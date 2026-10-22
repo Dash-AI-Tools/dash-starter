@@ -14,7 +14,7 @@ export const aiUsageTool: ToolDefinition = {
   descriptionKey: 'chat.tools.aiUsageSummary',
   schema: z.object({}),
   minRole: 'admin',
-  scope: 'billing:read',
+  scope: 'mcp:read',
   async execute(_input, ctx) {
     const [plan, used] = await Promise.all([
       EntitlementService.for(ctx.organization),

@@ -19,8 +19,11 @@ import logger from '@adonisjs/core/services/logger'
 export type AiContext = {
   /** The organization that pays for the call. */
   organization: Organization
-  /** The member that made the call. */
-  user: User
+  /**
+   * The member that made the call. A key of an organization whose creator
+   * was removed has none, so the usage is recorded without a member.
+   */
+  user: User | null
   /** The feature that asked for the generation. */
   feature: string
   /** The purpose of the model the feature needs. */
@@ -398,7 +401,7 @@ export class AiService {
   }): Promise<void> {
     await AiUsageEvent.create({
       organizationId: params.context.organization.id,
-      userId: params.context.user.id,
+      userId: params.context.user?.id ?? null,
       feature: params.context.feature,
       alias: params.alias.alias,
       provider: params.alias.provider,

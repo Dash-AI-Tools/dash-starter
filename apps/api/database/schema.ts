@@ -61,6 +61,51 @@ export class AiUsageEventSchema extends BaseModel {
   declare userId: number | null
 }
 
+export class ApiKeySchema extends BaseModel {
+  static $columns = [
+    'abilities',
+    'createdAt',
+    'createdById',
+    'expiresAt',
+    'hash',
+    'id',
+    'lastUsedAt',
+    'name',
+    'prefix',
+    'revokedAt',
+    'tokenableId',
+    'type',
+    'updatedAt',
+  ] as const
+  $columns = ApiKeySchema.$columns
+  @column()
+  declare abilities: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdById: number | null
+  @column.dateTime()
+  declare expiresAt: DateTime | null
+  @column()
+  declare hash: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare lastUsedAt: DateTime | null
+  @column()
+  declare name: string | null
+  @column()
+  declare prefix: string | null
+  @column.dateTime()
+  declare revokedAt: DateTime | null
+  @column()
+  declare tokenableId: number
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class BillingEventSchema extends BaseModel {
   static $columns = [
     'createdAt',
@@ -140,6 +185,36 @@ export class InvitationSchema extends BaseModel {
   declare role: string
   @column()
   declare tokenHash: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
+export class McpUsageEventSchema extends BaseModel {
+  static $columns = [
+    'apiKeyId',
+    'createdAt',
+    'durationMs',
+    'id',
+    'organizationId',
+    'outcome',
+    'tool',
+    'updatedAt',
+  ] as const
+  $columns = McpUsageEventSchema.$columns
+  @column()
+  declare apiKeyId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare durationMs: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare organizationId: number
+  @column()
+  declare outcome: string
+  @column()
+  declare tool: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }

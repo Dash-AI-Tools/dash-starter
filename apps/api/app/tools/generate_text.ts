@@ -16,7 +16,7 @@ export const generateTextTool: ToolDefinition = {
     prompt: z.string().min(1).max(2000),
   }),
   minRole: 'member',
-  scope: 'ai:write',
+  scope: 'mcp:write',
   async execute(input, ctx) {
     const service = new AiService()
 

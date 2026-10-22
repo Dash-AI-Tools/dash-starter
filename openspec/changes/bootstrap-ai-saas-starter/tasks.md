@@ -144,12 +144,18 @@
 
 ## 14. MCP server
 
-- [ ] 14.1 API keys via `DbAccessTokensProvider` on `Organization` (`api_keys` table, scopes as abilities, last used, expiry); create/list/revoke endpoints (admin, plan-gated); tests for one-time secret, revoke, member 403, free-plan refusal
-- [ ] 14.2 `/mcp` controller bridging Streamable HTTP transport (stateless) to `McpServer` with registry tools adapted by scope; functional tests for `tools/list` and `tools/call`
-- [ ] 14.3 Bearer auth, plan gating, `@adonisjs/limiter` per key and per org from entitlements (429 + Retry-After); tests for burst limit and revoked key
-- [ ] 14.4 `mcp_usage_events` metering and monthly allowance check (`mcp_quota_exceeded`), AI tools also consuming credits; tests
-- [ ] 14.5 Web API keys page (create with scopes, one-time secret display, revoke, usage per key vs allowance, MCP client connection snippet); component tests
-- [ ] 14.6 Document MCP usage (endpoint, auth, scopes, limits, example client config) in `docs/mcp.md`
+- [x] 14.1 API keys via `DbAccessTokensProvider` on `Organization` (`api_keys` table, scopes as abilities, last used, expiry); create/list/revoke endpoints (admin, plan-gated); tests for one-time secret, revoke, member 403, free-plan refusal
+  - NOTE: the provider is `apps/api/app/services/api_keys.ts` (`tokenableModel: Organization`, table `api_keys`, type `mcp`, prefix `dash_`), so the scopes of the key are its abilities and the database only keeps the hash of the secret. The table carries the columns the provider writes plus `prefix` and `created_by_id`; revoking sets `revoked_at` and keeps the row, so the history of the calls survives. The endpoints are `GET/POST /api/v1/orgs/:orgSlug/api-keys` and `DELETE .../api-keys/:id`, behind the ability `manageApiKeys` (owner and admin) and behind the plan: a key of an organization without MCP is refused with `E_MCP_NOT_ENABLED` (403). The functional test is `tests/functional/api_keys.spec.ts`.
+- [x] 14.2 `/mcp` controller bridging Streamable HTTP transport (stateless) to `McpServer` with registry tools adapted by scope; functional tests for `tools/list` and `tools/call`
+  - NOTE: the controller is `apps/api/app/controllers/mcp_controller.ts` and the server is built by `apps/api/app/services/mcp.ts`. The server is stateless: every request gets its own `WebStandardStreamableHTTPServerTransport` (`sessionIdGenerator: undefined`, `enableJsonResponse: true`), so it works behind a load balancer that does not keep the connections. The tools are the ones of the registry of the product, so the chat and the MCP server share the same permissions; every tool is advertised, so the client learns that a tool exists and that its key cannot use it. `GET /mcp` answers with a 405 that says the server has no stream of events. The functional test is `tests/functional/mcp.spec.ts`.
+- [x] 14.3 Bearer auth, plan gating, `@adonisjs/limiter` per key and per org from entitlements (429 + Retry-After); tests for burst limit and revoked key
+  - NOTE: the key of the `Authorization: Bearer` header is verified by hand in the controller (the request has no session), then the plan gate answers 403 `E_MCP_NOT_ENABLED`, and then the rate limits run: one for the key and one for the organization, with the requests per minute of the plan (`mcpRpm`). The 429 carries the `Retry-After` header of the limiter. The tests of the burst and of the revoked key are in `tests/functional/mcp.spec.ts`.
+- [x] 14.4 `mcp_usage_events` metering and monthly allowance check (`mcp_quota_exceeded`), AI tools also consuming credits; tests
+  - NOTE: the table is `mcp_usage_events` (organization, key, tool, outcome and duration) and the calls of the period are counted per key and in total. The allowance is checked before the tool runs: the answer is an MCP error with the code `mcp_quota_exceeded` and the tool never runs. The tools that call the model go through `AiService`, so they also consume the AI credits of the organization (`ai_usage_events`). The tests are in `tests/functional/mcp.spec.ts`.
+- [x] 14.5 Web API keys page (create with scopes, one-time secret display, revoke, usage per key vs allowance, MCP client connection snippet); component tests
+  - NOTE: the page is `apps/web/src/pages/ApiKeysPage.tsx` and the panel is `src/components/api-keys/api-keys-settings.tsx`; the client is `src/lib/api-keys.ts`. The secret is shown once, in a dialog that also carries the configuration of the client, and the calls of the period are shown per key and against the allowance of the plan. The component test is `src/pages/api-keys.test.tsx`.
+- [x] 14.6 Document MCP usage (endpoint, auth, scopes, limits, example client config) in `docs/mcp.md`
+  - NOTE: the doc is `docs/mcp.md`: the endpoint and the headers it needs, the keys and their scopes, the tools, the limits of the plan, the configuration of a client and the codes of the errors.
 
 ## 15. Quality tooling and CI
 

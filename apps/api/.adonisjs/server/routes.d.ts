@@ -51,12 +51,17 @@ export type ScannedRoutes = {
     'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'creem_webhook': { paramsTuple?: []; params?: {} }
+    'api_key.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'api_key.store': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'api_key.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
     'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.send': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
     'chat.rename': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
     'chat.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'mcp': { paramsTuple?: []; params?: {} }
+    'mcp.stream': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -74,9 +79,11 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'api_key.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'mcp.stream': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'drive.local.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
@@ -94,9 +101,11 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'api_key.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.show': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'mcp.stream': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.session.store': { paramsTuple?: []; params?: {} }
@@ -124,7 +133,9 @@ export type ScannedRoutes = {
     'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'creem_webhook': { paramsTuple?: []; params?: {} }
+    'api_key.store': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.send': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'mcp': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
     'profile.update': { paramsTuple?: []; params?: {} }
@@ -137,6 +148,7 @@ export type ScannedRoutes = {
     'organization.destroy': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'member.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'userId': ParamValue} }
     'invitation.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
+    'api_key.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
     'chat.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'orgSlug': ParamValue,'id': ParamValue} }
   }
 }

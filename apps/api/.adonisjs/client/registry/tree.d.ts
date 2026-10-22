@@ -79,6 +79,11 @@ export interface ApiDefinition {
     checkout: typeof routes['billing.checkout']
   }
   creemWebhook: typeof routes['creem_webhook']
+  apiKey: {
+    index: typeof routes['api_key.index']
+    store: typeof routes['api_key.store']
+    destroy: typeof routes['api_key.destroy']
+  }
   chat: {
     status: typeof routes['chat.status']
     send: typeof routes['chat.send']
@@ -86,5 +91,8 @@ export interface ApiDefinition {
     show: typeof routes['chat.show']
     rename: typeof routes['chat.rename']
     destroy: typeof routes['chat.destroy']
+  }
+  mcp: typeof routes['mcp'] & {
+    stream: typeof routes['mcp.stream']
   }
 }

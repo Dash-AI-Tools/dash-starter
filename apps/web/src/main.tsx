@@ -52,6 +52,10 @@ const routes: RouteObject[] = [
         path: 'settings/billing',
         ...page(() => import('./pages/BillingPage')),
       },
+      {
+        path: 'settings/api-keys',
+        ...page(() => import('./pages/ApiKeysPage')),
+      },
       { path: 'profile', ...page(() => import('./pages/ProfilePage')) },
       {
         path: '*',

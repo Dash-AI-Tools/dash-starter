@@ -42,6 +42,9 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_AI_UNAVAILABLE: { status: 503, message: 'ai_unavailable' },
   E_AI_ALIAS_UNAVAILABLE: { status: 500, message: 'ai_alias_unavailable' },
   E_CONVERSATION_NOT_FOUND: { status: 404, message: 'conversation_not_found' },
+  E_INVALID_API_KEY: { status: 401, message: 'invalid_api_key' },
+  E_API_KEY_NOT_FOUND: { status: 404, message: 'api_key_not_found' },
+  E_MCP_NOT_ENABLED: { status: 403, message: 'mcp_not_enabled' },
 }
 
 /**
@@ -75,6 +78,9 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   ai_unavailable: 'The AI is temporarily unavailable. Please try again',
   ai_alias_unavailable: 'This feature is not available with the AI model it is configured with',
   conversation_not_found: 'The conversation was not found',
+  invalid_api_key: 'The API key is not valid',
+  api_key_not_found: 'The API key was not found',
+  mcp_not_enabled: 'The MCP server is not available on your plan. Upgrade to unlock it',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {
