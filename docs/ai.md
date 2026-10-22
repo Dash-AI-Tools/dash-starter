@@ -189,7 +189,7 @@ The images are written to the disk of the application, in the folder of the orga
 organizations/<organization-id>/ai/<uuid>.png
 ```
 
-The URL is served by the API under `/api/uploads`, the same origin as the web app, so an image needs no CORS. The disk is the one of `DRIVE_DISK`: the local disk in development, and S3 in production.
+The URL is served by the API under `/api/uploads`, the same origin as the web app, so an image needs no CORS. The only disk that is registered is the local one, so the images live in the disk of the machine (`DRIVE_ROOT`). A deployment that stores them outside of the machine registers the S3 disk of `apps/api/config/drive.ts` with the `S3_*` variables of the environment, adds the driver of the disk (`@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`) to the API and widens the `DRIVE_DISK` of `apps/api/start/env.ts`: the environment refuses any disk that is not registered, so a deployment never writes to the local disk by mistake.
 
 ---
 

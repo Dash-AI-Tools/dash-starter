@@ -17,12 +17,12 @@ Use it as the starting point for your next AI product.
 
 Every external integration has a local fallback, so the whole product boots and the whole test suite passes **with zero third-party keys**:
 
-| Integration | Local / test fallback                          | Production              |
-| ----------- | ---------------------------------------------- | ----------------------- |
-| Email       | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API |
-| Payments    | Creem test mode + signed simulated webhooks    | Creem live              |
-| AI          | Deterministic stub provider                    | Any configured provider |
-| Storage     | Local disk                                     | S3-compatible           |
+| Integration | Local / test fallback                          | Production                              |
+| ----------- | ---------------------------------------------- | --------------------------------------- |
+| Email       | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API                 |
+| Payments    | Creem test mode + signed simulated webhooks    | Creem live                              |
+| AI          | Deterministic stub provider                    | Any configured provider                 |
+| Storage     | Local disk                                     | Local disk, or the S3 disk you register |
 
 ---
 
@@ -72,6 +72,8 @@ The API container installs the dependencies and runs the migrations before it se
 ```bash
 docker compose exec api node ace db:seed
 ```
+
+In development the seed also creates a demo account (`demo@example.test` / `supersecret`) with its own organization, so the product can be opened without signing up. The seeder is ignored in every other environment.
 
 Sign up at http://localhost:5173/signup — the verification email lands in Mailpit.
 
