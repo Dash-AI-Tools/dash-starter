@@ -198,9 +198,21 @@ test('the harness of the development travels with the project', async () => {
     'docs/architecture.md',
     'docs/harness.md',
     '.githooks/pre-commit',
+    '.opencode/agents/dsh/backend-dev.md',
+    '.opencode/commands/dsh/feature.md',
+    '.opencode/plugins/dsh.js',
+    'opencode.json',
   ]) {
     await readFile(join(target, file), 'utf8')
   }
+
+  /**
+   * The OpenCode files of the harness are rebranded like the rest.
+   */
+  assert.equal(
+    await readFile(join(target, '.opencode/agents/dsh/backend-dev.md'), 'utf8'),
+    '# backend-dev of Acme AI\n'
+  )
 
   /**
    * The state of the machine of the developer never travels.
@@ -210,6 +222,14 @@ test('the harness of the development travels with the project', async () => {
   await assert.rejects(() =>
     readFile(join(target, '.claude/worktrees/dsh-feature/state.txt'), 'utf8')
   )
+  for (const file of [
+    '.opencode/commands/opsx-apply.md',
+    '.opencode/skills/openspec-explore/SKILL.md',
+    '.opencode/opencode-loop/ses_1.json',
+    '.opencode/package.json',
+  ]) {
+    await assert.rejects(() => readFile(join(target, file), 'utf8'), file)
+  }
 
   /**
    * The plugin keeps its name and the marketplace takes the one of the

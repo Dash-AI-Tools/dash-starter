@@ -13,7 +13,18 @@ build
 .claude/dsh-allow
 .claude/.headroom*
 .serena/
-.opencode/
+# OpenCode: the files of the harness are tracked (generated from plugins/dsh by
+# plugins/dsh/scripts/opencode.mjs), the personal commands, skills and state are not
+.opencode/*
+!.opencode/agents/
+.opencode/agents/*
+!.opencode/agents/dsh/
+!.opencode/commands/
+.opencode/commands/*
+!.opencode/commands/dsh/
+!.opencode/plugins/
+.opencode/plugins/*
+!.opencode/plugins/dsh.js
 test-results
 playwright-report
 coverage

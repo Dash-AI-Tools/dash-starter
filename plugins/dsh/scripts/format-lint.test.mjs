@@ -3,7 +3,7 @@ import { readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { test } from 'node:test'
 
-import { checkFile, formatFile, lintFile, owningWorkspace } from './format-lint.mjs'
+import { checkFile, failureReason, formatFile, lintFile, owningWorkspace } from './format-lint.mjs'
 import { repoRoot } from './checks.mjs'
 
 test('the linted workspaces are the ones with a linter', () => {
@@ -48,4 +48,11 @@ test('a file with a lint error is reported', async () => {
 test('a file that does not exist is not checked', async () => {
   const result = await checkFile(join(repoRoot(), 'apps/web/src/lib/does-not-exist.ts'), repoRoot())
   assert.equal(result.ok, true)
+})
+
+test('the failure names the step and the file, with the output', () => {
+  assert.equal(
+    failureReason('apps/web/src/a.ts', { step: 'lint', output: '  error  unused\n' }),
+    'The lint of `apps/web/src/a.ts` failed. Fix it and try again.\n\nerror  unused'
+  )
 })

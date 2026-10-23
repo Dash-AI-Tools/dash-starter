@@ -24,7 +24,7 @@ See proposal.md for motivation. What the discovery found (and what the harness m
 
 **Non-Goals:**
 - Installing semgrep, gitleaks or other scanners (separate, asked decision).
-- A harness for non-Claude agents (opencode etc.).
+- A harness for agents other than Claude Code and OpenCode (D10).
 - Automatic merging to `main` or pushing without the developer.
 
 ## Decisions
@@ -88,6 +88,23 @@ Claude Code hooks only see Claude sessions; a commit by a developer or another a
 ### D9. Dry run as its own change
 After the harness lands, `/dsh:feature real-dashboard-metrics` proposes a separate change (API endpoint for the dashboard summary of the organization, the dashboard home consuming it instead of made-up numbers, unit/functional/e2e tests). Findings that need harness edits are fixed in this change before archive; the report lists what worked and what was adjusted.
 
+### D10. OpenCode from the same files
+OpenCode is supported from the Claude Code plugin, which stays the only source. What OpenCode V2 (2.1.3, checked against the binary and a real run; the V2 docs are at `opencode.ai/v2/docs`, `opencode.ai/docs` is V1) reads natively, and what the harness generates for it:
+
+| Piece | OpenCode V2 | The harness |
+|---|---|---|
+| Rules | `AGENTS.md` only: `CLAUDE.md` is no longer a fallback in V2 | root `opencode.json` with `instructions: ["CLAUDE.md"]`, so there is no `AGENTS.md` to keep in step |
+| Agents | `.opencode/agents/**.md` (a subdirectory is a namespace: `dsh/backend-dev`), frontmatter `description`, `mode`, `model`, `permissions` (ordered `{action, resource, effect}`); `.claude/agents` and plugin agents are not read | generated into `.opencode/agents/dsh/`: `mode: subagent`, a `deny` rule for each Claude Code tool the agent lacks (`Edit`/`Write` → `edit`, `Bash` → `shell`, `Agent` → `subagent`), the body as the prompt |
+| Commands | `.opencode/commands/**.md` (`/dsh/feature`), frontmatter `description`, `agent`, `model`, `subagent`, `$ARGUMENTS`; `.claude/commands` is not read | the skills generated into `.opencode/commands/dsh/`, the argument hint in the description |
+| Skills | `.opencode/skills`, `.claude/skills` and `.agents/skills`, never the skills of a Claude Code plugin | none: the skills of the plugin are explicit commands, so they become commands |
+| Guardrails | a plugin in `.opencode/plugins/` exporting `{ id, setup(ctx) }`; `ctx.tool.hook("execute.before")` refuses a call by throwing, and the agent reads the message; `ctx.tool.hook("execute.after")` can add to the result; `ctx.event.subscribe()` sees `session.execution.succeeded` when the agent stops (V2 has no `session.idle`); `ctx.session.prompt()` resumes a session. V1 plugins do not load in V2 | `.opencode/plugins/dsh.js` loads `plugins/dsh/scripts/opencode-plugin.mjs`, which calls the exported functions of the three hook scripts |
+
+- `plugins/dsh/scripts/opencode.mjs sync` writes the agents, the commands and the plugin module; `check` fails on a stale, missing or left over file, and a test of the plugin suite runs it, so an agent edited without `sync` fails `npm test`. The prompts are rewritten on the way (`dsh:<name>` → `dsh/<name>`, the Task tool → the subagent tool, the paths of the plugin's skills and agents → the generated ones).
+- The plugin keeps the semantics of the Claude Code hooks: the refusal and its message come from `protect-files.mjs` with the same `.claude/dsh-allow`, and a patch counts by every file it adds, updates, deletes or moves to; the format and lint output of `format-lint.mjs` is added to the result of the edit; on a stop, a top-level session that ran a tool is checked with `stop-check.mjs`, and a failure resumes it once with the same message, as `stop_hook_active` lets a Claude Code session stop the second time. A subagent is not checked: its parent is.
+- `opencode run` exits when the execution ends, so the stop check reports in the TUI and on a long-lived server, not in a one-shot run.
+- Git tracks `.opencode/agents/dsh/`, `.opencode/commands/dsh/` and `.opencode/plugins/dsh.js`; the rest of `.opencode/` (personal commands and skills, plugin state, session logs) stays ignored. The installer ships the same files through `!` globs in `exclude`, read the same way by the core update, and the CI `installer` job runs `check` in the generated project: the token replacement rewrites the sources and the generated files alike.
+*Alternatives:* hand-written OpenCode prompts (two copies that drift); an `AGENTS.md` that points at `CLAUDE.md` (one more file, and a pointer the model may not follow); `.claude/skills` for the commands (OpenCode would read them, but Claude Code would then list each command twice, once bare and once as `/dsh:`).
+
 ## Risks / Trade-offs
 
 - [Plugin marketplace relative path or namespaced agent spawning does not work as assumed] → Spike first (task 1) with the documented fallbacks in D1.
@@ -96,6 +113,7 @@ After the harness lands, `/dsh:feature real-dashboard-metrics` proposes a separa
 - [Hooks run under a different Node than `.nvmrc`] → Scripts call `npm`/`npx` from `PATH`; `docs/harness.md` requires the nvm default to satisfy `.nvmrc` (already the case on this machine); `stop-check.mjs` prints the Node version on failure.
 - [Bash-level protection is heuristic] → It covers the common writers (redirection, `npm install <pkg>`, `cp`/`mv` onto protected names); the Edit/Write block is exact. Documented as a guardrail, not a sandbox.
 - [Harness drifts from the code as the template evolves] → `docs/architecture.md` is the single stack map; agents reference it, and the architecture-docs requirement makes boundary changes update it.
+- [OpenCode changes its config or plugin API again (V1 → V2 broke the plugins)] → The version checked is in D10, the plugin touches only `ctx.tool.hook`, `ctx.event.subscribe` and `ctx.session`, and its tests drive those calls.
 - [Shipping `.claude/settings.json` to generated projects enables a plugin teammates did not choose] → It only loads after Claude Code's folder-trust check, and `docs/harness.md` explains how to disable it.
 
 ## Migration Plan

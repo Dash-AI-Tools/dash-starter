@@ -216,6 +216,11 @@ jobs:
           grep -q '"dsh@acme-ai"' .claude/settings.json
           grep -q '"name": "dsh"' .claude-plugin/marketplace.json
           test "$(git config core.hooksPath)" = ".githooks"
+          test -f opencode.json
+          test -f .opencode/plugins/dsh.js
+          test -f .opencode/agents/dsh/backend-dev.md
+          test -f .opencode/commands/dsh/feature.md
+          node plugins/dsh/scripts/opencode.mjs check
 
       - name: Check the palette and the demo mode of the project
         working-directory: ${{ runner.temp }}/project

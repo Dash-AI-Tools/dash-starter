@@ -24,7 +24,7 @@ npm workspaces, Node `>=24.22.1` (`.nvmrc`, `engine-strict` in `.npmrc`).
 | `packages/core-tools` | `@dash/core-tools`    | Node CLI: core update, generators, showcase removal (`node:test`) |
 | `e2e`                 | `@dash/e2e`           | Playwright                                                        |
 | `packages/create-app` | `create-dash-starter` | Node installer (`node:test`)                                      |
-| `plugins/dsh`         | `@dash/dsh`           | Claude Code plugin: agents, skills, hook scripts (`node:test`)    |
+| `plugins/dsh`         | `@dash/dsh`           | Agents, skills, hooks of Claude Code and OpenCode (`node:test`)   |
 
 The root `package.json` fans out to the workspaces:
 

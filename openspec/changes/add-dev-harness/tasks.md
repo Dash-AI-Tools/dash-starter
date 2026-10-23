@@ -24,7 +24,7 @@
 - [x] 4.1 Write skills `feature`, `backend`, `frontend`, `mcp-capability`, `ai-capability` (`disable-model-invocation: true`, `argument-hint`), each spawning the agent form recorded in 1.2; verify each appears as `/dsh:<name>` in a fresh session
 - [x] 4.2 Write skill `review`: format check, lint, typecheck, API tests (with the test database), web/installer/plugin tests, E2E against the current checkout's e2e stack, `dsh:security-reviewer`, scenario coverage; report table with step, command, result; verify it runs end to end on the current branch and reports each step
 - [x] 4.3 Write skill `docs` (spawns `dsh:docs-writer` with the current diff); verify on a diff that adds an MCP tool that it proposes a `docs/mcp.md` entry
-- [ ] 4.4 Write skill `parallel-features` following D7 (overlap table, contracts first, worktrees, status table, merge order, rebase procedure); verified in group 7
+- [x] 4.4 Write skill `parallel-features` following D7 (overlap table, contracts first, worktrees, status table, merge order, rebase procedure); verified in group 7
 
 ## 5. Guardrail hooks
 
@@ -44,7 +44,7 @@
 
 ## 7. Parallel features check
 
-- [ ] 7.1 Run `/dsh:parallel-features` on two small throwaway changes that both touch `apps/web/src/locales/en/common.ts` and each add a migration; verify the overlap table flags both conflicts, the plan sequences the migrations, two worktrees run their reviews concurrently, and the merge procedure lands both; then remove the throwaway changes, branches and worktrees
+- [x] 7.1 Run `/dsh:parallel-features` on two small throwaway changes that both touch `apps/web/src/locales/en/common.ts` and each add a migration; verify the overlap table flags both conflicts, the plan sequences the migrations, two worktrees run their reviews concurrently, and the merge procedure lands both; then remove the throwaway changes, branches and worktrees
 
 ## 8. Installer ships the harness
 
@@ -64,4 +64,13 @@
 
 ## 11. Integration verification
 
-- [ ] 11.1 Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, the e2e suite and `openspec validate add-dev-harness --strict`; all pass
+- [x] 11.1 Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, the e2e suite and `openspec validate add-dev-harness --strict`; all pass
+
+## 12. OpenCode support
+
+- [x] 12.1 Confirm against the installed OpenCode (V2) what it reads natively: the project directories of agents, commands, skills and plugins, the frontmatter of an agent and a command, whether it reads `CLAUDE.md`, `.claude/agents`, `.claude/skills` or the skills of a plugin, how a plugin refuses a tool call, reports after an edit and sees the agent stop; record the findings in D10
+- [x] 12.2 Implement `plugins/dsh/scripts/opencode.mjs sync|check` + tests: agents to `.opencode/agents/dsh/<name>.md` (`mode: subagent`, a `deny` permission for each Claude Code tool the agent lacks), skills to `.opencode/commands/dsh/<name>.md`, the prompts rewritten to the OpenCode forms (`dsh/<name>`, the subagent tool), the plugin module `.opencode/plugins/dsh.js`; `check` fails on a stale, missing or left over file; verify a test of the plugin suite fails when the files of the repository are out of date
+- [x] 12.3 Implement `plugins/dsh/scripts/opencode-plugin.mjs` + tests on the exported functions of `protect-files.mjs`, `format-lint.mjs` and `stop-check.mjs` (the messages of the failures shared with the Claude Code hooks): refuse a write, a patch or a shell command on a protected file with the same `.claude/dsh-allow`, format and lint the edited files into the result of the tool, check the changed workspaces when a top-level session stops and resume it once with the failures; verify with a real OpenCode run against a local scripted model that `apps/api/.env.smoke` and a shell redirection into `.env.smoke2` are refused, a lint error is reported and a type error resumes the session
+- [x] 12.4 Add the root `opencode.json` with `instructions: ["CLAUDE.md"]`, so OpenCode reads the one entry point without an `AGENTS.md`; track the generated files in git and keep the personal commands, skills and session state of `.opencode/` ignored; verify with `git check-ignore`
+- [x] 12.5 Ship the OpenCode files through the installer: `!` globs in `exclude` (read the same way by `packages/create-app` and `packages/core-tools`), installer tests that the files travel rebranded and the local state stays behind, and the CI `installer` job runs `opencode.mjs check` in the generated project; verify `npm test -w create-dash-starter`, the tests of `packages/core-tools` and the job's steps locally
+- [x] 12.6 Document OpenCode in `docs/harness.md` (the commands and agents, the guardrails, what is generated and how to regenerate it) and add an entry to `docs/log.md`; verify every command and path named exists

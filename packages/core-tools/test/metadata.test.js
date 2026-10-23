@@ -8,6 +8,7 @@ import {
   assertRelative,
   assertSafePath,
   globToRegExp,
+  matches,
   sha256,
 } from '../src/files.js'
 import {
@@ -34,6 +35,16 @@ test('a glob matches the paths of the manifest', () => {
   assert.equal(globToRegExp('apps/web/tsconfig*.json').test('apps/web/tsconfig.app.json'), true)
   assert.equal(globToRegExp('**/.env*').test('apps/api/.env'), true)
   assert.equal(globToRegExp('**/.env*').test('.env'), true)
+})
+
+test('a path taken back by a negated glob matches as the installer reads it', () => {
+  const patterns = ['.opencode/**', '!.opencode/agents/dsh/**', '!.opencode/plugins/dsh.js']
+
+  assert.equal(matches('.opencode/', patterns), false)
+  assert.equal(matches('.opencode/agents/dsh/backend-dev.md', patterns), false)
+  assert.equal(matches('.opencode/plugins/dsh.js', patterns), false)
+  assert.equal(matches('.opencode/plugins/other.js', patterns), true)
+  assert.equal(matches('.opencode/skills/', patterns), true)
 })
 
 test('the user-owned globs win over the core globs', () => {

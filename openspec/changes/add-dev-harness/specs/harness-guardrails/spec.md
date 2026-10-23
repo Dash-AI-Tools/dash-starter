@@ -47,6 +47,25 @@ The harness SHALL block agent edits to environment and secret files (`.env`, `.e
 - **WHEN** the developer has allowed lockfile edits for the session (for example to add an approved dependency)
 - **THEN** `npm install` may update `package-lock.json` and the edit is not blocked
 
+### Requirement: Guardrails in OpenCode
+An OpenCode plugin of the harness SHALL apply the same guardrails as the Claude Code hooks, with the same scripts: it SHALL refuse the tool calls that write a protected file (a write, an edit, a patch or a shell command) with the same message and the same developer allowance, SHALL report the formatter and linter failures of an edited file in the result of the edit, and SHALL check the changed workspaces when the agent of a top-level session stops, resuming the session once with the failures.
+
+#### Scenario: OpenCode agent edits a secret file
+- **WHEN** an OpenCode agent writes `apps/api/.env` or runs a shell command that redirects into an env file
+- **THEN** the call is refused and the agent receives the same message as in Claude Code, naming `.claude/dsh-allow`
+
+#### Scenario: Allowance in OpenCode
+- **WHEN** the developer has written `env` in `.claude/dsh-allow`
+- **THEN** an OpenCode agent may write `apps/api/.env`, and the allowance file itself stays refused
+
+#### Scenario: Lint error in OpenCode
+- **WHEN** an OpenCode agent writes a file in `apps/web/src` with an unused variable
+- **THEN** the result of the write carries the lint error, so the agent can fix it in the same turn
+
+#### Scenario: Broken type when the OpenCode agent stops
+- **WHEN** the agent of a top-level OpenCode session stops after introducing a type error in `apps/web`
+- **THEN** the session is resumed with the typecheck output, and it may stop the next time without a second check
+
 ### Requirement: Commit gate for everyone
 A git pre-commit hook, enabled for every checkout by the repository's install step, SHALL check the staged changes of any committer (developer, Claude Code or another agent): formatting and lint of the staged files, typecheck and fast unit tests of the affected workspaces, and refusal of staged secret files. It SHALL use the same check logic as the Claude Code stop check.
 
@@ -71,7 +90,7 @@ A git pre-commit hook, enabled for every checkout by the repository's install st
 - **THEN** the hook does not run, and CI still checks the change
 
 ### Requirement: Guardrails are tested
-The harness hook scripts and the git pre-commit hook SHALL have automated tests covering allowed and blocked paths, refused staged secrets and the selection of affected workspaces.
+The harness hook scripts, the OpenCode plugin and the git pre-commit hook SHALL have automated tests covering allowed and blocked paths, refused staged secrets and the selection of affected workspaces.
 
 #### Scenario: Hook regression
 - **WHEN** a hook script changes so that `.env` is no longer blocked

@@ -12,7 +12,7 @@ A monorepo with an AdonisJS API (`apps/api`), a React web app (`apps/web`), an e
 | Document                    | What it holds                                                                                                                                                                     |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/architecture.md`      | Workspaces, layers, request flow, the shared tool registry, persistence, config, localization, tests, CI, and the file to imitate for each kind of change. Read it before coding. |
-| `docs/harness.md`           | The `dsh` plugin: agents, commands, guardrail hooks, the git pre-commit gate, parallel features and how to adapt them.                                                            |
+| `docs/harness.md`           | The `dsh` plugin: agents, commands, guardrail hooks, the git pre-commit gate, parallel features, OpenCode and how to adapt them.                                                  |
 | `docs/ai.md`, `docs/mcp.md` | The AI layer and the MCP server.                                                                                                                                                  |
 | `openspec/`                 | The planning of every change.                                                                                                                                                     |
 

@@ -71,6 +71,21 @@ The harness SHALL provide the agents `feature-orchestrator`, `backend-dev`, `fro
 - **WHEN** semgrep or gitleaks is not installed
 - **THEN** the reviewer says which scanners were skipped and does not install them
 
+### Requirement: OpenCode support
+The harness SHALL be available in OpenCode with the same agents and commands, generated from the files of the Claude Code plugin, which stay the only source: the commands as `/dsh/<name>`, the agents as `dsh/<agent>` subagents with the permissions of their Claude Code tools, and the entry point `CLAUDE.md` loaded as the instructions of the project. A generated file that no longer matches its source SHALL fail the test command of the plugin.
+
+#### Scenario: Teammate opens the repository in OpenCode
+- **WHEN** a developer opens the repository in OpenCode
+- **THEN** the `/dsh/` commands and the `dsh/` subagents are available, `CLAUDE.md` is part of the instructions, and no file is copied into their home directory
+
+#### Scenario: Read-only agent in OpenCode
+- **WHEN** the OpenCode `dsh/security-reviewer` subagent is read
+- **THEN** it denies the edit and subagent actions, as its Claude Code definition has no `Edit`, `Write` or `Agent` tool
+
+#### Scenario: Agent edited without regenerating
+- **WHEN** an agent or a skill of `plugins/dsh` changes and the OpenCode files are not regenerated
+- **THEN** `npm test -w @dash/dsh` fails and names the stale file and the command that regenerates it
+
 ### Requirement: Harness guide
 `docs/harness.md` SHALL explain what each agent and command does, when to use it, and the single-feature, scoped-change and parallel-features workflows.
 

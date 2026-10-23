@@ -50,6 +50,11 @@ export async function checkFile(filePath, root = repoRoot()) {
   return { ok: true, output: '', step: null }
 }
 
+// The message that goes back to the agent when the file does not pass.
+export function failureReason(filePath, result) {
+  return `The ${result.step} of \`${filePath}\` failed. Fix it and try again.\n\n${result.output.trim()}`
+}
+
 function readInput() {
   try {
     return JSON.parse(readFileSync(0, 'utf8'))
@@ -67,7 +72,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     console.log(
       JSON.stringify({
         decision: 'block',
-        reason: `The ${result.step} of \`${filePath}\` failed. Fix it and try again.\n\n${result.output.trim()}`,
+        reason: failureReason(filePath, result),
       })
     )
   }

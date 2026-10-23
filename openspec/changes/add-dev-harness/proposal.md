@@ -16,6 +16,7 @@ Features in this starter span four layers with strict conventions (Adonis contro
 - Parallel features: one change, branch and git worktree per feature; overlap analysis; shared contracts merged first; merge order and rebase procedure; status reports.
 - Per-worktree Docker stacks: Compose project name and host ports become env-overridable (defaults unchanged), so each worktree can run its own full `/dsh:review` including E2E.
 - `docs/harness.md` and a short `CLAUDE.md` pointing to the architecture doc, the harness and the workflow.
+- OpenCode support from the same files: `plugins/dsh/scripts/opencode.mjs` generates the agents and the commands into `.opencode/` (`/dsh/<name>`, `dsh/<agent>`) and checks them in the plugin tests, an OpenCode plugin runs the same guardrail scripts, and the root `opencode.json` loads `CLAUDE.md`.
 - The installer ships the harness in generated projects (rebranded like the rest of the template) instead of excluding `.claude/**`; user-local Claude files and worktrees stay out.
 - Dry run: implement "real dashboard metrics" (replace the made-up KPI/activity data on the dashboard home with organization data) through `/dsh:feature` as its own OpenSpec change, and report what needed adjusting.
 
@@ -23,8 +24,8 @@ Features in this starter span four layers with strict conventions (Adonis contro
 
 ### New Capabilities
 - `architecture-docs`: the architecture reference that agents and humans consult, and the obligation to keep it in sync with module boundaries.
-- `dev-harness`: the `dsh` plugin: its agents, commands, ownership boundaries and definitions of done.
-- `harness-guardrails`: the Claude Code hooks that format, lint, check and protect files during agent work, and the git pre-commit gate that applies to every committer.
+- `dev-harness`: the `dsh` plugin: its agents, commands, ownership boundaries and definitions of done, for Claude Code and OpenCode.
+- `harness-guardrails`: the Claude Code hooks and the OpenCode plugin that format, lint, check and protect files during agent work, and the git pre-commit gate that applies to every committer.
 - `spec-driven-workflow`: how every feature moves through OpenSpec phases inside the harness, including layer-tagged tasks and scenario-to-test coverage.
 - `parallel-feature-development`: concurrent features in isolated worktrees with overlap analysis, contract-first merging and status reporting.
 
@@ -34,8 +35,8 @@ Features in this starter span four layers with strict conventions (Adonis contro
 
 ## Impact
 
-- New: `plugins/dsh/` (plugin manifest, `agents/`, `skills/`, `hooks/` and hook scripts), `.claude-plugin/marketplace.json`, `.claude/settings.json`, `.githooks/pre-commit`, `CLAUDE.md`, `docs/architecture.md`, `docs/harness.md`.
+- New: `plugins/dsh/` (plugin manifest, `agents/`, `skills/`, `hooks/` and hook scripts), `.claude-plugin/marketplace.json`, `.claude/settings.json`, `opencode.json` and the generated `.opencode/{agents,commands}/dsh/` and `.opencode/plugins/dsh.js`, `.githooks/pre-commit`, `CLAUDE.md`, `docs/architecture.md`, `docs/harness.md`.
 - Root `package.json` gains a `prepare` script that sets `core.hooksPath`; every `npm install` enables the commit gate (team-wide default, bypassable with `--no-verify`).
-- Changed: `docker-compose.yml`, `docker-compose.e2e.yml` (env-driven project name and ports), `e2e/playwright.config.ts` and `e2e/support/*` already read URLs from env and stay compatible; `.gitignore` (`.claude/worktrees/`); `packages/create-app/template.json` (ship harness, keep `settings.local.json`, worktrees and local tool state out).
+- Changed: `docker-compose.yml`, `docker-compose.e2e.yml` (env-driven project name and ports), `e2e/playwright.config.ts` and `e2e/support/*` already read URLs from env and stay compatible; `.gitignore` (`.claude/worktrees/`, the tracked OpenCode files of the harness); `packages/create-app/template.json` (ship harness, keep `settings.local.json`, worktrees and local tool state out); the `exclude` globs of `packages/create-app` and `packages/core-tools` take a path back with `!`.
 - No new npm dependencies or external tools. The security reviewer uses `npm audit` and uses semgrep/gitleaks only if already installed; adding them is a separate decision.
 - Dry run adds a separate OpenSpec change for real dashboard metrics (API endpoint, web dashboard, tests, e2e).

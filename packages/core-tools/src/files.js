@@ -69,16 +69,38 @@ export function globToRegExp(pattern) {
   return new RegExp(`${source}$`)
 }
 
+function matchesOne(pattern, path) {
+  if (!compiled.has(pattern)) compiled.set(pattern, globToRegExp(pattern))
+
+  return compiled.get(pattern).test(path)
+}
+
+/**
+ * The part of a glob before its first wildcard: every path it matches starts
+ * with it.
+ */
+function literalPrefix(pattern) {
+  const index = pattern.search(/[*?]/)
+
+  return index === -1 ? pattern : pattern.slice(0, index)
+}
+
 /**
  * Whether a path matches one of the globs. The paths of the directories end
  * with a slash, so `node_modules/**` matches the directory itself.
+ *
+ * A pattern that starts with `!` takes a path back, as the installer reads it:
+ * the path does not match, and neither does a directory on the way to it.
  */
 export function matches(path, patterns = []) {
-  return patterns.some((pattern) => {
-    if (!compiled.has(pattern)) compiled.set(pattern, globToRegExp(pattern))
+  const kept = patterns.filter((pattern) => pattern.startsWith('!')).map((p) => p.slice(1))
+  const dropped = patterns.filter((pattern) => !pattern.startsWith('!'))
 
-    return compiled.get(pattern).test(path)
-  })
+  if (!dropped.some((pattern) => matchesOne(pattern, path))) return false
+  if (kept.some((pattern) => matchesOne(pattern, path))) return false
+  if (path.endsWith('/')) return !kept.some((pattern) => literalPrefix(pattern).startsWith(path))
+
+  return true
 }
 
 /**

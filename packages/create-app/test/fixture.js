@@ -50,6 +50,9 @@ export const manifest = {
     '.claude/worktrees/**',
     '.claude/.headroom*',
     '.claude/dsh-allow',
+    // The OpenCode state stays behind and the files of the harness travel, as
+    // the template ships them.
+    ...shipped.exclude.filter((pattern) => pattern.replace(/^!/, '').startsWith('.opencode/')),
   ],
   removePaths: ['packages/create-app', 'openspec/changes'],
   removeSections: [{ file: 'README.md', heading: '## The installer' }],
@@ -176,6 +179,24 @@ export async function createTemplate() {
   await writeFile(join(root, 'plugins/dsh/skills/feature/SKILL.md'), '# feature\n')
   await writeFile(join(root, 'plugins/dsh/scripts/checks.mjs'), 'export const root = 1\n')
   await writeFile(join(root, 'plugins/dsh/hooks/hooks.json'), '{"hooks": {}}\n')
+
+  /**
+   * The OpenCode files of the harness, next to the personal commands, skills
+   * and session state of a developer.
+   */
+  await mkdir(join(root, '.opencode/agents/dsh'), { recursive: true })
+  await mkdir(join(root, '.opencode/commands/dsh'), { recursive: true })
+  await mkdir(join(root, '.opencode/plugins'), { recursive: true })
+  await mkdir(join(root, '.opencode/skills/openspec-explore'), { recursive: true })
+  await mkdir(join(root, '.opencode/opencode-loop'), { recursive: true })
+  await writeFile(join(root, '.opencode/agents/dsh/backend-dev.md'), '# backend-dev of Dash\n')
+  await writeFile(join(root, '.opencode/commands/dsh/feature.md'), '# feature\n')
+  await writeFile(join(root, '.opencode/plugins/dsh.js'), 'export { default } from "./x.mjs"\n')
+  await writeFile(join(root, '.opencode/commands/opsx-apply.md'), '# apply\n')
+  await writeFile(join(root, '.opencode/skills/openspec-explore/SKILL.md'), '# explore\n')
+  await writeFile(join(root, '.opencode/opencode-loop/ses_1.json'), '{}\n')
+  await writeFile(join(root, '.opencode/package.json'), '{}\n')
+  await writeFile(join(root, 'opencode.json'), '{"instructions": ["CLAUDE.md"]}\n')
 
   await mkdir(join(root, 'docs'), { recursive: true })
   await writeFile(join(root, 'CLAUDE.md'), '# Dash Starter\n')

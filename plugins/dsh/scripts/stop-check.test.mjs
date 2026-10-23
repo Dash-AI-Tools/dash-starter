@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 
-import { check, parsePorcelain } from './stop-check.mjs'
+import { check, failureReason, parsePorcelain } from './stop-check.mjs'
 
 // A repository with one workspace whose typecheck does what the script says.
 function workspaceRepo(script) {
@@ -56,4 +56,17 @@ test('a workspace that passes its typecheck lets the session end', async () => {
   const result = await check({ root, files: ['apps/api/app/models/x.ts'] })
   assert.equal(result.ok, true)
   assert.equal(result.results[0].check, 'typecheck')
+})
+
+test('the failure names each failing check with the end of its output', () => {
+  const output = Array.from({ length: 30 }, (_, index) => `line ${index}`).join('\n')
+  const reason = failureReason({
+    results: [
+      { workspace: 'apps/web', check: 'typecheck', ok: false, output },
+      { workspace: 'apps/api', check: 'typecheck', ok: true, output: 'fine' },
+    ],
+  })
+  assert.match(reason, /^The changed workspaces do not pass their checks\./)
+  assert.match(reason, /### apps\/web: typecheck\nline 10\n[\s\S]*line 29$/)
+  assert.doesNotMatch(reason, /apps\/api|line 9\n/)
 })

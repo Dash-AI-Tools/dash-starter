@@ -1,14 +1,14 @@
 ---
 type: Reference
 title: Development harness
-description: The dsh plugin: commands, specialist agents, guardrails, the commit gate and worktrees.
-tags: [harness, tooling, claude-code, reference]
+description: The dsh plugin: commands, specialist agents, guardrails, the commit gate, worktrees and OpenCode.
+tags: [harness, tooling, claude-code, opencode, reference]
 status: stable
 ---
 
 # The development harness
 
-The harness is the `dsh` plugin of this repository: a set of specialist agents, a set of commands, some guardrails and a gate of the commit. It lives in `plugins/dsh/` and it is enabled for the project by `.claude/settings.json`.
+The harness is the `dsh` plugin of this repository: a set of specialist agents, a set of commands, some guardrails and a gate of the commit. It lives in `plugins/dsh/` and it is enabled for the project by `.claude/settings.json`. OpenCode gets the same agents, commands and guardrails, generated from the same files: see [OpenCode](#opencode).
 
 It does not replace the way you work: it makes the way of the repository explicit, repeatable and checkable. A change still goes through OpenSpec, the specialists still write the code of their layer, and the guardrails still refuse what the repository refuses.
 
@@ -141,6 +141,44 @@ claude plugin details dsh@<marketplace>
 
 The commands of the plugin are then `/dsh:feature`, `/dsh:review` and the rest.
 
+## OpenCode
+
+The harness works in OpenCode (V2, checked with 2.1.3) from the same files. The agents and the skills of `plugins/dsh` stay the only source: the OpenCode files are generated from them, and the guardrails run the same scripts.
+
+| Claude Code                | OpenCode                       | Where it lives in OpenCode                                                        |
+| -------------------------- | ------------------------------ | --------------------------------------------------------------------------------- |
+| `/dsh:feature <id>`        | `/dsh/feature <id>`            | `.opencode/commands/dsh/feature.md`, and the same for every command               |
+| `dsh:backend-dev`          | `dsh/backend-dev`              | `.opencode/agents/dsh/backend-dev.md`, a subagent, and the same for every agent   |
+| The hooks of `hooks.json`  | The plugin `dsh`               | `.opencode/plugins/dsh.js`, which loads `plugins/dsh/scripts/opencode-plugin.mjs` |
+| `CLAUDE.md`, read natively | `CLAUDE.md`, as an instruction | `opencode.json`: `"instructions": ["CLAUDE.md"]`                                  |
+
+OpenCode namespaces by directory, so the commands are `/dsh/<name>` and the agents `dsh/<name>`: the prompts are rewritten to those forms, and to the subagent tool of OpenCode instead of the Task tool. An agent that lacks a tool in Claude Code is denied its action in OpenCode: `dsh/security-reviewer` cannot edit or spawn a subagent. OpenCode V2 reads `AGENTS.md` and not `CLAUDE.md`, so `opencode.json` names `CLAUDE.md` as an instruction file and there is no `AGENTS.md` to keep in step.
+
+### The generated files
+
+`.opencode/agents/dsh/`, `.opencode/commands/dsh/` and `.opencode/plugins/dsh.js` are written by a script, never by hand:
+
+```bash
+node plugins/dsh/scripts/opencode.mjs sync
+node plugins/dsh/scripts/opencode.mjs check
+```
+
+`sync` writes them from `plugins/dsh/agents/` and `plugins/dsh/skills/`, and removes the ones whose source is gone. `check` fails when one of them is stale, missing or left over, and the plugin tests run it: an agent or a skill changed without `sync` fails `npm test -w @dash/dsh`. A running OpenCode reads the new files after `opencode reload`.
+
+Git tracks the generated files. The rest of `.opencode/` stays ignored and never travels with the project: the commands and skills a developer installs for themselves (such as the ones of `openspec init`), the state of their plugins and their session logs.
+
+### The guardrails in OpenCode
+
+The plugin calls the scripts of the hooks of Claude Code, so the rules, the messages and the allowance are the same:
+
+| OpenCode hook                         | Script              | What it does                                                                                                                                                                                                   |
+| ------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execute.before`                      | `protect-files.mjs` | Refuses a `write`, an `edit`, a `patch` or a `shell` call that writes a protected file. A patch counts by every file it adds, updates, deletes or moves to. `.claude/dsh-allow` releases it as in Claude Code. |
+| `execute.after`                       | `format-lint.mjs`   | Formats and lints the edited files and adds the failure to the result of the edit, so the agent reads it in the same turn.                                                                                     |
+| `session.execution.succeeded` (event) | `stop-check.mjs`    | When the agent of a top-level session stops, checks the changed workspaces and resumes the session once with the failures. A subagent is not checked: its parent is.                                           |
+
+The allowance is written by you, as in Claude Code: `! echo env > .claude/dsh-allow` in the prompt of OpenCode runs a shell command that no tool hook sees. `opencode run` exits when the agent stops, so the stop check reports in the TUI and on a long-lived server, not in a one-shot run.
+
 ## The worktrees
 
 A feature that is developed while another one is in review needs its own checkout, its own branch, its own environment files and its own stack. The script does all of it:
@@ -167,15 +205,15 @@ node plugins/dsh/scripts/worktree.mjs remove <change-id> <slot>
 
 The harness follows the repository, so a change of the stack is a change of the harness.
 
-| The stack changes                        | The harness changes                                                                                                                    |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| A new workspace                          | The entry in `WORKSPACES` of `plugins/dsh/scripts/checks.mjs`, and the check of the workspace in `plugins/dsh/skills/review/SKILL.md`. |
-| A new layer of the API or of the web app | The agent that owns it in `plugins/dsh/agents/`, the tag of its tasks and the command that spawns it in `plugins/dsh/skills/`.         |
-| A new protected file                     | The rule in `RULES` of `plugins/dsh/scripts/protect-files.mjs` and the check in `isSecretPath` of `plugins/dsh/scripts/checks.mjs`.    |
-| A new check (a linter, a scanner)        | The check in `plugins/dsh/scripts/checks.mjs`, so the stop hook and the gate of the commit run it.                                     |
-| A new command                            | The skill in `plugins/dsh/skills/<name>/SKILL.md`, and a line in the table of this document.                                           |
-| A new agent                              | The agent in `plugins/dsh/agents/<name>.md`, and a line in the table of this document.                                                 |
-| The stack of the containers changes      | The variables of the Compose files (`README.md` names them) and the slot arithmetic of `plugins/dsh/scripts/worktree.mjs`.             |
+| The stack changes                        | The harness changes                                                                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| A new workspace                          | The entry in `WORKSPACES` of `plugins/dsh/scripts/checks.mjs`, and the check of the workspace in `plugins/dsh/skills/review/SKILL.md`.     |
+| A new layer of the API or of the web app | The agent that owns it in `plugins/dsh/agents/`, the tag of its tasks and the command that spawns it in `plugins/dsh/skills/`.             |
+| A new protected file                     | The rule in `RULES` of `plugins/dsh/scripts/protect-files.mjs` and the check in `isSecretPath` of `plugins/dsh/scripts/checks.mjs`.        |
+| A new check (a linter, a scanner)        | The check in `plugins/dsh/scripts/checks.mjs`, so the stop hook and the gate of the commit run it.                                         |
+| A new command                            | The skill in `plugins/dsh/skills/<name>/SKILL.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`. |
+| A new agent                              | The agent in `plugins/dsh/agents/<name>.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`.       |
+| The stack of the containers changes      | The variables of the Compose files (`README.md` names them) and the slot arithmetic of `plugins/dsh/scripts/worktree.mjs`.                 |
 
 `docs/architecture.md` is the map of the stack, and it is updated in the same change that moves it.
 

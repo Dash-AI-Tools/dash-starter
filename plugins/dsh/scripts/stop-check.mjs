@@ -31,6 +31,18 @@ export async function check({ root = repoRoot(), files = null } = {}) {
   return { skipped: null, ok: checks.ok, results: checks.results }
 }
 
+// The message that goes back to the agent when a check fails.
+export function failureReason(result) {
+  const failed = result.results
+    .filter((entry) => !entry.ok)
+    .map(
+      (entry) =>
+        `### ${entry.workspace}: ${entry.check}\n${entry.output.trim().split('\n').slice(-20).join('\n')}`
+    )
+    .join('\n\n')
+  return `The changed workspaces do not pass their checks. Fix them before ending the session.\n\n${failed}`
+}
+
 function readInput() {
   try {
     return JSON.parse(readFileSync(0, 'utf8'))
@@ -47,18 +59,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const result = await check({ root })
   if (result.ok) process.exit(0)
 
-  const failed = result.results
-    .filter((entry) => !entry.ok)
-    .map(
-      (entry) =>
-        `### ${entry.workspace}: ${entry.check}\n${entry.output.trim().split('\n').slice(-20).join('\n')}`
-    )
-    .join('\n\n')
-
   console.log(
     JSON.stringify({
       decision: 'block',
-      reason: `The changed workspaces do not pass their checks. Fix them before ending the session.\n\n${failed}`,
+      reason: failureReason(result),
     })
   )
 }

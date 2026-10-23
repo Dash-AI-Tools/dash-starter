@@ -90,6 +90,20 @@ test('a path is excluded by its glob', () => {
   assert.equal(isExcluded('apps/api/app.ts', patterns), false)
 })
 
+test('a path taken back by a negated glob is kept, with the directories on its way', () => {
+  const patterns = ['.opencode/**', '!.opencode/agents/dsh/**', '!.opencode/plugins/dsh.js']
+
+  assert.equal(isExcluded('.opencode/', patterns), false)
+  assert.equal(isExcluded('.opencode/agents/', patterns), false)
+  assert.equal(isExcluded('.opencode/agents/dsh/', patterns), false)
+  assert.equal(isExcluded('.opencode/agents/dsh/backend-dev.md', patterns), false)
+  assert.equal(isExcluded('.opencode/plugins/', patterns), false)
+  assert.equal(isExcluded('.opencode/plugins/dsh.js', patterns), false)
+  assert.equal(isExcluded('.opencode/plugins/other.js', patterns), true)
+  assert.equal(isExcluded('.opencode/skills/', patterns), true)
+  assert.equal(isExcluded('.opencode/package.json', patterns), true)
+})
+
 test('the job of the template is removed from a workflow', () => {
   const workflow = [
     'name: CI',
