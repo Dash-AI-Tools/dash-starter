@@ -49,7 +49,7 @@ function LocaleField({ label }: { label: string }) {
           aria-label={label}
           value={field.value}
           onChange={(event) => field.onChange(event.target.value)}
-          className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm"
+          className="h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm"
         >
           <option value="en">{t('english')}</option>
           <option value="es">{t('spanish')}</option>
@@ -145,7 +145,7 @@ export default function OrganizationSettingsPage() {
           <div className="flex flex-wrap items-center gap-2">
             <select
               aria-label={t('selectMember')}
-              className="h-8 rounded-lg border border-input bg-transparent px-2 text-sm"
+              className="h-9 rounded-lg border border-input bg-transparent px-3 text-sm"
               defaultValue=""
               onChange={async (event) => {
                 const userId = Number(event.target.value)

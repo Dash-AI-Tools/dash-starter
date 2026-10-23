@@ -3,6 +3,8 @@ export const auth = {
   signUpSubtitle: 'Prepara tu espacio de trabajo en menos de un minuto.',
   signInTitle: 'Bienvenido de nuevo',
   signInSubtitle: 'Inicia sesión para volver a tu espacio de trabajo.',
+  logoPlaceholder: 'Tu logo',
+  loginFeatureEyebrow: 'El starter de SaaS con IA',
   fullName: 'Nombre completo',
   email: 'Correo electrónico',
   password: 'Contraseña',

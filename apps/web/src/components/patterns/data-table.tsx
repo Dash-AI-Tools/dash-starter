@@ -249,7 +249,7 @@ export function DataTable<T>({
               aria-label={filter.label}
               value={filter.value ?? ''}
               onChange={(event) => filter.onChange(event.target.value)}
-              className="h-7 rounded-lg border border-input bg-transparent px-2 text-sm"
+              className="h-7 rounded-lg border border-input bg-transparent px-2.5 text-sm"
             >
               <option value="">{filter.label}</option>
               {filter.options.map((option) => (

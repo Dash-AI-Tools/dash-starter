@@ -45,7 +45,7 @@ function RoleField({ label }: { label: string }) {
           aria-label={label}
           value={field.value}
           onChange={(event) => field.onChange(event.target.value)}
-          className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm"
+          className="h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm"
         >
           {INVITABLE_ROLES.map((role) => (
             <option key={role} value={role}>

@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router'
 import { LogoMark } from '@/components/brand/logo-mark'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { PalettePicker } from '@/components/palette-picker'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { useConsent } from '@/providers/consent-provider'
 import { Button } from '@/components/ui/button'
 import { useI18n } from '@/lib/i18n'
@@ -20,7 +21,7 @@ export default function PublicLayout() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">
-      <header className="border-b">
+      <header className="border-b border-line/30">
         <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:h-16 sm:flex-nowrap sm:px-6 sm:py-0 lg:px-8">
           <Link
             to="/"
@@ -38,8 +39,13 @@ export default function PublicLayout() {
               {t('pricingNav')}
             </Link>
 
-            <PalettePicker />
-            <LanguageSwitcher />
+            <div className="flex items-center gap-0.5">
+              {user ? null : <PalettePicker />}
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
+
+            <span aria-hidden className="hidden h-5 w-px bg-border sm:block" />
 
             {user ? (
               <Link to="/app">

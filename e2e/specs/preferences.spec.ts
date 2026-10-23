@@ -9,7 +9,7 @@ test.describe('The preferences of the visitor', () => {
 
     await expect(page.getByRole('link', { name: en.appName })).toBeVisible()
 
-    await page.getByRole('button', { name: en.spanish, exact: true }).click()
+    await page.getByRole('button', { name: 'Switch language to Spanish', exact: true }).click()
 
     /**
      * The language is kept in a cookie, so the next page opens in it.

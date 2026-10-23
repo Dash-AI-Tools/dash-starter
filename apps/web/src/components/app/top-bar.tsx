@@ -1,7 +1,9 @@
 import { Bell, Menu, Search } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { UserMenu } from '@/components/app/user-menu'
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { PalettePicker } from '@/components/palette-picker'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import {
   Breadcrumb,
@@ -19,11 +21,13 @@ import {
 import { useI18n } from '@/lib/i18n'
 import { navItemForPath, orgPath } from '@/lib/nav'
 import { useOrganization } from '@/lib/organizations'
+import { stationColor } from '@/lib/stations'
 
 /**
  * The bar on top of the application: the way back to the navigation, the
- * breadcrumbs of the current page, the global search, the notifications and
- * the menu of the account.
+ * breadcrumbs of the current page, then a single rail of tools — search, the
+ * palette, the language, the theme — closed by the notifications and the menu
+ * of the account.
  */
 export function TopBar({
   orgSlug,
@@ -43,8 +47,14 @@ export function TopBar({
 
   const current = navItemForPath(location.pathname, orgSlug, organization?.role)
 
+  /**
+   * The shortcut is part of the name too: below `sm` the text of the button is
+   * hidden and the search would otherwise be left without a name.
+   */
+  const searchLabel = `${t('searchPlaceholder')} ⌘K`
+
   return (
-    <header className="flex h-14 items-center gap-2 border-b px-3 sm:px-4">
+    <header className="flex h-14 items-center gap-2 border-b border-line/30 px-3 sm:px-4">
       <Button
         type="button"
         variant="ghost"
@@ -67,20 +77,28 @@ export function TopBar({
             <>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{t(current.labelKey)}</BreadcrumbPage>
+                <BreadcrumbPage className="flex items-center gap-1.5">
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: stationColor(current.station) }}
+                  />
+                  {t(current.labelKey)}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </>
           ) : null}
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="ml-auto flex items-center gap-1">
+      <div className="ml-auto flex items-center gap-0.5">
         <Button
           type="button"
           variant="outline"
           size="sm"
           onClick={onOpenSearch}
-          className="gap-2 text-muted-foreground"
+          aria-label={searchLabel}
+          className="mr-1 gap-2 text-muted-foreground max-sm:border-transparent max-sm:bg-transparent dark:max-sm:border-transparent dark:max-sm:bg-transparent"
         >
           <Search className="size-4" />
           <span className="hidden sm:inline">{t('searchPlaceholder')}</span>
@@ -88,6 +106,10 @@ export function TopBar({
         </Button>
 
         <PalettePicker />
+        <LanguageSwitcher />
+        <ThemeToggle />
+
+        <span aria-hidden className="mx-1.5 hidden h-4 w-px bg-border sm:block" />
 
         <DropdownMenu>
           <DropdownMenuTrigger

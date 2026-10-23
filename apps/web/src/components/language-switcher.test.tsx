@@ -5,10 +5,12 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { I18nProvider } from '@/lib/i18n'
 
-function renderSwitcher() {
+function renderSwitcher(entry = '/') {
   return render(
     <I18nProvider>
-      <LanguageSwitcher />
+      <MemoryRouter initialEntries={[entry]}>
+        <LanguageSwitcher />
+      </MemoryRouter>
     </I18nProvider>
   )
 }
@@ -23,29 +25,33 @@ describe('LanguageSwitcher', () => {
     document.cookie = 'locale=; path=/; max-age=0'
   })
 
-  it('renders one button per supported locale', () => {
+  it('offers a single toggle that names the language it switches to', () => {
     renderSwitcher()
 
-    expect(screen.getByRole('button', { name: 'English' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Spanish' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Switch language to Spanish' })).toBeInTheDocument()
   })
 
-  it('marks the active locale as pressed', () => {
-    renderSwitcher()
-
-    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'Spanish' })).toHaveAttribute('aria-pressed', 'false')
-  })
-
-  it('switches the locale, persists the cookie and syncs the html lang attribute', async () => {
+  it('switches the locale with one click and syncs the html lang attribute', async () => {
     const user = userEvent.setup()
     renderSwitcher()
 
-    await user.click(screen.getByRole('button', { name: 'Spanish' }))
+    await user.click(screen.getByRole('button', { name: 'Switch language to Spanish' }))
 
-    expect(screen.getByRole('button', { name: 'Español' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Cambiar idioma a Inglés' })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('es')
     expect(document.cookie).toContain('locale=es')
+  })
+
+  it('switches back to the first language with the next click', async () => {
+    const user = userEvent.setup()
+    document.cookie = 'locale=es; path=/'
+    renderSwitcher()
+
+    await user.click(screen.getByRole('button', { name: 'Cambiar idioma a Inglés' }))
+
+    expect(document.documentElement.lang).toBe('en')
+    expect(document.cookie).toContain('locale=en')
   })
 
   it('keeps the current route and query string', async () => {
@@ -59,7 +65,7 @@ describe('LanguageSwitcher', () => {
       </I18nProvider>
     )
 
-    await user.click(screen.getByRole('button', { name: 'Spanish' }))
+    await user.click(screen.getByRole('button', { name: 'Switch language to Spanish' }))
 
     expect(screen.getByTestId('path')).toHaveTextContent('/es/pricing?interval=yearly')
   })

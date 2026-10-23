@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
+import { AuthShell } from '@/components/auth/auth-shell'
 import { Form } from '@/components/patterns/form'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field'
@@ -90,7 +91,7 @@ export default function SignupPage() {
   )
 
   return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col justify-center px-4">
+    <AuthShell>
       <h1 className="text-2xl font-semibold tracking-tight">{t('signUpTitle')}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{t('signUpSubtitle')}</p>
 
@@ -142,6 +143,6 @@ export default function SignupPage() {
           {t('signIn')}
         </Link>
       </p>
-    </div>
+    </AuthShell>
   )
 }

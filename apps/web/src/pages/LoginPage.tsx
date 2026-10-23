@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
+import { AuthShell } from '@/components/auth/auth-shell'
 import { Form } from '@/components/patterns/form'
 import { client } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
@@ -28,7 +29,7 @@ export default function LoginPage() {
   )
 
   return (
-    <div className="mx-auto flex min-h-svh max-w-md flex-col justify-center px-4">
+    <AuthShell>
       <h1 className="text-2xl font-semibold tracking-tight">{t('signInTitle')}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{t('signInSubtitle')}</p>
 
@@ -62,6 +63,6 @@ export default function LoginPage() {
           {t('signUp')}
         </Link>
       </p>
-    </div>
+    </AuthShell>
   )
 }

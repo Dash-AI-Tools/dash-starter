@@ -18,6 +18,7 @@ const user = {
   emailVerifiedAt: null,
   locale: 'en',
   theme: 'system',
+  palette: null,
   avatarPath: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -62,6 +63,11 @@ describe('LoginPage', () => {
 
     const visitor = userEvent.setup()
     renderLogin('/login?redirectTo=%2Fapp%2Facme')
+
+    expect(screen.getByText('Your logo')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Every station of your AI SaaS, already running.' })
+    ).toBeInTheDocument()
 
     await visitor.type(screen.getByLabelText('Email'), 'ada@example.com')
     await visitor.type(screen.getByLabelText('Password'), 'supersecret')

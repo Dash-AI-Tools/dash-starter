@@ -236,7 +236,7 @@ export default function ProfilePage() {
                 setLocale(next)
                 await savePreference({ locale: next })
               }}
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm"
+              className="h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm"
             >
               {LOCALES.map((option) => (
                 <option key={option} value={option}>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
                 setTheme(next)
                 await savePreference({ theme: next })
               }}
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm"
+              className="h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm"
             >
               {THEMES.map((option) => (
                 <option key={option} value={option}>

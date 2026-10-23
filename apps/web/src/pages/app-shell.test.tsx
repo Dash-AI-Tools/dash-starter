@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { API_BASE_URL } from '@/lib/api'
 import { I18nProvider } from '@/lib/i18n'
 import { PaletteProvider } from '@/providers/palette-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import AppLayout from '@/layouts/AppLayout'
 import DashboardPage from '@/pages/DashboardPage'
 import { server } from '@/test/server'
@@ -26,6 +27,7 @@ const user = {
   emailVerifiedAt: NOW,
   locale: 'en',
   theme: 'system',
+  palette: null,
   avatarPath: null,
   pendingEmail: null,
   termsVersion: '2026-01-01',
@@ -112,18 +114,20 @@ function renderShell(page = <DashboardPage />) {
   return render(
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <PaletteProvider>
-          <MemoryRouter initialEntries={['/app/acme-labs']}>
-            <Location />
-            <Routes>
-              <Route path="/app/:orgSlug" element={<AppLayout />}>
-                <Route index element={page} />
-              </Route>
-              <Route path="/login" element={<p>Login page</p>} />
-              <Route path="/onboarding" element={<p>Onboarding page</p>} />
-            </Routes>
-          </MemoryRouter>
-        </PaletteProvider>
+        <ThemeProvider>
+          <PaletteProvider>
+            <MemoryRouter initialEntries={['/app/acme-labs']}>
+              <Location />
+              <Routes>
+                <Route path="/app/:orgSlug" element={<AppLayout />}>
+                  <Route index element={page} />
+                </Route>
+                <Route path="/login" element={<p>Login page</p>} />
+                <Route path="/onboarding" element={<p>Onboarding page</p>} />
+              </Routes>
+            </MemoryRouter>
+          </PaletteProvider>
+        </ThemeProvider>
       </I18nProvider>
     </QueryClientProvider>
   )
@@ -150,10 +154,12 @@ describe('The shell of the app', () => {
     const nav = await navigation()
 
     expect(await nav.findByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Search…⌘K' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Search… ⌘K' })).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Account menu: AL Ada Lovelace' })
     ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Switch language to Spanish' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Toggle light and dark theme' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument()
   })
 
@@ -257,7 +263,7 @@ describe('The shell of the app', () => {
     serveApp()
     renderShell()
 
-    await screen.findByRole('button', { name: 'Search…⌘K' })
+    await screen.findByRole('button', { name: 'Search… ⌘K' })
     await userEvent.setup().keyboard('{Meta>}k{/Meta}')
 
     const input = await screen.findByRole('combobox')
@@ -283,7 +289,7 @@ describe('The shell of the app', () => {
     const visitor = userEvent.setup()
     renderShell()
 
-    await visitor.click(await screen.findByRole('button', { name: 'Search…⌘K' }))
+    await visitor.click(await screen.findByRole('button', { name: 'Search… ⌘K' }))
     await visitor.type(await screen.findByRole('combobox'), 'grace')
 
     const palette = within(await screen.findByRole('dialog'))

@@ -10,6 +10,7 @@ import { API_BASE_URL } from '@/lib/api'
 import { CONSENT_COOKIE, CONSENT_POLICY_VERSION } from '@/lib/consent'
 import { I18nProvider } from '@/lib/i18n'
 import { PaletteProvider } from '@/providers/palette-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import Home from '@/pages/Home'
 import PrivacyPage from '@/pages/PrivacyPage'
 import PricingPage from '@/pages/PricingPage'
@@ -77,19 +78,21 @@ function renderPublic(path: string) {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <ConsentProvider>
-          <PaletteProvider>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route element={<PublicLayout />}>
-                  <Route index element={<Home />} />
-                  <Route path="pricing" element={<PricingPage />} />
-                  <Route path="terms" element={<TermsPage />} />
-                  <Route path="privacy" element={<PrivacyPage />} />
-                </Route>
-              </Routes>
-              <CurrentPath />
-            </MemoryRouter>
-          </PaletteProvider>
+          <ThemeProvider>
+            <PaletteProvider>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route element={<PublicLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path="pricing" element={<PricingPage />} />
+                    <Route path="terms" element={<TermsPage />} />
+                    <Route path="privacy" element={<PrivacyPage />} />
+                  </Route>
+                </Routes>
+                <CurrentPath />
+              </MemoryRouter>
+            </PaletteProvider>
+          </ThemeProvider>
         </ConsentProvider>
       </I18nProvider>
     </QueryClientProvider>
@@ -130,7 +133,12 @@ describe('The public site', () => {
     const header = screen.getByRole('banner')
     expect(within(header).getByRole('link', { name: 'Dash' })).toBeInTheDocument()
     expect(within(header).getByRole('link', { name: 'Pricing' })).toBeInTheDocument()
-    expect(within(header).getByRole('button', { name: 'English' })).toBeInTheDocument()
+    expect(
+      within(header).getByRole('button', { name: 'Switch language to Spanish' })
+    ).toBeInTheDocument()
+    expect(
+      within(header).getByRole('button', { name: 'Toggle light and dark theme' })
+    ).toBeInTheDocument()
     expect(within(header).getByRole('link', { name: 'Sign in' })).toBeInTheDocument()
     expect(within(header).getByRole('link', { name: 'Create account' })).toBeInTheDocument()
 
@@ -154,6 +162,7 @@ describe('The public site', () => {
             avatarPath: null,
             locale: 'en',
             theme: 'system',
+            palette: null,
             termsVersion: '2026-01-01',
           },
         })
@@ -332,6 +341,7 @@ describe('The pricing page', () => {
             avatarPath: null,
             locale: 'en',
             theme: 'system',
+            palette: null,
             termsVersion: '2026-01-01',
           },
         })

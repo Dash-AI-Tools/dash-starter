@@ -35,6 +35,19 @@ export const STATIONS: { id: StationId; icon: ComponentType<SVGProps<SVGSVGEleme
 ]
 
 /**
+ * How a station is spelled inside the keys of the catalog, such as
+ * `stationBillingName`.
+ */
+export const STATION_KEY_NAMES: Record<StationId, string> = {
+  auth: 'Auth',
+  orgs: 'Orgs',
+  billing: 'Billing',
+  ai: 'Ai',
+  mcp: 'Mcp',
+  email: 'Email',
+}
+
+/**
  * The colour of a station, as a design token. Rebranding the product means
  * changing the tokens, never this map.
  */

@@ -40,6 +40,8 @@ export const common = {
   language: 'Language',
   english: 'English',
   spanish: 'Spanish',
+  switchToLanguage: 'Switch language to {language}',
+  toggleTheme: 'Toggle light and dark theme',
   paletteLabel: 'Color palette',
   paletteLine: 'Line',
   paletteInk: 'Ink',

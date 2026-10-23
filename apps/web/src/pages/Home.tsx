@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { ArrowRight, Check, Copy, Flag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useI18n, type TranslationKey } from '@/lib/i18n'
-import { STATIONS, stationColor, type StationId } from '@/lib/stations'
+import { STATIONS, STATION_KEY_NAMES, stationColor, type StationId } from '@/lib/stations'
 import { usePublicPageMeta } from '@/lib/use-page-meta'
 import { cn } from '@/lib/utils'
 
@@ -20,22 +20,10 @@ const FAQ = [
 ] as const
 
 /**
- * How a station is spelled inside the keys of the catalog.
- */
-const KEY_NAME: Record<StationId, string> = {
-  auth: 'Auth',
-  orgs: 'Orgs',
-  billing: 'Billing',
-  ai: 'Ai',
-  mcp: 'Mcp',
-  email: 'Email',
-}
-
-/**
  * A catalog key of a station, such as `stationBillingName`.
  */
 function stationKey(id: StationId, field: 'Name' | 'Alt' | 'Title' | 'Body' | 'Proof') {
-  return `station${KEY_NAME[id]}${field}` as TranslationKey
+  return `station${STATION_KEY_NAMES[id]}${field}` as TranslationKey
 }
 
 /**

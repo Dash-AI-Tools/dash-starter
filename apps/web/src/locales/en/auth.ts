@@ -3,6 +3,8 @@ export const auth = {
   signUpSubtitle: 'Start your workspace in less than a minute.',
   signInTitle: 'Welcome back',
   signInSubtitle: 'Sign in to continue to your workspace.',
+  logoPlaceholder: 'Your logo',
+  loginFeatureEyebrow: 'The AI SaaS starter',
   fullName: 'Full name',
   email: 'Email',
   password: 'Password',
