@@ -1,0 +1,266 @@
+{
+  "rows": [
+    {
+      "layer": "api-endpoint",
+      "change": "API endpoint",
+      "files": "`apps/api/start/routes.ts`, `apps/api/app/controllers/`, `apps/api/app/validators/`, `apps/api/app/services/`, `apps/api/app/transformers/`",
+      "generator": "`npm run gen -- <controller|validator|service|transformer|middleware|exception|event|listener|test> <name>`",
+      "imitate": "`apps/api/app/controllers/organization_controller.ts`, `apps/api/app/validators/organization.ts`, `apps/api/app/services/organizations.ts`, `apps/api/app/transformers/organization_transformer.ts`",
+      "aliases": ["endpoint", "api", "route"]
+    },
+    {
+      "layer": "database-change",
+      "change": "Database change",
+      "files": "`apps/api/database/migrations/`, `apps/api/database/schema.ts` (regenerated)",
+      "generator": "`npm run gen -- <migration|model|seeder|factory> <name>`",
+      "imitate": "the newest migration in `apps/api/database/migrations/`",
+      "aliases": ["database", "db", "schema"]
+    },
+    {
+      "layer": "authorization-rule",
+      "change": "Authorization rule",
+      "files": "`apps/api/app/abilities/main.ts`",
+      "generator": "—",
+      "imitate": "`updateOrganization` in `apps/api/app/abilities/main.ts`",
+      "aliases": ["ability", "abilities", "authorization", "policy"]
+    },
+    {
+      "layer": "api-key-or-mcp-feature",
+      "change": "API key or MCP feature",
+      "files": "`apps/api/app/services/api_keys.ts`, `apps/api/app/services/mcp.ts`, `docs/mcp.md`",
+      "generator": "—",
+      "imitate": "`apps/api/app/services/api_keys.ts`",
+      "aliases": ["mcp", "api-key"]
+    },
+    {
+      "layer": "ai-tool-or-provider",
+      "change": "AI tool or provider",
+      "files": "`apps/api/app/tools/<tool>.ts`, `apps/api/app/tools/main.ts`, `apps/api/config/ai.ts`, `docs/ai.md`",
+      "generator": "—",
+      "imitate": "`apps/api/app/tools/list_members.ts`",
+      "aliases": ["tool", "ai-tool", "provider"]
+    },
+    {
+      "layer": "ai-behaviour",
+      "change": "AI behaviour",
+      "files": "`apps/api/app/services/ai.ts`, `apps/api/app/services/ai_usage.ts`",
+      "generator": "—",
+      "imitate": "`generateText` in `apps/api/app/services/ai.ts`",
+      "aliases": ["ai", "ai-behavior"]
+    },
+    {
+      "layer": "web-page",
+      "change": "Web page",
+      "files": "`apps/web/src/pages/`, `apps/web/src/lib/`, `apps/web/src/locales/{en,es}/`",
+      "generator": "`npm run i18n -- web <namespace> <key> <en> <es>`",
+      "imitate": "`apps/web/src/pages/MembersPage.tsx`, `apps/web/src/lib/organizations.ts`, `apps/web/src/locales/en/organizations.ts`",
+      "aliases": ["page", "locale", "catalog"]
+    },
+    {
+      "layer": "product-feature",
+      "change": "Product feature",
+      "files": "`apps/api/app/features/<name>/`, `apps/api/tests/functional/features/`, `apps/web/src/features/<name>/`, both `features/index.ts` registries",
+      "generator": "`npm run gen -- feature <name>`",
+      "imitate": "the output of `npm run make:feature -- <name>`",
+      "aliases": []
+    },
+    {
+      "layer": "web-component",
+      "change": "Web component",
+      "files": "`apps/web/src/components/`",
+      "generator": "—",
+      "imitate": "`apps/web/src/components/api-keys/api-keys-settings.tsx`",
+      "aliases": ["web-components"]
+    },
+    {
+      "layer": "ui-primitive-core",
+      "change": "UI primitive (core)",
+      "files": "`packages/ui/src/<primitive>.tsx`, `packages/ui/src/<primitive>.stories.tsx`, `packages/ui/src/index.ts`",
+      "generator": "`npm run gen -- primitive <name>`",
+      "imitate": "`packages/ui/src/button.tsx`, `packages/ui/src/button.stories.tsx`",
+      "aliases": ["ui-primitive"]
+    },
+    {
+      "layer": "product-component",
+      "change": "Product component",
+      "files": "`packages/ui/src/custom/`",
+      "generator": "`npm run gen -- component <name>`",
+      "imitate": "the output of `npm run make:component -- <name>`",
+      "aliases": ["custom-component"]
+    },
+    {
+      "layer": "design-token-or-palette",
+      "change": "Design token or palette",
+      "files": "`packages/ui/src/styles/palettes.css`",
+      "generator": "—",
+      "imitate": "the `line` palette block",
+      "aliases": ["palette", "token", "design-token"]
+    },
+    {
+      "layer": "core-update-or-generators",
+      "change": "Core update or generators",
+      "files": "`packages/core-tools/src/`, `packages/core-tools/test/`, `docs/guides/updating.md`, `docs/guides/extending.md`",
+      "generator": "—",
+      "imitate": "`packages/core-tools/src/showcase.js`, `packages/core-tools/test/showcase.test.js`",
+      "aliases": ["core", "core-tools"]
+    },
+    {
+      "layer": "end-to-end-journey",
+      "change": "End-to-end journey",
+      "files": "`e2e/specs/`, `e2e/support/`",
+      "generator": "—",
+      "imitate": "`e2e/specs/auth.spec.ts`, `e2e/support/app.ts`",
+      "aliases": ["e2e", "journey"]
+    },
+    {
+      "layer": "installer-behaviour",
+      "change": "Installer behaviour",
+      "files": "`packages/create-app/src/`, `packages/create-app/template.json`",
+      "generator": "—",
+      "imitate": "`packages/create-app/src/env.js`",
+      "aliases": ["installer"]
+    },
+    {
+      "layer": "harness",
+      "change": "Harness",
+      "files": "`plugins/dsh/agents/`, `plugins/dsh/skills/`, `plugins/dsh/scripts/`, `plugins/dsh/hooks/hooks.json`, `docs/harness.md`",
+      "generator": "—",
+      "imitate": "`plugins/dsh/agents/backend-dev.md`, `plugins/dsh/skills/backend/SKILL.md`, `plugins/dsh/scripts/protect-files.mjs`",
+      "aliases": ["dsh", "plugin"]
+    },
+    {
+      "layer": "planning",
+      "change": "Planning",
+      "files": "`openspec/changes/<change>/`",
+      "generator": "`npm run gen -- change <name>`",
+      "imitate": "`openspec/changes/add-dev-harness/`",
+      "aliases": ["openspec", "plan"]
+    }
+  ],
+  "generators": {
+    "controller": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:controller"],
+      "cwd": "apps/api",
+      "flags": ["--resource", "--api", "--singular"],
+      "actions": true,
+      "writes": ["apps/api"]
+    },
+    "validator": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:validator"],
+      "cwd": "apps/api",
+      "flags": ["--resource"],
+      "writes": ["apps/api"]
+    },
+    "service": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:service"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "transformer": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:transformer"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "middleware": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:middleware"],
+      "cwd": "apps/api",
+      "flags": ["--stack=<server|router|named>"],
+      "writes": ["apps/api"]
+    },
+    "exception": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:exception"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "event": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:event"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "listener": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:listener"],
+      "cwd": "apps/api",
+      "flags": ["--event=<name>"],
+      "writes": ["apps/api"]
+    },
+    "test": {
+      "row": "api-endpoint",
+      "run": ["node", "ace", "make:test"],
+      "cwd": "apps/api",
+      "flags": ["--suite=<name>"],
+      "writes": ["apps/api"]
+    },
+    "migration": {
+      "row": "database-change",
+      "run": ["node", "ace", "make:migration"],
+      "cwd": "apps/api",
+      "flags": ["--create", "--alter"],
+      "writes": ["apps/api"]
+    },
+    "model": {
+      "row": "database-change",
+      "run": ["node", "ace", "make:model"],
+      "cwd": "apps/api",
+      "flags": ["--migration", "--controller", "--transformer", "--factory"],
+      "writes": ["apps/api"]
+    },
+    "seeder": {
+      "row": "database-change",
+      "run": ["node", "ace", "make:seeder"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "factory": {
+      "row": "database-change",
+      "run": ["node", "ace", "make:factory"],
+      "cwd": "apps/api",
+      "flags": [],
+      "writes": ["apps/api"]
+    },
+    "primitive": {
+      "row": "ui-primitive-core",
+      "run": ["npx", "shadcn", "add"],
+      "cwd": "apps/web",
+      "target": "packages/ui/src/<name>.tsx",
+      "flags": [],
+      "writes": ["apps/web", "packages/ui"]
+    },
+    "component": {
+      "row": "product-component",
+      "run": ["npm", "run", "make:component", "--"],
+      "cwd": ".",
+      "target": "packages/ui/src/custom/<name>.tsx",
+      "flags": [],
+      "writes": ["packages/ui/src/custom"]
+    },
+    "feature": {
+      "row": "product-feature",
+      "run": ["npm", "run", "make:feature", "--"],
+      "cwd": ".",
+      "target": ["apps/api/app/features/<name>", "apps/web/src/features/<name>"],
+      "flags": [],
+      "writes": ["apps/api", "apps/web"]
+    },
+    "change": {
+      "row": "planning",
+      "run": ["openspec", "new", "change"],
+      "cwd": ".",
+      "target": "openspec/changes/<name>",
+      "flags": [],
+      "writes": ["openspec/changes"]
+    }
+  }
+}

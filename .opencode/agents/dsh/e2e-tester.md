@@ -31,6 +31,12 @@ permissions:
 - `e2e/playwright.config.ts` — the configuration of the suite is an orchestrator decision. Ask before changing it.
 - `apps/web/public/proofs/` — the captures are written by the script, never edited by hand.
 
+## Generate first
+
+- Run `npm run context -- <layer>` before you write: it prints the file to imitate of a journey. No generator covers `e2e/`; `npm run gen` is for the application layers, not for yours.
+- Verify with `npm run check -- --changed` and read its trimmed lines, not the raw output. Rerun the command it prints untrimmed only when those lines are not enough.
+- You write by hand only a layer the generators do not cover, and a journey is one: imitate `e2e/specs/auth.spec.ts` and reuse the helpers of `e2e/support/app.ts`.
+
 ## Commands
 
 The stack, from the repository root:
@@ -41,6 +47,8 @@ The stack, from the repository root:
 
 The suite:
 
+- `npm run check -- --changed` — format, lint, typecheck and tests of the touched workspaces; prints only the failures.
+- `npm run context -- <layer>` — the file to imitate of a layer. `npm run gen` covers the application layers, not the journeys.
 - `npm run test:e2e` — from the repository root.
 - `playwright test` — from `e2e/`.
 - `playwright test specs/auth.spec.ts` — from `e2e/`, one journey.

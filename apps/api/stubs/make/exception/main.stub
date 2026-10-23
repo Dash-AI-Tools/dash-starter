@@ -1,0 +1,20 @@
+{{#var exceptionName = generators.exceptionName(entity.name)}}
+{{#var exceptionFileName = generators.exceptionFileName(entity.name)}}
+{{#var errorCode = 'E_' + string(exceptionName).removeSuffix('exception').snakeCase().toString().toUpperCase()}}
+{{#var message = string(exceptionName).removeSuffix('exception').sentenceCase().toString()}}
+{{{
+  exports({
+    to: app.exceptionsPath(entity.path, exceptionFileName)
+  })
+}}}
+import { createError } from '@adonisjs/core/exceptions'
+
+/**
+ * A domain error. The services throw it instead of an HTTP error, and the
+ * handler of \`#exceptions/handler\` maps its code to a status and to a message
+ * of \`resources/lang/{en,es}/errors.json\`, so the client reads it in its own
+ * language.
+ */
+export const {{ errorCode }} = createError('{{ message }}', '{{ errorCode }}', 500)
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

@@ -1,0 +1,21 @@
+{{#var factoryName = generators.factoryName(entity.name)}}
+{{#var factoryFileName = generators.factoryFileName(entity.name)}}
+{{#var modelName = generators.modelName(model.name)}}
+{{#var modelFileName = generators.modelFileName(model.name)}}
+{{#var modelImportPath = generators.importPath('#models', model.path, modelFileName.replace(/\.ts$/, ''))}}
+{{#var one = string(modelName).noCase().toString()}}
+{{{
+  exports({
+    to: app.factoriesPath(entity.path, factoryFileName)
+  })
+}}}
+import {{ modelName }} from '{{ modelImportPath }}'
+import factory from '@adonisjs/lucid/factories'
+
+/**
+ * Builds a {{ one }} with the columns the database requires, so a test only
+ * sets the ones it talks about.
+ */
+export const {{ factoryName }} = factory.define({{ modelName }}, async () => ({})).build()
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

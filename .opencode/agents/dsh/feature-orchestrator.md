@@ -29,6 +29,14 @@ mode: subagent
 - Generated files: `apps/api/database/schema.ts` and `apps/api/.adonisjs/client/`.
 - When a task needs a decision that changes the design, you update `openspec/changes/<change-id>/design.md`, the deltas or `openspec/changes/<change-id>/tasks.md` first, with the developer's approval, and only then delegate the task.
 
+## Generate first
+
+- You never write layer code, but you make the specialists generate before they write. Delegate each task with the output of `npm run context -- <layer>` for its layer: the generator, the file to imitate and the files to register.
+- A new change: `npm run gen -- change <change-id>` instead of a hand-made directory.
+- A product feature is scaffolded once, with `npm run gen -- feature <name>`, by the first specialist you delegate to, before the others start on it.
+- The specialists scaffold with `npm run gen -- <layer> <name>`, add the strings with `npm run i18n`, and write by hand only a layer the generators do not cover (abilities, AI tools, pages outside a feature, end-to-end journeys).
+- Verify with `npm run check -- --changed` and read its trimmed lines, not the raw output. Rerun the command it prints untrimmed only when those lines are not enough.
+
 ## Commands
 
 OpenSpec, from the repository root:
@@ -40,6 +48,8 @@ OpenSpec, from the repository root:
 - `openspec validate <change-id> --strict` — validates the change and its deltas.
 - `openspec new change <change-id>` — creates a change.
 - `openspec archive <change-id>` — syncs the deltas into `openspec/specs/` and moves the change to the archive.
+
+Generators and checks, from the repository root: `npm run context -- <layer>`, `npm run gen -- <layer> <name>` (`change` for a new change), `npm run i18n -- <web|api> <namespace> <key> <en> <es>`, `npm run check -- --changed` (failures only, trimmed).
 
 Verification, from the repository root: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm test`, `npm run build`, `npm run test:e2e`.
 

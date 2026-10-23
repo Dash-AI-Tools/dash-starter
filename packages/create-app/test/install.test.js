@@ -191,6 +191,14 @@ test('the harness of the development travels with the project', async () => {
     'plugins/dsh/agents/backend-dev.md',
     'plugins/dsh/skills/feature/SKILL.md',
     'plugins/dsh/scripts/checks.mjs',
+    'plugins/dsh/scripts/gen.mjs',
+    'plugins/dsh/scripts/check.mjs',
+    'plugins/dsh/scripts/i18n.mjs',
+    'plugins/dsh/scripts/context.mjs',
+    'plugins/dsh/scripts/gen.test.mjs',
+    'plugins/dsh/scripts/layers.json',
+    'plugins/dsh/scripts/fixtures/check/eslint.txt',
+    'apps/api/stubs/make/controller/main.stub',
     'plugins/dsh/hooks/hooks.json',
     '.claude-plugin/marketplace.json',
     '.claude/settings.json',
@@ -213,6 +221,49 @@ test('the harness of the development travels with the project', async () => {
     await readFile(join(target, '.opencode/agents/dsh/backend-dev.md'), 'utf8'),
     '# backend-dev of Acme AI\n'
   )
+
+  /**
+   * The stubs of the generators carry no brand, so they travel byte for byte,
+   * Tempura tags included. The scripts name the workspaces by their package,
+   * so they follow the scope of the project, and so do the captured outputs
+   * their tests parse.
+   */
+  const stub = await readFile(join(target, 'apps/api/stubs/make/controller/main.stub'), 'utf8')
+
+  assert.equal(
+    stub,
+    await readFile(join(template, 'apps/api/stubs/make/controller/main.stub'), 'utf8')
+  )
+  assert.match(stub, /export default class \{\{ controllerName \}\} \{\}/)
+
+  const checks = await readFile(join(target, 'plugins/dsh/scripts/checks.mjs'), 'utf8')
+  const eslint = await readFile(
+    join(target, 'plugins/dsh/scripts/fixtures/check/eslint.txt'),
+    'utf8'
+  )
+
+  assert.match(checks, /name: '@acme-ai\/api'/)
+  assert.equal(checks.includes('@dash/'), false)
+  assert.match(eslint, /@acme-ai\/web@0\.0\.0/)
+  assert.equal(eslint.includes('@dash/'), false)
+
+  const layers = JSON.parse(await readFile(join(target, 'plugins/dsh/scripts/layers.json'), 'utf8'))
+
+  assert.equal(layers.rows[0].generator, '`npm run gen -- controller <name>`')
+
+  /**
+   * The root scripts that drive the harness survive the rebrand of the root
+   * package.
+   */
+  const rootPackage = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
+
+  assert.equal(rootPackage.name, 'acme-ai')
+  assert.deepEqual(rootPackage.scripts, {
+    gen: 'node plugins/dsh/scripts/gen.mjs',
+    check: 'node plugins/dsh/scripts/check.mjs',
+    i18n: 'node plugins/dsh/scripts/i18n.mjs',
+    context: 'node plugins/dsh/scripts/context.mjs',
+  })
 
   /**
    * The state of the machine of the developer never travels.

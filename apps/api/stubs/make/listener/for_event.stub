@@ -1,0 +1,26 @@
+{{#var listenerName = generators.listenerName(entity.name)}}
+{{#var listenerFileName = generators.listenerFileName(entity.name)}}
+{{#var eventName = generators.eventName(event.name)}}
+{{#var eventFileName = generators.eventFileName(event.name)}}
+{{#var eventImportPath = generators.importPath('#events', event.path, eventFileName.replace(/\.ts$/, ''))}}
+{{{
+  exports({
+    to: app.listenersPath(entity.path, listenerFileName)
+  })
+}}}
+import type {{ eventName }} from '{{ eventImportPath }}'
+import logger from '@adonisjs/core/services/logger'
+
+/**
+ * The \`{{ listenerName }}\` listener of \`{{ eventName }}\`.
+ *
+ * It delegates the work to a service of \`#services/\`, so it stays as thin as a
+ * controller and the work can be tested without an event.
+ */
+export default class {{ listenerName }} {
+  async handle(event: {{ eventName }}) {
+    logger.debug({ event: event.constructor.name }, 'handled by {{ listenerName }}')
+  }
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

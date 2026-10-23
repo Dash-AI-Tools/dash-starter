@@ -15,3 +15,11 @@ Change: `$ARGUMENTS`
 - The MCP transport and the API keys are not touched. A task that needs them is refused and reported as a missing `[mcp]` task.
 - Check off each finished task in `tasks.md` at the line `openspec instructions apply --change $ARGUMENTS --json` reports, only after its verification passes.
 - Report the tasks you ran, the capabilities added, the commands that passed and the tasks that need another layer.
+
+## Generate first
+
+- Tell the specialist to run `npm run context -- <layer>` for each layer it touches: the generator, the file to imitate and the files to register.
+- It scaffolds a test with `npm run gen -- test <name>` and reads only the path it prints.
+- It adds the description of a tool with `npm run i18n -- api chat <key> <en> <es>`.
+- It verifies with `npm run check -- --changed` and reads the trimmed lines, not the raw output; it reruns the printed command untrimmed only when those lines are not enough.
+- It writes by hand only a layer the generators do not cover (an AI tool, a provider, an alias), imitating the file `npm run context` names.

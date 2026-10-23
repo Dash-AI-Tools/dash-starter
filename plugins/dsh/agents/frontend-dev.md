@@ -29,10 +29,22 @@ model: inherit
 - `packages/ui/src/styles/palettes.css` and `packages/ui/src/styles/index.css` — these are the design tokens; changing them changes the whole product. Ask first.
 - Never hand-write API types. They come from the generated registry.
 
+## Generate first
+
+- Run `npm run context -- <layer>` before you write: it prints the generator, the file to imitate and the files to register.
+- Scaffold with `npm run gen -- <layer> <name>`: `component` (a product component in `packages/ui/src/custom/`), `primitive` (a shadcn primitive in `packages/ui/src/`, needs the network), `feature` when the orchestrator gives you the scaffold of a product feature. Read only the paths it prints.
+- Add a user-facing string with `npm run i18n -- web <namespace> <key> <en> <es>`: it writes `apps/web/src/locales/en/` and `apps/web/src/locales/es/` together.
+- Verify with `npm run check -- --changed` and read its trimmed lines, not the raw output. Rerun the command it prints untrimmed only when those lines are not enough.
+- You write by hand only a layer the generators do not cover — a page outside a feature in `apps/web/src/pages/`, a client module in `apps/web/src/lib/`, a component in `apps/web/src/components/` — imitating the file `npm run context` names.
+
 ## Commands
 
 Run from the repository root:
 
+- `npm run context -- <layer>` — the generator, the file to imitate and the files to register of a layer.
+- `npm run gen -- <layer> <name>` — scaffolds a layer with the generator of the stack and prints only the created paths.
+- `npm run i18n -- web <namespace> <key> <en> <es>` — adds a key to the English and the Spanish catalog; refuses a duplicate.
+- `npm run check -- --changed` — format, lint, typecheck and tests of the touched workspaces; prints only the failures.
 - `npm run lint` — eslint in every workspace.
 - `npm run typecheck` — `tsc --noEmit` in `apps/api`, `tsc -b --noEmit` in `apps/web`.
 - `npm run format` / `npm run format:check` — Prettier over the whole repository.

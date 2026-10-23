@@ -1,0 +1,289 @@
+
+> test
+> node bin/test.js --reporters=spec
+
+
+unit / Invoices (tests/unit/invoices.spec.js)
+  ✔ records the invoice of event 1 (0.45ms)
+  ✔ records the invoice of event 2 (0.05ms)
+  ✔ records the invoice of event 3 (0.04ms)
+  ✔ records the invoice of event 4 (0.03ms)
+  ✔ records the invoice of event 5 (0.04ms)
+  ✔ records the invoice of event 6 (0.02ms)
+  ✔ records the invoice of event 7 (0.02ms)
+  ✔ records the invoice of event 8 (0.02ms)
+  ✔ records the invoice of event 9 (0.03ms)
+  ✔ records the invoice of event 10 (0.06ms)
+  ✔ records the invoice of event 11 (0.03ms)
+  ✔ records the invoice of event 12 (0.04ms)
+  ✔ records the invoice of event 13 (0.02ms)
+  ✔ records the invoice of event 14 (0.02ms)
+  ✔ records the invoice of event 15 (0.02ms)
+  ✔ records the invoice of event 16 (0.02ms)
+  ✔ records the invoice of event 17 (0.02ms)
+  ✔ records the invoice of event 18 (0.01ms)
+  ✔ records the invoice of event 19 (0.01ms)
+  ✔ records the invoice of event 20 (0.01ms)
+  ✔ records the invoice of event 21 (0.01ms)
+  ✔ records the invoice of event 22 (0.01ms)
+  ✔ records the invoice of event 23 (0.01ms)
+  ✔ records the invoice of event 24 (0.01ms)
+  ✔ records the invoice of event 25 (0.01ms)
+  ✔ records the invoice of event 26 (0.02ms)
+  ✔ records the invoice of event 27 (0.01ms)
+  ✔ records the invoice of event 28 (0.01ms)
+  ✔ records the invoice of event 29 (0.01ms)
+  ✔ records the invoice of event 30 (0.01ms)
+  ✔ records the invoice of event 31 (0.01ms)
+  ✔ records the invoice of event 32 (0.01ms)
+  ✔ records the invoice of event 33 (0.01ms)
+  ✔ records the invoice of event 34 (0.01ms)
+  ✔ records the invoice of event 35 (0.01ms)
+  ✔ records the invoice of event 36 (0.01ms)
+  ✔ records the invoice of event 37 (0.01ms)
+  ✔ records the invoice of event 38 (0.01ms)
+  ✔ records the invoice of event 39 (0.01ms)
+  ✔ records the invoice of event 40 (0.01ms)
+  ✔ records the invoice of event 41 (0.01ms)
+  ✔ records the invoice of event 42 (0.01ms)
+  ✔ records the invoice of event 43 (0.01ms)
+  ✔ records the invoice of event 44 (0.01ms)
+  ✔ records the invoice of event 45 (0.01ms)
+  ✔ records the invoice of event 46 (0.01ms)
+  ✔ records the invoice of event 47 (0.01ms)
+  ✔ records the invoice of event 48 (0.01ms)
+  ✔ records the invoice of event 49 (0.01ms)
+  ✔ records the invoice of event 50 (0.01ms)
+  ✔ records the invoice of event 51 (0.01ms)
+  ✔ records the invoice of event 52 (0.01ms)
+  ✔ records the invoice of event 53 (0.01ms)
+  ✔ records the invoice of event 54 (0.01ms)
+  ✔ records the invoice of event 55 (0.01ms)
+  ✔ records the invoice of event 56 (0.02ms)
+  ✔ records the invoice of event 57 (0.01ms)
+  ✔ records the invoice of event 58 (0.01ms)
+  ✔ records the invoice of event 59 (0.01ms)
+  ✔ records the invoice of event 60 (0.01ms)
+  ✔ records the invoice of event 61 (0.01ms)
+  ✔ records the invoice of event 62 (0.01ms)
+  ✔ records the invoice of event 63 (0.02ms)
+  ✔ records the invoice of event 64 (0.01ms)
+  ✔ records the invoice of event 65 (0.01ms)
+  ✔ records the invoice of event 66 (0.01ms)
+  ✔ records the invoice of event 67 (0.01ms)
+  ✔ records the invoice of event 68 (0.01ms)
+  ✔ records the invoice of event 69 (0.01ms)
+  ✔ records the invoice of event 70 (0.01ms)
+  ✔ records the invoice of event 71 (0.01ms)
+  ✔ records the invoice of event 72 (0.01ms)
+  ✔ records the invoice of event 73 (0.01ms)
+  ✔ records the invoice of event 74 (0.01ms)
+  ✔ records the invoice of event 75 (0.01ms)
+  ✔ records the invoice of event 76 (0.01ms)
+  ✔ records the invoice of event 77 (0.01ms)
+  ✔ records the invoice of event 78 (0.01ms)
+  ✔ records the invoice of event 79 (0.01ms)
+  ✔ records the invoice of event 80 (0.01ms)
+  ✔ records the invoice of event 81 (0.01ms)
+  ✔ records the invoice of event 82 (0.01ms)
+  ✔ records the invoice of event 83 (0.01ms)
+  ✔ records the invoice of event 84 (0.01ms)
+  ✔ records the invoice of event 85 (0.01ms)
+  ✔ records the invoice of event 86 (0.01ms)
+  ✔ records the invoice of event 87 (0.01ms)
+  ✔ records the invoice of event 88 (0.01ms)
+  ✔ records the invoice of event 89 (0.01ms)
+  ✔ records the invoice of event 90 (0.01ms)
+  ✔ records the invoice of event 91 (0.01ms)
+  ✔ records the invoice of event 92 (0.01ms)
+  ✔ records the invoice of event 93 (0.02ms)
+  ✔ records the invoice of event 94 (0.01ms)
+  ✔ records the invoice of event 95 (0.01ms)
+  ✔ records the invoice of event 96 (0.06ms)
+  ✔ records the invoice of event 97 (0.01ms)
+  ✔ records the invoice of event 98 (0.01ms)
+  ✔ records the invoice of event 99 (0.01ms)
+  ✔ records the invoice of event 100 (0.01ms)
+  ✔ records the invoice of event 101 (0.01ms)
+  ✔ records the invoice of event 102 (0.01ms)
+  ✔ records the invoice of event 103 (0.01ms)
+  ✔ records the invoice of event 104 (0.01ms)
+  ✔ records the invoice of event 105 (0.3ms)
+  ✔ records the invoice of event 106 (0.01ms)
+  ✔ records the invoice of event 107 (0.01ms)
+  ✔ records the invoice of event 108 (0.01ms)
+  ✔ records the invoice of event 109 (0.01ms)
+  ✔ records the invoice of event 110 (0.01ms)
+  ✔ records the invoice of event 111 (0.01ms)
+  ✔ records the invoice of event 112 (0.01ms)
+  ✔ records the invoice of event 113 (0.01ms)
+  ✔ records the invoice of event 114 (0.01ms)
+  ✔ records the invoice of event 115 (0.01ms)
+  ✔ records the invoice of event 116 (0.01ms)
+  ✔ records the invoice of event 117 (0.01ms)
+  ✔ records the invoice of event 118 (0.01ms)
+  ✔ records the invoice of event 119 (0.01ms)
+  ✔ records the invoice of event 120 (0.01ms)
+  ✖ a failed payment records a failed invoice (0.74ms)
+
+unit / Plans (tests/unit/invoices.spec.js)
+  ✔ plan 1 has its limits (0.04ms)
+  ✔ plan 2 has its limits (0.01ms)
+  ✔ plan 3 has its limits (0.01ms)
+  ✔ plan 4 has its limits (0.01ms)
+  ✔ plan 5 has its limits (0.01ms)
+  ✔ plan 6 has its limits (0.02ms)
+  ✔ plan 7 has its limits (0.01ms)
+  ✔ plan 8 has its limits (0.01ms)
+  ✔ plan 9 has its limits (0.01ms)
+  ✔ plan 10 has its limits (0.01ms)
+  ✔ plan 11 has its limits (0.01ms)
+  ✔ plan 12 has its limits (0.01ms)
+  ✔ plan 13 has its limits (0.01ms)
+  ✔ plan 14 has its limits (0.01ms)
+  ✔ plan 15 has its limits (0.01ms)
+  ✔ plan 16 has its limits (0.01ms)
+  ✔ plan 17 has its limits (0.01ms)
+  ✔ plan 18 has its limits (0.01ms)
+  ✔ plan 19 has its limits (0.01ms)
+  ✔ plan 20 has its limits (0.01ms)
+  ✔ plan 21 has its limits (0.01ms)
+  ✔ plan 22 has its limits (0.01ms)
+  ✔ plan 23 has its limits (0.01ms)
+  ✔ plan 24 has its limits (0.01ms)
+  ✔ plan 25 has its limits (0.01ms)
+  ✔ plan 26 has its limits (0.01ms)
+  ✔ plan 27 has its limits (0.01ms)
+  ✔ plan 28 has its limits (0.01ms)
+  ✔ plan 29 has its limits (0.01ms)
+  ✔ plan 30 has its limits (0.01ms)
+  ✔ plan 31 has its limits (0.01ms)
+  ✔ plan 32 has its limits (0.01ms)
+  ✔ plan 33 has its limits (0.01ms)
+  ✔ plan 34 has its limits (0.01ms)
+  ✔ plan 35 has its limits (0.01ms)
+  ✔ plan 36 has its limits (0.01ms)
+  ✔ plan 37 has its limits (0.01ms)
+  ✔ plan 38 has its limits (0.01ms)
+  ✔ plan 39 has its limits (0.01ms)
+  ✔ plan 40 has its limits (0.01ms)
+  ✔ plan 41 has its limits (0.01ms)
+  ✔ plan 42 has its limits (0.01ms)
+  ✔ plan 43 has its limits (0.01ms)
+  ✔ plan 44 has its limits (0.01ms)
+  ✔ plan 45 has its limits (0.01ms)
+  ✔ plan 46 has its limits (0.01ms)
+  ✔ plan 47 has its limits (0.01ms)
+  ✔ plan 48 has its limits (0.01ms)
+  ✔ plan 49 has its limits (0.01ms)
+  ✔ plan 50 has its limits (0.01ms)
+  ✔ plan 51 has its limits (0.01ms)
+  ✔ plan 52 has its limits (0.01ms)
+  ✔ plan 53 has its limits (0.01ms)
+  ✔ plan 54 has its limits (0.01ms)
+  ✔ plan 55 has its limits (0.01ms)
+  ✔ plan 56 has its limits (0.01ms)
+  ✔ plan 57 has its limits (0.01ms)
+  ✔ plan 58 has its limits (0.01ms)
+  ✔ plan 59 has its limits (0.01ms)
+  ✔ plan 60 has its limits (0.01ms)
+  ✔ plan 61 has its limits (0.01ms)
+  ✔ plan 62 has its limits (0.01ms)
+  ✔ plan 63 has its limits (0.01ms)
+  ✔ plan 64 has its limits (0.01ms)
+  ✔ plan 65 has its limits (0.01ms)
+  ✔ plan 66 has its limits (0.01ms)
+  ✔ plan 67 has its limits (0.01ms)
+  ✔ plan 68 has its limits (0.01ms)
+  ✔ plan 69 has its limits (0.01ms)
+  ✔ plan 70 has its limits (0.01ms)
+  ✔ plan 71 has its limits (0.01ms)
+  ✔ plan 72 has its limits (0.01ms)
+  ✔ plan 73 has its limits (0.01ms)
+  ✔ plan 74 has its limits (0.01ms)
+  ✔ plan 75 has its limits (0.01ms)
+  ✔ plan 76 has its limits (0.01ms)
+  ✔ plan 77 has its limits (0.01ms)
+  ✔ plan 78 has its limits (0.01ms)
+  ✔ plan 79 has its limits (0.01ms)
+  ✔ plan 80 has its limits (0.01ms)
+  ✖ the free plan has no invoices (0.09ms)
+ ERRORS 
+
+❯ Invoices / a failed payment records a failed invoice
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+    "amount": 1000,
+-   "state": "failed",
++   "state": "paid",
+  }
+
+[31mℹ AssertionError: expected { state: 'paid', amount: 1000 } to deeply equal { state: 'failed', amount: 1000 }[39m
+
+ ⁃ at Assert.deepEqual [33m(/repo/node_modules/@japa/assert/build/index.js:85:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/invoices.spec.js:5:12)[39m
+
+   [2m 1[22m [2m┃[22m  [31mimport[0m { test } [31mfrom[0m [32m'@japa/runner'[0m
+   [2m 2[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Invoices'[0m[34m,[0m () [31m=>[0m {
+   [2m 3[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m120[0m; i[34m++[0m) [35mtest[0m([32m`records the invoice of event [0m[31m${[0mi[31m}[0m[32m`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35misTrue[0m([36mtrue[0m))
+   [2m 4[22m [2m┃[22m    [35mtest[0m([32m'a failed payment records a failed invoice'[0m[34m,[0m ({ assert }) [31m=>[0m {
+ [41m❯  5 ┃      assert.deepEqual({ state: 'paid', amount: 1000 }, { state: 'failed', amount: 1000 })[49m
+   [2m 6[22m [2m┃[22m    })
+   [2m 7[22m [2m┃[22m  })
+   [2m 8[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Plans'[0m[34m,[0m () [31m=>[0m {
+   [2m 9[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m80[0m; i[34m++[0m) [35mtest[0m([32m`plan [0m[31m${[0mi[31m}[0m[32m has its limits`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35mequal[0m(i[34m,[0m i))
+   [2m10[22m [2m┃[22m    [35mtest[0m([32m'the free plan has no invoices'[0m[34m,[0m ({ assert }) [31m=>[0m { assert[34m.[0m[35mequal[0m([33m2[0m[34m,[0m [33m0[0m) })
+   [2m11[22m [2m┃[22m  })
+
+ ⁃ at #runTest [33m(/repo/node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(/repo/node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(/repo/node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(/repo/node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:354:3)[39m
+[1/2]─
+
+❯ Plans / the free plan has no invoices
+
+- Expected  - 1
++ Received  + 1
+
+- 0
++ 2
+
+[31mℹ AssertionError: expected 2 to equal +0[39m
+
+ ⁃ at Assert.equal [33m(/repo/node_modules/@japa/assert/build/index.js:69:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/invoices.spec.js:10:66)[39m
+
+   [2m 2[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Invoices'[0m[34m,[0m () [31m=>[0m {
+   [2m 3[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m120[0m; i[34m++[0m) [35mtest[0m([32m`records the invoice of event [0m[31m${[0mi[31m}[0m[32m`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35misTrue[0m([36mtrue[0m))
+   [2m 4[22m [2m┃[22m    [35mtest[0m([32m'a failed payment records a failed invoice'[0m[34m,[0m ({ assert }) [31m=>[0m {
+   [2m 5[22m [2m┃[22m      assert[34m.[0m[35mdeepEqual[0m({ state[34m:[0m [32m'paid'[0m[34m,[0m amount[34m:[0m [33m1000[0m }[34m,[0m { state[34m:[0m [32m'failed'[0m[34m,[0m amount[34m:[0m [33m1000[0m })
+   [2m 6[22m [2m┃[22m    })
+   [2m 7[22m [2m┃[22m  })
+   [2m 8[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Plans'[0m[34m,[0m () [31m=>[0m {
+   [2m 9[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m80[0m; i[34m++[0m) [35mtest[0m([32m`plan [0m[31m${[0mi[31m}[0m[32m has its limits`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35mequal[0m(i[34m,[0m i))
+ [41m❯ 10 ┃    test('the free plan has no invoices', ({ assert }) => { assert.equal(2, 0) })[49m
+   [2m11[22m [2m┃[22m  })
+   [2m12[22m [2m┃[22m  
+
+ ⁃ at #runTest [33m(/repo/node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(/repo/node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(/repo/node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(/repo/node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:354:3)[39m
+[2/2]─
+
+ FAILED 
+
+Tests  200 passed, 2 failed (202)
+ Time  8ms

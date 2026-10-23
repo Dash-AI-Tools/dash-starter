@@ -34,10 +34,22 @@ The MCP server of the API and the API keys that authenticate it.
 - The tools that already exist in `apps/api/app/tools/` (`list_members.ts`, `organization_info.ts`, `ai_usage.ts`, `generate_text.ts`) and their lines in `apps/api/app/tools/main.ts`.
 - `apps/api/database/schema.ts` and `apps/api/database/migrations/` — a change of the shape of the data is an orchestrator decision.
 
+## Generate first
+
+- Run `npm run context -- <layer>` before you write: it prints the generator, the file to imitate and the files to register.
+- Scaffold with `npm run gen -- <layer> <name>`: `test`, and `validator`, `transformer` or `model` when the keys need one. Read only the paths it prints.
+- Add a user-facing string, such as the description of a tool, with `npm run i18n -- api <namespace> <key> <en> <es>`: it writes `apps/api/resources/lang/en/` and `apps/api/resources/lang/es/` together.
+- Verify with `npm run check -- --changed` and read its trimmed lines, not the raw output. Rerun the command it prints untrimmed only when those lines are not enough.
+- You write by hand only a layer the generators do not cover — a tool in `apps/api/app/tools/`, a scope or a key policy in `apps/api/app/services/api_keys.ts` — imitating the file `npm run context` names.
+
 ## Commands
 
 From the repository root:
 
+- `npm run context -- <layer>` — the generator, the file to imitate and the files to register of a layer.
+- `npm run gen -- <layer> <name>` — scaffolds a layer with the generator of the stack and prints only the created paths.
+- `npm run i18n -- api <namespace> <key> <en> <es>` — adds a key to the English and the Spanish catalog; refuses a duplicate.
+- `npm run check -- --changed` — format, lint, typecheck and tests of the touched workspaces; prints only the failures.
 - `npm run lint` — ESLint of every workspace.
 - `npm run typecheck` — the types of every workspace.
 - `npm run format:check` — Prettier.

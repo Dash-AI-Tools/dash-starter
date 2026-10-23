@@ -1,0 +1,7 @@
+
+> typecheck
+> tsc --noEmit
+
+src/invoices.ts(2,14): error TS2322: Type 'string' is not assignable to type 'number'.
+src/invoices.ts(4,58): error TS2551: Property 'amout' does not exist on type 'Invoice'. Did you mean 'amount'?
+src/invoices.ts(6,42): error TS2322: Type 'string' is not assignable to type 'number'.

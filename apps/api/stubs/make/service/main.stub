@@ -1,0 +1,30 @@
+{{#var modelName = generators.modelName(entity.name.replace(/[-_.]?service(\.ts)?$/i, ''))}}
+{{#var many = string(modelName).noCase().plural().toString()}}
+{{#var manyName = string(many).pascalCase().toString()}}
+{{#var tableName = generators.tableName(modelName)}}
+{{#var serviceFileName = string(many).snakeCase().ext('.ts').toString()}}
+{{{
+  exports({
+    to: app.servicesPath(entity.path, serviceFileName)
+  })
+}}}
+import type Organization from '#models/organization'
+import db from '@adonisjs/lucid/services/db'
+
+/**
+ * The {{ many }} of the organization, newest first.
+ *
+ * Every query of the domain is scoped to the organization of the request, so
+ * a tenant never reads the rows of another one. The controllers call these
+ * functions: the services are the only layer that touches the database, and
+ * they throw the domain errors of \`#exceptions/errors\`, never an HTTP error.
+ */
+export async function list{{ manyName }}(organization: Organization) {
+  return db
+    .from('{{ tableName }}')
+    .where('organization_id', organization.id)
+    .orderBy('created_at', 'desc')
+    .orderBy('id', 'desc')
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

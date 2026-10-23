@@ -1,0 +1,19 @@
+{{#var modelName = generators.modelName(entity.name)}}
+{{#var modelSchemaName = `${modelName}Schema` }}
+{{#var modelFileName = generators.modelFileName(entity.name)}}
+{{#var one = string(modelName).noCase().toString()}}
+{{{
+  exports({
+    to: app.modelsPath(entity.path, modelFileName)
+  })
+}}}
+import { {{ modelSchemaName }} } from '#database/schema'
+
+/**
+ * A {{ one }}. The columns come from \`#database/schema\`, which the migrations
+ * regenerate, so the model only declares the relations and the narrower types
+ * of its columns.
+ */
+export default class {{ modelName }} extends {{ modelSchemaName }} {}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

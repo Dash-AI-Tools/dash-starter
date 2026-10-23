@@ -1,0 +1,24 @@
+{{#var validatorName = generators.validatorName(entity.name)}}
+{{#var validatorFileName = generators.validatorFileName(entity.name)}}
+{{#var createAction = generators.validatorActionName(entity.name, 'create')}}
+{{#var updateAction = generators.validatorActionName(entity.name, 'update')}}
+{{#var one = string(validatorName).noCase().toString()}}
+{{{
+  exports({
+    to: app.validatorsPath(entity.path, validatorFileName)
+  })
+}}}
+import vine from '@vinejs/vine'
+
+/**
+ * The payload of the creation of a {{ one }}.
+ */
+export const {{ createAction }} = vine.create({})
+
+/**
+ * The payload of the update of a {{ one }}. Every field is optional, so the
+ * form can send only what changed.
+ */
+export const {{ updateAction }} = vine.create({})
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

@@ -1,7 +1,7 @@
 ---
 type: Reference
 title: Development harness
-description: The dsh plugin: commands, specialist agents, guardrails, the commit gate, worktrees and OpenCode.
+description: The dsh plugin: commands, specialist agents, the scripts and the API stubs, guardrails, the commit gate, worktrees and OpenCode.
 tags: [harness, tooling, claude-code, opencode, reference]
 status: stable
 ---
@@ -81,6 +81,147 @@ The loop is the one of the repository, and the harness does not change it:
 3. `openspec instructions apply --change <id> --json` reports the files of the change and the line of every task: a task is checked off in `openspec/changes/<id>/tasks.md` at that line, and only after its verification passes.
 4. `openspec validate <id> --strict` checks the change before it is archived.
 5. `openspec archive <id>` moves the deltas into the specs of the main and leaves the history of the change in `openspec/changes/archive/`.
+
+## The scripts
+
+Four plain Node scripts in `plugins/dsh/scripts/` scaffold, verify and localize a change with short output, so an agent reads a few lines instead of a generator banner or a full test log. The root `package.json` exposes them:
+
+| Command                                                  | Script        | What it does                                                                                                       |
+| -------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `npm run context -- <layer>`                             | `context.mjs` | Prints one row of `plugins/dsh/scripts/layers.json`: the generator, the file to imitate and the files to register. |
+| `npm run gen -- <layer> <name> [flags]`                  | `gen.mjs`     | Runs the generator of the layer in its workspace and prints only the files it created or changed.                  |
+| `npm run check -- [--changed \| <workspace>...]`         | `check.mjs`   | Runs the format, the lint, the typecheck and the tests, and prints one line per step and only the failures.        |
+| `npm run i18n -- <web\|api> <namespace> <key> <en> <es>` | `i18n.mjs`    | Adds a key to the English and the Spanish catalog together, then formats them.                                     |
+
+### `context`
+
+`layers.json` holds the rows of the table "Where each kind of change lives" of `docs/architecture.md` as data, plus the generator layers of `gen`. The argument is a row (`api-endpoint`, `database-change`, `web-page`, …), an alias of a row (`endpoint`, `db`, `page`, …) or a generator layer (`controller`, `migration`, …). The output is four lines:
+
+```bash
+npm run context -- database-change
+```
+
+```
+layer: database-change (Database change)
+generator: npm run gen -- <migration|model|seeder|factory> <name>
+imitate: the newest migration in apps/api/database/migrations/
+files: apps/api/database/migrations/, apps/api/database/schema.ts (regenerated)
+```
+
+A row with no generator says `generator: none, write it by imitation`. An unknown layer fails and lists the known ones. `plugins/dsh/scripts/context.test.mjs` asserts that every row of `layers.json` matches the table of `docs/architecture.md` (the change, the files, the generator and the file to imitate), so a change of one without the other fails `npm test -w @dash/dsh`.
+
+### `gen`
+
+| Layer                                                                                                                                                  | Runs                               | In         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- | ---------- |
+| `controller`, `validator`, `service`, `transformer`, `middleware`, `exception`, `event`, `listener`, `test`, `migration`, `model`, `seeder`, `factory` | `node ace make:<layer> <name>`     | `apps/api` |
+| `primitive`                                                                                                                                            | `npx shadcn add <name> --yes`      | `apps/web` |
+| `component`                                                                                                                                            | `npm run make:component -- <name>` | the root   |
+| `feature`                                                                                                                                              | `npm run make:feature -- <name>`   | the root   |
+| `change`                                                                                                                                               | `openspec new change <name>`       | the root   |
+
+A `primitive`, `component`, `feature` or `change` name is kebab-case (`data-card`); an ace name may have folders (`admin/invoices`).
+
+The flags after the name reach the generator only when `generators.<layer>.flags` of `layers.json` allows them:
+
+| Layer        | Flags                                                                |
+| ------------ | -------------------------------------------------------------------- |
+| `controller` | `--resource`, `--api`, `--singular`, and action names (`index show`) |
+| `validator`  | `--resource`                                                         |
+| `middleware` | `--stack=<server\|router\|named>`                                    |
+| `listener`   | `--event=<name>`                                                     |
+| `test`       | `--suite=<name>`                                                     |
+| `migration`  | `--create`, `--alter`                                                |
+| `model`      | `--migration`, `--controller`, `--transformer`, `--factory`          |
+| Any other    | none                                                                 |
+
+Any other flag is refused with the flags the layer allows: `Refused: --api. validator accepts only --resource.` The overwrite flags (`--force`, `-f`, `--overwrite`, `-o`) and `--contents-from` are always refused: the generators never overwrite a file. Without `--stack`, `make:middleware` asks a question; `gen` reports that it created nothing and to pass the flag that answers it.
+
+The output contract:
+
+- On success, only the paths: one created path per line, then one `modified: <path>` line per changed file (`modified: apps/api/start/kernel.ts` for a named middleware). The paths are relative to the root of the repository. They cover the folders the generator can write and the files at the root; the snapshot skips `.claude`, `.serena`, `.opencode` and the `.env*` files.
+- After a migration, one more line: `Next: node ace migration:run in apps/api, it regenerates database/schema.ts.`
+- A row of the table is refused with the generator it names: `"api-endpoint" is a kind of change, not a generator layer: run npm run gen -- <controller|…> <name>.`
+- A layer that no generator covers is refused with the file to imitate: `No generator covers "ability" (Authorization rule): write it by imitating updateOrganization in apps/api/app/abilities/main.ts, …`. Any other name lists the generator layers.
+- An existing target is refused and nothing is written: `The target exists, nothing was generated`, with the path, or with the line of the generator that skipped it.
+- A failing generator prints its command, its exit code, the last 15 lines of its output and the files it left behind.
+
+Two generators depend on something outside the repository:
+
+- `primitive` runs `npx shadcn add`, which fetches the primitive from the registry of shadcn: it needs the network, and its failure says so.
+- `change` runs `openspec new change`: `openspec` must be on the `PATH` of the active Node. With nvm, a global `openspec` installed under another version is not found after `nvm use`; install it again under the version of `.nvmrc`.
+
+### `check`
+
+`npm run check` and `npm run check -- --changed` check the files that changed since the last commit, tracked or not; `npm run check -- <workspace>...` checks whole workspaces, named by their directory (`apps/web`), their last segment (`web`) or their package name (`@dash/web`). An unknown name fails and lists the known ones.
+
+| Mode             | Steps per workspace                                                                                                                                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--changed`      | Prettier on the changed files only, then for each affected workspace: the lint, the typecheck, the fast tests of the `Stop` hook (`vitest related` for `apps/web`, the node suites).                                       |
+| Named workspaces | Prettier on the workspace, the lint, the typecheck, and the tests: the node suites, and the full `npm test` of `apps/web` and `apps/api`. The API suite runs only when `apps/api` is named, because it needs the database. |
+
+The output contract:
+
+- One line per step: `<step> <workspace> ok` or `<step> <workspace> failed`. `nothing changed` when there is nothing to check.
+- Under a failed step, only the lines that name a failure: `error TS` with its explanation, the ESLint file and its error lines, the titles and the assertions of the failing Japa, Vitest and node:test tests, the files Prettier would rewrite. Stack frames, code frames and npm noise are dropped.
+- At most 30 lines per failed step, then `… N more`.
+- Then `rerun: <command>`, the command that prints the same step untrimmed (`npm run typecheck -w @dash/web`, `npx prettier --check <files>`, `cd apps/web && npx vitest related --run <files>`).
+
+The exit code is 0 when every step passed. The stop hook and the gate of the commit keep their own reporting.
+
+### `i18n`
+
+```bash
+npm run i18n -- web billing receiptsTitle Receipts Recibos
+```
+
+`web` writes `apps/web/src/locales/{en,es}/<namespace>.ts`, above the `} as const` line, and takes a camelCase key. `api` writes `apps/api/resources/lang/{en,es}/<namespace>.json`, and a dotted key (`errors.notFound`) nests the message. The namespace is the file name of the catalog (`apiKeys`) and must stay inside the locale folder. Each part of a key is letters, digits, `_` or `-`; `__proto__`, `constructor` and `prototype` are refused. Both files are read and formatted with the Prettier of the repository before either is written: a missing namespace, a key that exists in either catalog or a format failure fails with `Nothing was written.`, so a pair never splits. The written files are printed, one per line.
+
+## The stubs of the API
+
+`node ace make:*` writes from the stubs of `apps/api/stubs/make/` before the ones of the framework, so `npm run gen` and a plain `node ace make:<layer>` both produce code in the style of the repository. The stubs were ejected with `node ace eject` and rewritten from the files `docs/architecture.md` names to imitate:
+
+| Generator          | Stubs                                                                                  | What they write                                                                                                                                                   |
+| ------------------ | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `make:controller`  | `controller/main.stub`, `resource.stub`, `api.stub`, `actions.stub`                    | A singular controller (`probe_controller.ts`), HTTP only: validate, authorize, call a service, serialize.                                                         |
+| `make:service`     | `service/main.stub`                                                                    | `app/services/<plural>.ts` exporting functions, with a `list<Plural>(organization)` query scoped to the organization.                                             |
+| `make:migration`   | `migration/create.stub`, `alter.stub`                                                  | Create: `id`, `organization_id` (cascade), the timestamps and an index on `organization_id, created_at`. Alter: a no-op with an example of a column in a comment. |
+| `make:exception`   | `exception/main.stub`                                                                  | An `E_<NAME>` constant built with `createError`, the form of `apps/api/app/exceptions/errors.ts`.                                                                 |
+| `make:model`       | `model/main.stub`                                                                      | A model extending its schema class of `#database/schema`.                                                                                                         |
+| `make:validator`   | `validator/main.stub`, `resource.stub`                                                 | VineJS validators, one file per resource.                                                                                                                         |
+| `make:transformer` | `transformer/main.stub`                                                                | A transformer that picks its fields by name.                                                                                                                      |
+| `make:test`        | `test/main.stub`                                                                       | A Japa group; a functional test points at the `Browser` of `apps/api/tests/helpers/browser.ts`.                                                                   |
+| The others         | `middleware/`, `event/`, `listener/main.stub`, `for_event.stub`, `seeder/`, `factory/` | The files of the framework, with a JSDoc that states the rule of the layer: a listener delegates to a service, a seeder writes through one.                       |
+
+`apps/api/tests/unit/stubs.spec.ts` keeps them honest. It copies the API to `apps/api/build/stubs-check/`, runs one generator per variant of the stubs in the copy, and checks the generated files with Prettier, ESLint and `tsc --noEmit`. A second test replaces the service stub with one that imports what it never uses and proves the lint fails. The copy is removed after the run.
+
+### After an AdonisJS upgrade
+
+An upgrade can change the variables a stub receives. The stub test then fails on the next `node ace test unit`. To bring a stub back in line:
+
+1. Move the house stub aside and eject the new one, from `apps/api`: `node ace eject make/<generator>` for the stubs of `@adonisjs/core`, `node ace eject make/<generator> --pkg=@adonisjs/lucid` for `migration`, `model`, `seeder` and `factory`.
+2. Port the house style of the old stub onto the new one, keeping the variables of the new one.
+3. Run `node ace test unit --files=stubs` from `apps/api`, with the stack up, until it passes.
+
+## Generate first
+
+Every agent that writes code (`backend-dev`, `frontend-dev`, `ai-dev`, `mcp-dev`, `e2e-tester`, `feature-orchestrator`) and the skills `backend`, `frontend`, `feature`, `ai-capability` and `mcp-capability` carry a "Generate first" section: `npm run context` before writing, `npm run gen` to scaffold, `npm run i18n` for a string, `npm run check -- --changed` to verify, and a hand-written file only for a layer the generators do not cover, imitating the file `context` names. `plugins/dsh/scripts/agents.test.mjs` fails when one of those agents, in `plugins/dsh/agents/` or in `.opencode/agents/dsh/`, does not name `npm run gen` and `npm run check` in its commands.
+
+## Measured comparison
+
+Measured on 2026-10-23. Two fresh general-purpose subagents, same model, no shared context, each in its own copy of the repository with its own throwaway Postgres database, got the same prompt except the line on the method. The scaffold: a migration for a `notes` table (run with `node ace migration:run`, which regenerates `database/schema.ts`), a model `Note`, a validator with `createNoteValidator`, a service `notes.ts` with `listNotes(organization)`, a transformer `NoteTransformer` (`id`, `title`), a controller `NoteController` with `index`, and two keys of the `dashboard` namespace of the web catalogs (`notesTitle`, `notesEmpty`, in English and Spanish). The model is not in the list of the design: it was added because a transformer types against a model, and both runs had it. Done meant `eslint .` and `tsc --noEmit` in `apps/api`, the web typecheck and Prettier on the touched files all exit 0.
+
+- By imitation: the copy before this change, with no stubs and no scripts, told to imitate the files of the table of `docs/architecture.md`.
+- With the scripts: the copy with this change, told to use `npm run context`, `gen`, `i18n` and `check`.
+
+| Method           | Tool calls | Tokens | Time   | Bytes written                     | Checks   |
+| ---------------- | ---------- | ------ | ------ | --------------------------------- | -------- |
+| By imitation     | 7          | 59,518 | 64.8 s | 2,350 in 6 files, plus 2 catalogs | all pass |
+| With the scripts | 10         | 57,075 | 75.9 s | 3,313 in 6 files, plus 2 catalogs | all pass |
+
+The tokens and the tool calls are the totals the Agent tool reports at the end of a run: input and output across the turns of the subagent. The extra bytes of the scripts are the JSDoc of the stubs. The validator of the scripts run came out as `validators/note.ts`, the singular name of the generator, instead of the requested `notes.ts`.
+
+There was one run per method, so the differences (4% fewer tokens, 3 more tool calls, 11 s more) are within the noise between runs: this measurement shows no token saving. On a scaffold this small, a capable agent already batches its reads and its writes. What the scripts changed is the output: the house-style JSDoc and the query scoped to the organization come from the stubs instead of the memory of the agent, and the two catalogs are written in one call with the check for a duplicate key. The saving the change expects, fewer raw check outputs to read, only shows when a check fails, and neither run had a failing check. The measurement to repeat is a larger feature, or a run with failing checks.
 
 ## The guardrails
 
@@ -213,6 +354,8 @@ The harness follows the repository, so a change of the stack is a change of the 
 | A new check (a linter, a scanner)        | The check in `plugins/dsh/scripts/checks.mjs`, so the stop hook and the gate of the commit run it.                                         |
 | A new command                            | The skill in `plugins/dsh/skills/<name>/SKILL.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`. |
 | A new agent                              | The agent in `plugins/dsh/agents/<name>.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`.       |
+| A new generator or layer                 | The row in `plugins/dsh/scripts/layers.json` and the same row in the table "Where each kind of change lives" of `docs/architecture.md`.    |
+| An AdonisJS upgrade                      | The stubs of `apps/api/stubs/make/`: see [After an AdonisJS upgrade](#after-an-adonisjs-upgrade).                                          |
 | The stack of the containers changes      | The variables of the Compose files (`README.md` names them) and the slot arithmetic of `plugins/dsh/scripts/worktree.mjs`.                 |
 
 `docs/architecture.md` is the map of the stack, and it is updated in the same change that moves it.

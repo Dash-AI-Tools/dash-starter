@@ -1,0 +1,65 @@
+{{#var controllerName = generators.controllerName(entity.name, true)}}
+{{#var controllerFileName = generators.controllerFileName(entity.name, true)}}
+{{#var one = string(generators.modelName(entity.name)).noCase().toString()}}
+{{#var many = string(one).plural().toString()}}
+{{#var oneKey = string(one).camelCase().toString()}}
+{{#var manyKey = string(many).camelCase().toString()}}
+{{{
+  exports({
+    to: app.httpControllersPath(entity.path, controllerFileName)
+  })
+}}}
+import type { HttpContext } from '@adonisjs/core/http'
+
+/**
+ * The HTTP layer of the {{ many }}.
+ *
+ * One request is one method: it validates the payload with
+ * \`request.validateUsing(...)\`, authorizes the caller with
+ * \`bouncer.authorize(...)\`, delegates to a service of \`#services/\` and answers
+ * with \`serialize.withoutWrapping(...)\` and a transformer of \`#transformers/\`.
+ * No database query lives here.
+ *
+ * There is no \`create\` or \`edit\` method: the web app renders the forms, so
+ * the routes are \`router.resource(...).apiOnly()\`.
+ */
+export default class {{ controllerName }} {
+  /**
+   * The list of the {{ many }}.
+   */
+  async index({ serialize }: HttpContext) {
+    return serialize.withoutWrapping({ {{ manyKey }}: [] })
+  }
+
+  /**
+   * Creates a {{ one }}.
+   */
+  async store({ response, serialize }: HttpContext) {
+    response.status(201)
+
+    return serialize.withoutWrapping({ {{ oneKey }}: {} })
+  }
+
+  /**
+   * Shows one {{ one }}.
+   */
+  async show({ serialize }: HttpContext) {
+    return serialize.withoutWrapping({ {{ oneKey }}: {} })
+  }
+
+  /**
+   * Updates a {{ one }}.
+   */
+  async update({ serialize }: HttpContext) {
+    return serialize.withoutWrapping({ {{ oneKey }}: {} })
+  }
+
+  /**
+   * Deletes a {{ one }}.
+   */
+  async destroy() {
+    return { success: true }
+  }
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

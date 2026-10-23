@@ -1,0 +1,37 @@
+
+ RUN  v5.0.5 /repo/apps/web
+
+ ❯ src/dsh-probe.test.ts (61 tests | 1 failed) 7ms
+   ❯ billing catalog (61)
+     × names the invoices title 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dsh-probe.test.ts > billing catalog > names the invoices title
+AssertionError: expected { title: 'Invoices' } to deeply equal { title: 'Facturas' }
+
+- Expected
++ Received
+
+  {
+-   "title": "Facturas",
++   "title": "Invoices",
+  }
+
+ ❯ src/dsh-probe.test.ts:15:46
+     13|
+     14|   it('names the invoices title', () => {
+     15|     expect({ title: billing.invoicesTitle }).toEqual({ title: 'Factura…
+       |                                              ^
+     16|   })
+     17| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+   Affected  1 of 28 test files (related to src/dsh-probe.test.ts)
+      Tests  1 failed | 60 passed (61)
+   Start at  14:54:39
+   Duration  456ms (environment 72%, setup 24%, tests 2%, worker 1%, transform 1%)
+

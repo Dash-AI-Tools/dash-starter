@@ -1,0 +1,21 @@
+{{#var testGroupName = generators.testGroupName(entity)}}
+{{#var testFileName = generators.testFileName(entity.name)}}
+{{#var note = suite.directory.includes('functional') ? 'The requests go through the signed-in `Browser` of `#tests/helpers/browser`.' : 'A unit test never touches the database.'}}
+{{{
+  exports({
+    to: app.makePath(suite.directory, entity.path, testFileName)
+  })
+}}}
+import { test } from '@japa/runner'
+
+/**
+ * One test per scenario of the spec, titled with what the user sees, so a
+ * failure reads as the behavior that broke.
+ *
+ * {{{ note }}}
+ */
+test.group('{{ testGroupName }}', () => {
+  test('describes the behavior under test')
+})
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

@@ -1,0 +1,18 @@
+{{#var eventName = generators.eventName(entity.name)}}
+{{#var eventFileName = generators.eventFileName(entity.name)}}
+{{{
+  exports({
+    to: app.eventsPath(entity.path, eventFileName)
+  })
+}}}
+import { BaseEvent } from '@adonisjs/core/events'
+
+/**
+ * The \`{{ eventName }}\` event.
+ *
+ * It carries the data its listeners need, passed to the constructor, so a
+ * listener never queries it again.
+ */
+export default class {{ eventName }} extends BaseEvent {}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

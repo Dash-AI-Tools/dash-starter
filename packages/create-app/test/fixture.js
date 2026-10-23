@@ -92,7 +92,22 @@ export async function createTemplate() {
     ].join('\n')
   )
 
-  await writeFile(join(root, 'package.json'), '{\n  "name": "dash-starter"\n}\n')
+  await writeFile(
+    join(root, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'dash-starter',
+        scripts: {
+          gen: 'node plugins/dsh/scripts/gen.mjs',
+          check: 'node plugins/dsh/scripts/check.mjs',
+          i18n: 'node plugins/dsh/scripts/i18n.mjs',
+          context: 'node plugins/dsh/scripts/context.mjs',
+        },
+      },
+      null,
+      2
+    ) + '\n'
+  )
   await writeFile(join(root, '.env.example'), 'APP_KEY=\nSUPPORT_EMAIL=support@dash-starter.test\n')
   await writeFile(join(root, '.gitignore'), '.env\nnode_modules\n')
 
@@ -102,6 +117,22 @@ export async function createTemplate() {
     'APP_KEY=\nDEFAULT_LOCALE=en\nMAIL_FROM=Dash <no-reply@dash-starter.test>\nMAIL_FROM_NAME=Dash\n'
   )
   await writeFile(join(root, 'apps/api/package.json'), '{\n  "name": "@dash/api"\n}\n')
+
+  /**
+   * The house-style stubs of the Ace generators, in the Tempura syntax.
+   */
+  await mkdir(join(root, 'apps/api/stubs/make/controller'), { recursive: true })
+  await writeFile(
+    join(root, 'apps/api/stubs/make/controller/main.stub'),
+    [
+      '{{#var controllerName = generators.controllerName(entity.name, true)}}',
+      '{{{',
+      '  exports({ to: app.httpControllersPath(entity.path, controllerName) })',
+      '}}}',
+      'export default class {{ controllerName }} {}',
+      '',
+    ].join('\n')
+  )
 
   await mkdir(join(root, 'apps/web/src/lib'), { recursive: true })
   await writeFile(
@@ -177,7 +208,23 @@ export async function createTemplate() {
   await writeFile(join(root, 'plugins/dsh/package.json'), '{"name": "@dash/dsh"}\n')
   await writeFile(join(root, 'plugins/dsh/agents/backend-dev.md'), '# backend-dev of Dash\n')
   await writeFile(join(root, 'plugins/dsh/skills/feature/SKILL.md'), '# feature\n')
-  await writeFile(join(root, 'plugins/dsh/scripts/checks.mjs'), 'export const root = 1\n')
+  await writeFile(
+    join(root, 'plugins/dsh/scripts/checks.mjs'),
+    "export const WORKSPACES = [{ dir: 'apps/api', name: '@dash/api' }]\n"
+  )
+  for (const script of ['gen', 'check', 'i18n', 'context']) {
+    await writeFile(join(root, `plugins/dsh/scripts/${script}.mjs`), `// ${script}\n`)
+    await writeFile(join(root, `plugins/dsh/scripts/${script}.test.mjs`), `// ${script} test\n`)
+  }
+  await writeFile(
+    join(root, 'plugins/dsh/scripts/layers.json'),
+    '{"rows": [{"layer": "api-endpoint", "generator": "`npm run gen -- controller <name>`"}]}\n'
+  )
+  await mkdir(join(root, 'plugins/dsh/scripts/fixtures/check'), { recursive: true })
+  await writeFile(
+    join(root, 'plugins/dsh/scripts/fixtures/check/eslint.txt'),
+    '> @dash/web@0.0.0 lint\nnpm error workspace @dash/web@0.0.0\n'
+  )
   await writeFile(join(root, 'plugins/dsh/hooks/hooks.json'), '{"hooks": {}}\n')
 
   /**

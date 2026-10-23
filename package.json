@@ -24,6 +24,10 @@
     "make:feature": "node packages/core-tools/bin/core.js make:feature",
     "make:component": "node packages/core-tools/bin/core.js make:component",
     "remove:showcase": "node packages/core-tools/bin/core.js remove:showcase",
+    "gen": "node plugins/dsh/scripts/gen.mjs",
+    "check": "node plugins/dsh/scripts/check.mjs",
+    "i18n": "node plugins/dsh/scripts/i18n.mjs",
+    "context": "node plugins/dsh/scripts/context.mjs",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "engines": {

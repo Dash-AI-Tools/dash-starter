@@ -1,0 +1,20 @@
+{{#var controllerName = generators.controllerName(entity.name, true)}}
+{{#var controllerFileName = generators.controllerFileName(entity.name, true)}}
+{{#var many = string(generators.modelName(entity.name)).noCase().plural().toString()}}
+{{{
+  exports({
+    to: app.httpControllersPath(entity.path, controllerFileName)
+  })
+}}}
+/**
+ * The HTTP layer of the {{ many }}.
+ *
+ * One request is one method: it validates the payload with
+ * \`request.validateUsing(...)\`, authorizes the caller with
+ * \`bouncer.authorize(...)\`, delegates to a service of \`#services/\` and answers
+ * with \`serialize.withoutWrapping(...)\` and a transformer of \`#transformers/\`.
+ * No database query lives here.
+ */
+export default class {{ controllerName }} {}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

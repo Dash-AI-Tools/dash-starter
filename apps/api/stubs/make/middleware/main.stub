@@ -1,0 +1,22 @@
+{{#var middlewareName = generators.middlewareName(entity.name)}}
+{{#var middlewareFileName = generators.middlewareFileName(entity.name)}}
+{{{
+  exports({
+    to: app.middlewarePath(entity.path, middlewareFileName)
+  })
+}}}
+import type { HttpContext } from '@adonisjs/core/http'
+import type { NextFn } from '@adonisjs/core/types/http'
+
+/**
+ * Runs before the routes it is attached to. A refused request throws a domain
+ * error of \`#exceptions/errors\`, so the exception handler answers it in the
+ * locale of the caller.
+ */
+export default class {{ middlewareName }} {
+  async handle(_ctx: HttpContext, next: NextFn) {
+    return next()
+  }
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

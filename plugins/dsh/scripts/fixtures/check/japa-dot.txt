@@ -1,0 +1,84 @@
+
+> test
+> node bin/test.js
+
+✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✖✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✖
+ ERRORS 
+
+❯ Invoices / a failed payment records a failed invoice
+
+- Expected  - 1
++ Received  + 1
+
+  Object {
+    "amount": 1000,
+-   "state": "failed",
++   "state": "paid",
+  }
+
+[31mℹ AssertionError: expected { state: 'paid', amount: 1000 } to deeply equal { state: 'failed', amount: 1000 }[39m
+
+ ⁃ at Assert.deepEqual [33m(/repo/node_modules/@japa/assert/build/index.js:85:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/invoices.spec.js:5:12)[39m
+
+   [2m 1[22m [2m┃[22m  [31mimport[0m { test } [31mfrom[0m [32m'@japa/runner'[0m
+   [2m 2[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Invoices'[0m[34m,[0m () [31m=>[0m {
+   [2m 3[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m120[0m; i[34m++[0m) [35mtest[0m([32m`records the invoice of event [0m[31m${[0mi[31m}[0m[32m`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35misTrue[0m([36mtrue[0m))
+   [2m 4[22m [2m┃[22m    [35mtest[0m([32m'a failed payment records a failed invoice'[0m[34m,[0m ({ assert }) [31m=>[0m {
+ [41m❯  5 ┃      assert.deepEqual({ state: 'paid', amount: 1000 }, { state: 'failed', amount: 1000 })[49m
+   [2m 6[22m [2m┃[22m    })
+   [2m 7[22m [2m┃[22m  })
+   [2m 8[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Plans'[0m[34m,[0m () [31m=>[0m {
+   [2m 9[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m80[0m; i[34m++[0m) [35mtest[0m([32m`plan [0m[31m${[0mi[31m}[0m[32m has its limits`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35mequal[0m(i[34m,[0m i))
+   [2m10[22m [2m┃[22m    [35mtest[0m([32m'the free plan has no invoices'[0m[34m,[0m ({ assert }) [31m=>[0m { assert[34m.[0m[35mequal[0m([33m2[0m[34m,[0m [33m0[0m) })
+   [2m11[22m [2m┃[22m  })
+
+ ⁃ at #runTest [33m(/repo/node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(/repo/node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(/repo/node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(/repo/node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:354:3)[39m
+[1/2]─
+
+❯ Plans / the free plan has no invoices
+
+- Expected  - 1
++ Received  + 1
+
+- 0
++ 2
+
+[31mℹ AssertionError: expected 2 to equal +0[39m
+
+ ⁃ at Assert.equal [33m(/repo/node_modules/@japa/assert/build/index.js:69:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/invoices.spec.js:10:66)[39m
+
+   [2m 2[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Invoices'[0m[34m,[0m () [31m=>[0m {
+   [2m 3[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m120[0m; i[34m++[0m) [35mtest[0m([32m`records the invoice of event [0m[31m${[0mi[31m}[0m[32m`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35misTrue[0m([36mtrue[0m))
+   [2m 4[22m [2m┃[22m    [35mtest[0m([32m'a failed payment records a failed invoice'[0m[34m,[0m ({ assert }) [31m=>[0m {
+   [2m 5[22m [2m┃[22m      assert[34m.[0m[35mdeepEqual[0m({ state[34m:[0m [32m'paid'[0m[34m,[0m amount[34m:[0m [33m1000[0m }[34m,[0m { state[34m:[0m [32m'failed'[0m[34m,[0m amount[34m:[0m [33m1000[0m })
+   [2m 6[22m [2m┃[22m    })
+   [2m 7[22m [2m┃[22m  })
+   [2m 8[22m [2m┃[22m  test[34m.[0m[35mgroup[0m([32m'Plans'[0m[34m,[0m () [31m=>[0m {
+   [2m 9[22m [2m┃[22m    [31mfor[0m ([31mlet[0m i [34m=[0m [33m1[0m; i [34m<=[0m [33m80[0m; i[34m++[0m) [35mtest[0m([32m`plan [0m[31m${[0mi[31m}[0m[32m has its limits`[0m[34m,[0m ({ assert }) [31m=>[0m assert[34m.[0m[35mequal[0m(i[34m,[0m i))
+ [41m❯ 10 ┃    test('the free plan has no invoices', ({ assert }) => { assert.equal(2, 0) })[49m
+   [2m11[22m [2m┃[22m  })
+   [2m12[22m [2m┃[22m  
+
+ ⁃ at #runTest [33m(/repo/node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(/repo/node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(/repo/node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(/repo/node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(/repo/node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(/repo/node_modules/@japa/core/build/index.js:354:3)[39m
+[2/2]─
+
+ FAILED 
+
+Tests  200 passed, 2 failed (202)
+ Time  8ms

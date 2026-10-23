@@ -1,0 +1,25 @@
+{{#var transformerName = generators.transformerName(entity.name)}}
+{{#var transformerFileName = generators.transformerFileName(entity.name)}}
+{{#var modelName = generators.modelName(model.name)}}
+{{#var modelFileName = generators.modelFileName(model.name)}}
+{{#var modelImportPath = generators.importPath('#models', model.path, modelFileName.replace(/\.ts$/, ''))}}
+{{#var one = string(modelName).noCase().toString()}}
+{{{
+  exports({
+    to: app.transformersPath(entity.path, transformerFileName)
+  })
+}}}
+import type {{ modelName }} from '{{ modelImportPath }}'
+import { BaseTransformer } from '@adonisjs/core/transformers'
+
+/**
+ * A {{ one }}, as the API answers it. Every field is picked by name, so a new
+ * column never reaches the client by accident.
+ */
+export default class {{ transformerName }} extends BaseTransformer<{{ modelName }}> {
+  toObject() {
+    return this.pick(this.resource, ['id'])
+  }
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}

@@ -48,10 +48,23 @@ A file listed here wins over the directory it sits in under "Owns". If a task ne
 - Never edit `apps/api/database/schema.ts` by hand. It is generated: `node ace migration:run --force` regenerates it from the database.
 - Never hand-edit the generated registry under `apps/api/.adonisjs/client/`.
 
+## Generate first
+
+- Run `npm run context -- <layer>` before you write: it prints the generator, the file to imitate and the files to register (`api-endpoint`, `database-change`, …).
+- Scaffold with `npm run gen -- <layer> <name>`: `controller`, `validator`, `service`, `transformer`, `model`, `migration`, `middleware`, `exception`, `event`, `listener`, `seeder`, `factory`, `test`. Read only the paths it prints. After a migration, run `node ace migration:run --force`.
+- `feature` only when the orchestrator gives you the scaffold of a product feature: `npm run gen -- feature <name>` writes both sides at once.
+- Add a user-facing string with `npm run i18n -- api <namespace> <key> <en> <es>`: it writes `apps/api/resources/lang/en/` and `apps/api/resources/lang/es/` together.
+- Verify with `npm run check -- --changed` and read its trimmed lines, not the raw output. Rerun the command it prints untrimmed only when those lines are not enough.
+- You write by hand only a layer the generators do not cover — a route in `apps/api/start/routes.ts`, an ability in `apps/api/app/abilities/main.ts`, a mail in `apps/api/app/mails/` — imitating the file `npm run context` names.
+
 ## Commands
 
 Run from the repository root:
 
+- `npm run context -- <layer>` — the generator, the file to imitate and the files to register of a layer.
+- `npm run gen -- <layer> <name>` — scaffolds a layer with the generator of the stack and prints only the created paths.
+- `npm run i18n -- api <namespace> <key> <en> <es>` — adds a key to the English and the Spanish catalog; refuses a duplicate.
+- `npm run check -- --changed` — format, lint, typecheck and tests of the touched workspaces; prints only the failures.
 - `npm run lint` — eslint in every workspace.
 - `npm run typecheck` — `tsc --noEmit` in `apps/api`, `tsc -b --noEmit` in `apps/web`.
 - `npm run format` / `npm run format:check` — Prettier over the whole repository.
@@ -67,7 +80,7 @@ Run from `apps/api`:
 - `node ace migration:run --force` — applies the pending migrations and regenerates `apps/api/database/schema.ts`.
 - `tsc --noEmit` — typecheck of the API.
 - `eslint .` — lint of the API.
-- Generators: `node ace make:controller`, `node ace make:validator`, `node ace make:service`, `node ace make:model`, `node ace make:transformer`, `node ace make:migration`, `node ace make:test`, `node ace make:seed`.
+- `node ace make:<layer> <name>` — the generator `npm run gen` runs for an API layer, with the house-style stubs of `apps/api/stubs/`. Prefer `npm run gen`: it prints only the created paths.
 
 Before running anything: `nvm use` (Node `>=24.22.1`), otherwise the API test suite fails. Bring the stack up with `docker compose up -d --wait`.
 

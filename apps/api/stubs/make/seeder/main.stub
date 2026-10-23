@@ -1,0 +1,17 @@
+{{#var seederFileName = generators.seederFileName(entity.name)}}
+{{{
+  exports({
+    to: app.seedersPath(entity.path, seederFileName)
+  })
+}}}
+import { BaseSeeder } from '@adonisjs/lucid/seeders'
+
+/**
+ * Writes its rows through a service of \`#services/\`, so the seeded data is
+ * the same the domain would write, and running it twice changes nothing.
+ */
+export default class extends BaseSeeder {
+  async run() {}
+}
+
+{{{ "\n\n" + exports({ finalNewline: true }) }}}
