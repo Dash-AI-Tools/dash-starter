@@ -10,6 +10,7 @@ import { ThemeProvider } from './providers/theme-provider'
 import { PaletteProvider } from './providers/palette-provider'
 import { DEMO_MODE } from './lib/demo-mode'
 import { applyPalette, resolveInitialPalette } from './lib/palettes'
+import { featureRoutes } from './features'
 import Home from './pages/Home'
 import NotFoundPage, { NotFoundContent } from './pages/NotFoundPage'
 
@@ -64,6 +65,7 @@ const routes: RouteObject[] = [
         ...page(() => import('./pages/ApiKeysPage')),
       },
       { path: 'profile', ...page(() => import('./pages/ProfilePage')) },
+      ...featureRoutes,
       {
         path: '*',
         element: <NotFoundContent />,
@@ -72,6 +74,7 @@ const routes: RouteObject[] = [
   },
 ]
 
+// showcase:start
 // The showcase is a development tool: it is only reachable in dev builds or
 // when the build was made with VITE_ENABLE_SHOWCASE=true. The condition is
 // inlined here on purpose, so the bundler can drop the whole branch (and the
@@ -82,6 +85,7 @@ if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_SHOWCASE === 'true') {
     ...page(() => import('./pages/ShowcasePage')),
   })
 }
+// showcase:end
 
 routes.push({ path: '*', element: <NotFoundPage /> })
 

@@ -49,4 +49,7 @@ export const common = {
   paletteForest: 'Bosque',
   palettePlum: 'Ciruela',
   paletteEmber: 'Brasa',
+  featureScaffoldTitle: 'Nueva funcionalidad',
+  featureScaffoldDescription:
+    'Esta página la generó make:feature. Sustitúyela por las pantallas de tu funcionalidad.',
 } as const

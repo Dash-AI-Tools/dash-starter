@@ -6,176 +6,9 @@ import { join } from 'node:path'
 
 import { run } from '../src/index.js'
 import { listFiles } from '../src/files.js'
-
-/**
- * The manifest of the test: the same contract as the one of the template, with
- * the tokens that the fixture uses.
- */
-const manifest = {
-  version: '0.1.0',
-  identity: {
-    name: { default: 'Dash' },
-    slug: { default: 'dash-starter' },
-    description: { default: 'The AI SaaS starter for launching your next product' },
-    locale: { default: 'en' },
-    palette: { default: 'line' },
-    email: { default: 'support@{slug}.test' },
-  },
-  tokens: {
-    'The AI SaaS starter for launching your next product': 'description',
-    'support@dash-starter.test': 'email',
-    'dash-test-storage': 'storageTest',
-    'dash-storage': 'storage',
-    'dash_consent': 'consent',
-    'dash_test': 'codeTest',
-    'dash-starter': 'slug',
-    'dash starter': 'name',
-    'dash_': 'prefix',
-    '@dash/': 'scope',
-    'Dash': 'name',
-    'dash': 'slug',
-  },
-  files: ['**/*'],
-  exclude: [
-    'node_modules/**',
-    '**/node_modules/**',
-    '**/dist/**',
-    'package-lock.json',
-    '.claude/settings.local.json',
-    '.claude/worktrees/**',
-    '.claude/.headroom*',
-    '.claude/dsh-allow',
-  ],
-  removePaths: ['packages/create-app', 'openspec/changes'],
-  removeSections: [{ file: 'README.md', heading: '## The installer' }],
-  removeLines: [{ file: 'README.md', text: 'packages/create-app' }],
-  removeWorkflowJobs: ['installer'],
-}
-
-/**
- * Writes a template that looks like the one of the repository.
- */
-async function createTemplate() {
-  const root = await mkdtemp(join(tmpdir(), 'create-app-template-'))
-
-  await writeFile(
-    join(root, 'README.md'),
-    [
-      '# Dash Starter',
-      '',
-      'A production-ready **AI SaaS starter**.',
-      '',
-      '| `packages/create-app` | The installer |',
-      '| `apps/api` | The API |',
-      '',
-      '## The installer',
-      '',
-      '```bash',
-      'npx create-dash-starter my-product',
-      '```',
-      '',
-      '## Deployment',
-      '',
-      'docker compose up',
-      '',
-    ].join('\n')
-  )
-
-  await writeFile(join(root, 'package.json'), '{\n  "name": "dash-starter"\n}\n')
-  await writeFile(join(root, '.env.example'), 'APP_KEY=\nSUPPORT_EMAIL=support@dash-starter.test\n')
-  await writeFile(join(root, '.gitignore'), '.env\nnode_modules\n')
-
-  await mkdir(join(root, 'apps/api'), { recursive: true })
-  await writeFile(
-    join(root, 'apps/api/.env.example'),
-    'APP_KEY=\nDEFAULT_LOCALE=en\nMAIL_FROM=Dash <no-reply@dash-starter.test>\nMAIL_FROM_NAME=Dash\n'
-  )
-  await writeFile(join(root, 'apps/api/package.json'), '{\n  "name": "@dash/api"\n}\n')
-
-  await mkdir(join(root, 'apps/web/src/lib'), { recursive: true })
-  await writeFile(
-    join(root, 'apps/web/src/lib/i18n.tsx'),
-    "export const DEFAULT_LOCALE: Locale = 'en'\n"
-  )
-  await writeFile(
-    join(root, 'apps/web/src/lib/palettes.ts'),
-    "export const DEFAULT_PALETTE: PaletteId = 'line'\n"
-  )
-
-  await mkdir(join(root, 'packages/create-app'), { recursive: true })
-  await writeFile(join(root, 'packages/create-app/package.json'), '{}\n')
-
-  await mkdir(join(root, 'openspec/changes/bootstrap'), { recursive: true })
-  await writeFile(join(root, 'openspec/changes/bootstrap/tasks.md'), '- [ ] a task\n')
-
-  /**
-   * The harness of the development, with the state that never travels.
-   */
-  await mkdir(join(root, '.claude-plugin'), { recursive: true })
-  await writeFile(
-    join(root, '.claude-plugin/marketplace.json'),
-    JSON.stringify(
-      {
-        name: 'dash-starter',
-        owner: { name: 'Dash' },
-        plugins: [{ name: 'dsh', source: './plugins/dsh' }],
-      },
-      null,
-      2
-    )
-  )
-
-  await mkdir(join(root, '.claude/worktrees/dsh-feature'), { recursive: true })
-  await writeFile(
-    join(root, '.claude/settings.json'),
-    '{"enabledPlugins": {"dsh@dash-starter": true}}\n'
-  )
-  await writeFile(join(root, '.claude/settings.local.json'), '{"permissions": {}}\n')
-  await writeFile(join(root, '.claude/dsh-allow'), 'env\n')
-  await writeFile(join(root, '.claude/worktrees/dsh-feature/state.txt'), 'work\n')
-
-  await mkdir(join(root, 'plugins/dsh/agents'), { recursive: true })
-  await mkdir(join(root, 'plugins/dsh/skills/feature'), { recursive: true })
-  await mkdir(join(root, 'plugins/dsh/scripts'), { recursive: true })
-  await mkdir(join(root, 'plugins/dsh/hooks'), { recursive: true })
-  await writeFile(join(root, 'plugins/dsh/package.json'), '{"name": "@dash/dsh"}\n')
-  await writeFile(join(root, 'plugins/dsh/agents/backend-dev.md'), '# backend-dev of Dash\n')
-  await writeFile(join(root, 'plugins/dsh/skills/feature/SKILL.md'), '# feature\n')
-  await writeFile(join(root, 'plugins/dsh/scripts/checks.mjs'), 'export const root = 1\n')
-  await writeFile(join(root, 'plugins/dsh/hooks/hooks.json'), '{"hooks": {}}\n')
-
-  await mkdir(join(root, 'docs'), { recursive: true })
-  await writeFile(join(root, 'CLAUDE.md'), '# Dash Starter\n')
-  await writeFile(join(root, 'docs/architecture.md'), '# Architecture of Dash\n')
-  await writeFile(join(root, 'docs/harness.md'), '# The harness of Dash\n')
-
-  await mkdir(join(root, '.githooks'), { recursive: true })
-  await writeFile(join(root, '.githooks/pre-commit'), '#!/bin/sh\nexit 0\n')
-
-  await mkdir(join(root, '.github/workflows'), { recursive: true })
-  await writeFile(
-    join(root, '.github/workflows/ci.yml'),
-    [
-      'name: CI',
-      '',
-      'jobs:',
-      '  lint:',
-      '    steps:',
-      '      - run: npm run lint',
-      '',
-      '  installer:',
-      '    steps:',
-      '      - run: node packages/create-app/bin/create-dash-starter.js',
-      '',
-      '  test:',
-      '    steps:',
-      '      - run: npm test',
-      '',
-    ].join('\n')
-  )
-
-  return root
-}
+import { isExcluded } from '../src/glob.js'
+import { sha256 } from '../src/metadata.js'
+import { createTemplate, manifest, shipped } from './fixture.js'
 
 test('a project is generated from a local template', async () => {
   const template = await createTemplate()
@@ -300,10 +133,21 @@ test('no placeholder of the template survives in the project', async () => {
   )
 
   const files = await listFiles(target)
-  const tokens = Object.keys(manifest.tokens)
+  /**
+   * The metadata directory maps to itself: its name is kept on purpose.
+   */
+  const tokens = Object.keys(manifest.tokens).filter(
+    (token) => manifest.tokens[token] !== 'metadata'
+  )
 
-  for (const file of files) {
-    const content = await readFile(join(target, file), 'utf8')
+  /**
+   * The core tools keep their text on purpose, and the metadata records the
+   * tokens so a core update can replay them.
+   */
+  const literal = [...manifest.preserve, '.dash/**']
+
+  for (const file of files.filter((path) => !isExcluded(path, literal))) {
+    const content = (await readFile(join(target, file), 'utf8')).replaceAll('.dash', '')
 
     for (const token of tokens) {
       assert.equal(
@@ -608,4 +452,173 @@ test('a machine without Docker keeps the project and the commands to run later',
   const packageJson = await readFile(join(target, 'package.json'), 'utf8')
 
   assert.equal(packageJson.includes('"name": "dash-starter"'), true)
+})
+
+/**
+ * Generates a project from the fixture with the given flags, without the
+ * steps that need the network or Docker.
+ */
+async function generate(flags = []) {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'project')
+
+  const code = await run(
+    [target, '--template', template, ...flags, '--yes', '--no-install', '--no-boot', '--no-git'],
+    {
+      manifest,
+      version: '0.1.0',
+      log: () => {},
+      run: async () => ({ code: 0, output: '', error: null }),
+    }
+  )
+
+  assert.equal(code, 0)
+
+  const read = async (file) => JSON.parse(await readFile(join(target, file), 'utf8'))
+
+  return { target, install: await read('.dash/install.json'), core: await read('.dash/core.json') }
+}
+
+const ACME = ['--name', 'Acme AI', '--slug', 'acme-ai', '--email', 'hi@acme.test']
+
+test('the project records the ownership of its files', async () => {
+  const { core } = await generate(ACME)
+
+  assert.deepEqual(core.core, shipped.core)
+  assert.deepEqual(core.userOwned, shipped.userOwned)
+
+  for (const owned of ['apps/api/app/features/**', 'apps/web/src/features/**']) {
+    assert.ok(core.userOwned.includes(owned), `"${owned}" is owned by the product`)
+  }
+
+  assert.ok(core.userOwned.includes('packages/ui/src/custom/**'))
+})
+
+test('every core file of the project carries the checksum of its bytes', async () => {
+  const { target, core } = await generate(ACME)
+
+  assert.equal(core.schemaVersion, 1)
+  assert.equal(core.repository, 'github:Dash-AI-Tools/dash-starter')
+  assert.equal(core.version, '0.1.0')
+
+  const expected = (await listFiles(target))
+    .filter((file) => isExcluded(file, core.core) && !isExcluded(file, core.userOwned))
+    .sort()
+
+  assert.deepEqual(Object.keys(core.checksums), expected)
+  assert.ok(expected.includes('packages/ui/src/brand.ts'))
+  assert.ok(expected.includes('packages/core-tools/src/metadata.js'))
+
+  for (const file of expected) {
+    assert.equal(core.checksums[file], sha256(await readFile(join(target, file))), file)
+  }
+
+  for (const file of Object.keys(core.checksums)) {
+    assert.equal(file.includes('/features/') || file.includes('/custom/'), false, file)
+  }
+})
+
+test('the metadata names the identity and holds no secret', async () => {
+  const { target, install } = await generate(ACME)
+
+  assert.equal(install.identity.name, 'Acme AI')
+  assert.equal(install.identity.slug, 'acme-ai')
+  assert.equal(install.values.scope, '@acme-ai/')
+  assert.deepEqual(install.removedCapabilities, [])
+
+  const metadata =
+    (await readFile(join(target, '.dash/install.json'), 'utf8')) +
+    (await readFile(join(target, '.dash/core.json'), 'utf8'))
+
+  for (const file of ['.env', 'apps/api/.env']) {
+    for (const line of (await readFile(join(target, file), 'utf8')).split('\n')) {
+      const value = line.split('=').slice(1).join('=').trim()
+
+      if (value.length >= 16) {
+        assert.equal(metadata.includes(value), false, `a value of ${file} leaked`)
+      }
+    }
+  }
+})
+
+test('the core tools keep their text while the cores are rebranded', async () => {
+  const { target } = await generate(ACME)
+
+  const tools = await readFile(join(target, 'packages/core-tools/src/metadata.js'), 'utf8')
+  const toolsPackage = await readFile(join(target, 'packages/core-tools/package.json'), 'utf8')
+  const ui = await readFile(join(target, 'packages/ui/package.json'), 'utf8')
+
+  assert.match(tools, /'\.dash'/)
+  assert.match(toolsPackage, /"@dash\/core-tools"/)
+  assert.match(ui, /"@acme-ai\/ui"/)
+})
+
+test('the cores and the metadata travel while the installer does not', async () => {
+  const { target } = await generate(ACME)
+  const files = await listFiles(target)
+
+  assert.ok(files.some((file) => file.startsWith('packages/ui/')))
+  assert.ok(files.some((file) => file.startsWith('packages/core-tools/')))
+  assert.ok(files.includes('.dash/core.json'))
+  assert.ok(files.includes('.dash/install.json'))
+  assert.equal(
+    files.some(
+      (file) => file.startsWith('packages/create-app/') || file.startsWith('openspec/changes/')
+    ),
+    false
+  )
+})
+
+test('the metadata records a custom template repository', async () => {
+  const previous = process.env.DASH_TEMPLATE_REPO
+  process.env.DASH_TEMPLATE_REPO = 'github:acme/starter-fork'
+
+  try {
+    const { core } = await generate(ACME)
+
+    assert.equal(core.repository, 'github:acme/starter-fork')
+  } finally {
+    if (previous === undefined) delete process.env.DASH_TEMPLATE_REPO
+    else process.env.DASH_TEMPLATE_REPO = previous
+  }
+})
+
+test('the metadata records the locale and the palette of the project', async () => {
+  const { install, target } = await generate([...ACME, '--locale', 'es', '--palette', 'forest'])
+
+  assert.equal(install.locale, 'es')
+  assert.equal(install.palette, 'forest')
+
+  const locale = await readFile(join(target, 'apps/web/src/lib/i18n.tsx'), 'utf8')
+
+  assert.match(locale, /DEFAULT_LOCALE: Locale = 'es'/)
+})
+
+test('two projects differ in their checksums only where the identity is written', async () => {
+  const acme = await generate(ACME)
+  const beta = await generate([
+    '--name',
+    'Beta Labs',
+    '--slug',
+    'beta-labs',
+    '--email',
+    'hi@beta.test',
+  ])
+
+  assert.deepEqual(Object.keys(acme.core.checksums), Object.keys(beta.core.checksums))
+
+  for (const [file, checksum] of Object.entries(acme.core.checksums)) {
+    const branded = (await readFile(join(acme.target, file), 'utf8')).toLowerCase().includes('acme')
+
+    assert.equal(checksum === beta.core.checksums[file], !branded, file)
+  }
+})
+
+test('the metadata directory keeps its name in the rebranded docs', async () => {
+  const { target } = await generate(ACME)
+  const architecture = await readFile(join(target, 'docs/architecture.md'), 'utf8')
+
+  assert.match(architecture, /# Architecture of Acme AI/)
+  assert.match(architecture, /`\.dash\/core\.json`/)
 })

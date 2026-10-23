@@ -10,7 +10,7 @@ import { chat } from './chat'
 import { apiKeys } from './apiKeys'
 import { profile } from './profile'
 import { consent } from './consent'
-import { showcase } from './showcase'
+import { showcase } from './showcase' // showcase:line
 import type { Messages } from '../en'
 
 /**
@@ -29,7 +29,7 @@ export const catalogs = {
   apiKeys,
   profile,
   consent,
-  showcase,
+  showcase, // showcase:line
 }
 
 /**
@@ -49,5 +49,5 @@ export const es = {
   ...apiKeys,
   ...profile,
   ...consent,
-  ...showcase,
+  ...showcase, // showcase:line
 } satisfies Messages

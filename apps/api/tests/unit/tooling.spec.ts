@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import app from '@adonisjs/core/services/app'
+import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ESLint } from 'eslint'
@@ -13,6 +14,12 @@ const PROJECT_ROOT = app.makePath('..', '..')
  * The root of the API, where the ESLint configuration lives.
  */
 const APP_ROOT = app.makePath()
+
+/**
+ * Whether this checkout is the template itself. A generated project has no
+ * installer, and the installer removes its job from the workflow.
+ */
+const IS_TEMPLATE = existsSync(join(PROJECT_ROOT, 'packages/create-app'))
 
 /**
  * Reads a file of the project.
@@ -96,5 +103,5 @@ test.group('The tooling of the project', () => {
      */
     assert.include(workflow, 'create-dash-starter.js')
     assert.include(workflow, 'Lint, type-check and test the project')
-  })
+  }).skip(!IS_TEMPLATE, 'A generated project has no installer job')
 })

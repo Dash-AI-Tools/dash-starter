@@ -67,6 +67,11 @@ export function buildValues(identity) {
     storageTest: `${identity.slug}-test-storage`,
     consent: `${code}_consent`,
     prefix: `${code}_`,
+    /**
+     * The metadata directory keeps its name in every project, so the docs
+     * and the tools that name it stay right after a rebrand.
+     */
+    metadata: '.dash',
   }
 }
 

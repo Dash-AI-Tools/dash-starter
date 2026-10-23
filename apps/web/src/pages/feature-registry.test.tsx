@@ -1,0 +1,162 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, screen, within } from '@testing-library/react'
+import { HttpResponse, http } from 'msw'
+import type { RouteObject } from 'react-router'
+import { createMemoryRouter, RouterProvider } from 'react-router'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { API_BASE_URL } from '@/lib/api'
+import { I18nProvider } from '@/lib/i18n'
+import { NAV_GROUPS, visibleNavItems } from '@/lib/nav'
+import { PaletteProvider } from '@/providers/palette-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
+import { server } from '@/test/server'
+
+/**
+ * The registry of the features is owned by the product, so the core is tested
+ * against a fixture of it: one page and two destinations, one of them only for
+ * the admins.
+ */
+vi.mock('@/features', async () => {
+  const { FlaskConical, Lock } = await import('lucide-react')
+  const { createElement } = await import('react')
+
+  return {
+    featureRoutes: [{ path: 'probe', element: createElement('h1', null, 'Probe feature') }],
+    featureNav: [
+      {
+        id: 'probe',
+        labelKey: 'featureScaffoldTitle',
+        path: 'probe',
+        icon: FlaskConical,
+        minRole: 'member',
+        station: 'line',
+      },
+      {
+        id: 'probe-admin',
+        labelKey: 'featureScaffoldDescription',
+        path: 'probe/admin',
+        icon: Lock,
+        minRole: 'admin',
+        station: 'line',
+      },
+    ],
+  }
+})
+
+/**
+ * `main.tsx` builds the router and renders the app as soon as it is imported,
+ * so the router is captured instead of mounted: the routes under test are the
+ * ones the entry point really declares.
+ */
+const captured = vi.hoisted(() => ({ routes: [] as RouteObject[] }))
+
+vi.mock('react-dom/client', () => ({ createRoot: () => ({ render: () => undefined }) }))
+
+vi.mock('react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('react-router')>()),
+  createBrowserRouter: (routes: RouteObject[]) => {
+    captured.routes = routes
+    return {}
+  },
+}))
+
+const SESSION = `${API_BASE_URL}/api/v1/auth/session`
+const ORGANIZATIONS = `${API_BASE_URL}/api/v1/orgs`
+const ORGANIZATION = `${API_BASE_URL}/api/v1/orgs/:orgSlug`
+
+const NOW = '2026-01-01T00:00:00.000Z'
+
+const user = {
+  id: 1,
+  fullName: 'Ada Lovelace',
+  email: 'ada@example.com',
+  emailVerifiedAt: NOW,
+  locale: 'en',
+  theme: 'system',
+  palette: null,
+  avatarPath: null,
+  pendingEmail: null,
+  termsVersion: '2026-01-01',
+  lastOrganizationId: 10,
+  createdAt: NOW,
+  updatedAt: NOW,
+  initials: 'AL',
+}
+
+/**
+ * Serves the API with one organization where the visitor holds the given role.
+ */
+function serveApp(role: 'admin' | 'member') {
+  server.use(
+    http.get(SESSION, () => HttpResponse.json({ user })),
+    http.get(ORGANIZATIONS, () =>
+      HttpResponse.json({ organizations: [{ id: 10, name: 'Acme Labs', slug: 'acme-labs', role }] })
+    ),
+    http.get(ORGANIZATION, () =>
+      HttpResponse.json({
+        organization: {
+          id: 10,
+          name: 'Acme Labs',
+          slug: 'acme-labs',
+          logoPath: null,
+          defaultLocale: 'en',
+          onboardedAt: NOW,
+          createdAt: NOW,
+          updatedAt: NOW,
+          role,
+        },
+      })
+    )
+  )
+}
+
+/**
+ * Renders the routes of the entry point at the given path.
+ */
+function renderAt(path: string) {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  const router = createMemoryRouter(captured.routes, { initialEntries: [path] })
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider>
+        <ThemeProvider>
+          <PaletteProvider>
+            <RouterProvider router={router} />
+          </PaletteProvider>
+        </ThemeProvider>
+      </I18nProvider>
+    </QueryClientProvider>
+  )
+}
+
+beforeAll(async () => {
+  await import('@/main')
+})
+
+describe('The registry of the features', () => {
+  it('mounts a feature page under the organization', async () => {
+    serveApp('member')
+    renderAt('/app/acme-labs/probe')
+
+    expect(await screen.findByRole('heading', { name: 'Probe feature' })).toBeInTheDocument()
+    expect(await screen.findByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument()
+  })
+
+  it('appends the feature destinations to the main group of the navigation', () => {
+    const main = NAV_GROUPS.find((group) => group.id === 'main')
+
+    expect(main?.items.map((item) => item.id).slice(-2)).toEqual(['probe', 'probe-admin'])
+  })
+
+  it('shows a feature destination to the roles that can reach it', async () => {
+    serveApp('member')
+    renderAt('/app/acme-labs/probe')
+
+    const nav = within(await screen.findByRole('navigation', { name: 'Main navigation' }))
+
+    expect(await nav.findByRole('link', { name: 'New feature' })).toBeInTheDocument()
+    expect(nav.queryByRole('link', { name: /generated by make:feature/ })).not.toBeInTheDocument()
+    expect(visibleNavItems('admin').map((item) => item.id)).toContain('probe-admin')
+  })
+})

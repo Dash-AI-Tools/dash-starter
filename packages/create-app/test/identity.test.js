@@ -109,6 +109,7 @@ test('the values of the replacement are derived from the identity', () => {
   assert.equal(values.storageTest, 'acme-ai-test-storage')
   assert.equal(values.consent, 'acme_ai_consent')
   assert.equal(values.prefix, 'acme_ai_')
+  assert.equal(values.metadata, '.dash')
 })
 
 test('the palette defaults to line and refuses one that does not exist', () => {

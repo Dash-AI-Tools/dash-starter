@@ -1,7 +1,7 @@
 {
   "name": "dash-starter",
   "version": "0.1.0",
-  "description": "Replacement contract of the create-dash-starter installer. Every literal of `tokens` is replaced by the value of the collected identity, and the files of `removePaths`, `removeSections` and `removeLines` are taken out of the generated project.",
+  "description": "Replacement contract of the create-dash-starter installer. Every literal of `tokens` is replaced by the value of the collected identity, and the files of `removePaths`, `removeSections` and `removeLines` are taken out of the generated project. The files of `preserve` keep their text untouched, and `core` and `userOwned` tell a core update which files it may replace.",
   "identity": {
     "name": {
       "description": "Product name shown in the UI, emails and page titles.",
@@ -41,6 +41,7 @@
     "dash starter": "name",
     "dash_": "prefix",
     "@dash/": "scope",
+    ".dash": "metadata",
     "Dash": "name",
     "dash": "slug"
   },
@@ -69,5 +70,40 @@
   "removePaths": ["packages/create-app", "openspec/changes"],
   "removeSections": [{ "file": "README.md", "heading": "## The installer" }],
   "removeLines": [{ "file": "README.md", "text": "packages/create-app" }],
-  "removeWorkflowJobs": ["installer"]
+  "removeWorkflowJobs": ["installer"],
+  "preserve": ["packages/core-tools/**"],
+  "core": [
+    "apps/api/app/**",
+    "apps/api/start/**",
+    "apps/api/config/**",
+    "apps/api/database/**",
+    "apps/api/resources/**",
+    "apps/api/tests/unit/**",
+    "apps/api/tests/functional/**",
+    "apps/web/src/**",
+    "apps/web/vite.config.ts",
+    "apps/web/tsconfig*.json",
+    "apps/web/index.html",
+    "packages/ui/**",
+    "packages/core-tools/**"
+  ],
+  "userOwned": [
+    "apps/api/app/features/**",
+    "apps/api/tests/functional/features/**",
+    "apps/web/src/features/**",
+    "packages/ui/src/custom/**",
+    ".env*",
+    "**/.env*",
+    "openspec/**",
+    "docs/**",
+    "README.md",
+    "package.json",
+    "apps/api/package.json",
+    "apps/web/package.json",
+    "package-lock.json",
+    "**/package-lock.json",
+    "**/Dockerfile*",
+    "docker-compose*.yml",
+    ".github/**"
+  ]
 }

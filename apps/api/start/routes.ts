@@ -1,6 +1,7 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
+import { registerFeatureRoutes } from '#features/index'
 
 router.get('/', () => {
   return { hello: 'world' }
@@ -198,6 +199,12 @@ router
         router.delete('orgs/:orgSlug/chat/conversations/:id', [controllers.Chat, 'destroy'])
       })
       .use([middleware.auth(), middleware.org()])
+
+    /**
+     * The features of the product. They live in `app/features`, which a core
+     * update never touches, so a feature is added without editing this file.
+     */
+    registerFeatureRoutes(router)
   })
   .prefix('/api/v1')
 

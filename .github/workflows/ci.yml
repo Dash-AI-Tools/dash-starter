@@ -118,6 +118,11 @@ jobs:
 
       - run: npm run build
 
+      - name: Check that the web build ships no Storybook asset
+        run: |
+          test -z "$(find apps/web/dist -iname '*storybook*')"
+          ! grep -rqi storybook apps/web/dist
+
   e2e:
     name: End-to-end tests
     runs-on: ubuntu-latest
@@ -232,6 +237,54 @@ jobs:
         run: node ace migration:run --force
 
       - name: Lint, type-check and test the project
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+
+      - name: Check the cores and the update metadata of the project
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          test -f .dash/core.json
+          test -f .dash/install.json
+          test -f packages/ui/package.json
+          test -f packages/core-tools/bin/core.js
+          test ! -e packages/create-app
+          test ! -e openspec/changes
+
+      # The checkout is the release the project was generated from, so the
+      # core must already match it.
+      - name: Check the core of the project against the template
+        working-directory: ${{ runner.temp }}/project
+        run: npm run core:check -- --source "$GITHUB_WORKSPACE"
+
+      - name: Remove the showcase
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          npm run remove:showcase
+          test ! -e apps/web/src/pages/ShowcasePage.tsx
+          test -f apps/web/src/pages/Home.tsx
+          test -f apps/web/src/pages/DashboardPage.tsx
+          test -f packages/ui/.storybook/main.ts
+          npm run core:check -- --source "$GITHUB_WORKSPACE"
+
+      - name: Lint, type-check and test the project without the showcase
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+
+      - name: Generate a feature and a component
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          npm run make:feature -- invoices
+          npm run make:component -- data-card
+          (cd apps/api && node ace codegen)
+          grep -q "orgs/:orgSlug/invoices" apps/api/.adonisjs/client/registry/index.ts
+
+      - name: Lint, type-check and test the project with the feature
         working-directory: ${{ runner.temp }}/project
         run: |
           npm run lint

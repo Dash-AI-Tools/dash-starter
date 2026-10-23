@@ -8,6 +8,7 @@ import { DEFAULT_TEMPLATE_REPO, fetchTemplate } from './fetch.js'
 import { applyReplacements, applyRemovals, removePaths, removeWorkflowJobs } from './replace.js'
 import { applyLocale, applyPalette, generateEnvFiles, generateKey, generateSecret } from './env.js'
 import { createRemote, initRepository } from './git.js'
+import { writeMetadata } from './metadata.js'
 import { bootStack, hasDocker, installDependencies } from './boot.js'
 import { run as shell } from './shell.js'
 import { askIdentity, askOptions, askProviderKeys, Cancelled } from './prompts.js'
@@ -81,19 +82,26 @@ export async function run(argv, options = {}) {
 
   logger(`Fetching the template into ${target}...`)
 
+  const templateRepo = process.env.DASH_TEMPLATE_REPO ?? DEFAULT_TEMPLATE_REPO
+
   const dir = await fetchTemplate({
     template: cli.template,
     version,
     target,
     exclude: manifest.exclude,
-    repo: process.env.DASH_TEMPLATE_REPO ?? DEFAULT_TEMPLATE_REPO,
+    repo: templateRepo,
   })
 
   await applyRemovals(dir, {
     sections: manifest.removeSections,
     lines: manifest.removeLines,
   })
-  await applyReplacements(dir, { tokens: manifest.tokens, values, exclude: manifest.exclude })
+  await applyReplacements(dir, {
+    tokens: manifest.tokens,
+    values,
+    exclude: manifest.exclude,
+    preserve: manifest.preserve,
+  })
   await removePaths(dir, manifest.removePaths)
   await removeWorkflowJobs(dir, manifest.removeWorkflowJobs)
   await applyLocale(dir, identity.locale)
@@ -104,6 +112,13 @@ export async function run(argv, options = {}) {
     secrets: { appKey: generateKey(), webhookSecret: generateSecret() },
     options: keys,
   })
+
+  /**
+   * The metadata describes the final bytes of the project, so it is written
+   * after every transformation and before the dependencies and the first
+   * commit. It is what lets `npm run core:update` replay the rebrand.
+   */
+  await writeMetadata(dir, { manifest, identity, values, version, repository: templateRepo })
 
   /**
    * The dependencies come first: the lock file they write belongs to the

@@ -10,7 +10,7 @@ import { chat } from './chat'
 import { apiKeys } from './apiKeys'
 import { profile } from './profile'
 import { consent } from './consent'
-import { showcase } from './showcase'
+import { showcase } from './showcase' // showcase:line
 
 /**
  * The catalogs of every namespace, in the order they are merged. The flat
@@ -30,7 +30,7 @@ export const catalogs = {
   apiKeys,
   profile,
   consent,
-  showcase,
+  showcase, // showcase:line
 }
 
 /**
@@ -50,7 +50,7 @@ export const en = {
   ...apiKeys,
   ...profile,
   ...consent,
-  ...showcase,
+  ...showcase, // showcase:line
 }
 
 /** Shape every locale must satisfy: one string per key. */

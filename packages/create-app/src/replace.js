@@ -2,6 +2,7 @@ import { readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { listFiles } from './files.js'
+import { isExcluded } from './glob.js'
 
 /**
  * Escapes the characters of a literal that have a meaning in a regular
@@ -57,13 +58,18 @@ export function compileTokens(tokens, values) {
 
 /**
  * Rewrites every text file of a project with the identity of the product.
+ *
+ * The files of `preserve` keep their text: the core tools name the metadata
+ * directory and their own package literally, so a rebrand must not reach them.
  */
-export async function applyReplacements(root, { tokens, values, exclude = [] }) {
+export async function applyReplacements(root, { tokens, values, exclude = [], preserve = [] }) {
   const compiled = compileTokens(tokens, values)
   const files = await listFiles(root, { exclude })
   let changed = 0
 
   for (const file of files) {
+    if (isExcluded(file, preserve)) continue
+
     const path = join(root, file)
     const buffer = await readFile(path)
 

@@ -8,6 +8,7 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
+import { featureNav } from '@/features'
 import type { TranslationKey } from '@/lib/i18n'
 import type { OrganizationRole } from '@/lib/organizations'
 import type { StationTone } from '@/lib/stations'
@@ -44,8 +45,9 @@ export type NavGroup = {
 
 /**
  * The navigation of the application. It is declared once and consumed by the
- * sidebar, by the command palette and by the breadcrumbs, so a new page only
- * has to be added here.
+ * sidebar, by the command palette and by the breadcrumbs, so a new page of the
+ * core only has to be added here. The destinations of the features come from
+ * `@/features`, so a feature never edits this list.
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
@@ -68,6 +70,7 @@ export const NAV_GROUPS: NavGroup[] = [
         minRole: 'member',
         station: 'ai',
       },
+      ...featureNav,
     ],
   },
   {
