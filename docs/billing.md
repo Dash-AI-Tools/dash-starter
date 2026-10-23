@@ -1,3 +1,11 @@
+---
+type: Reference
+title: Billing
+description: Plans, Creem checkout, subscriptions, webhooks, entitlements and the billing emails.
+tags: [billing, payments, creem, reference]
+status: stable
+---
+
 # Billing
 
 The billing of the starter is built on [Creem](https://creem.io). The catalog of plans lives in the database, the prices are mirrored as products in Creem, and the state of every subscription is written by the webhooks of Creem — never by the browser.

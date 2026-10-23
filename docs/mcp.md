@@ -1,3 +1,11 @@
+---
+type: Reference
+title: MCP server
+description: The MCP endpoint, API keys, scopes, tools, limits and how to connect a client.
+tags: [mcp, api-keys, agents, reference]
+status: stable
+---
+
 # MCP
 
 The starter ships an [MCP](https://modelcontextprotocol.io) server, so an external agent — Claude Desktop, an IDE, an agent of your own — can read the data of an organization and act on it. The server exposes the **tools of the product**: the same ones the assistant of the chat uses, with the same permissions.

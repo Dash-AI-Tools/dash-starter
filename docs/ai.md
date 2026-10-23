@@ -1,3 +1,11 @@
+---
+type: Reference
+title: AI layer
+description: The model-agnostic AI layer: aliases, providers, quotas, credits and images.
+tags: [ai, providers, quotas, reference]
+status: stable
+---
+
 # AI
 
 The AI of the starter is built on the [AI SDK](https://sdk.vercel.ai). Every feature of the product asks for a **purpose** — `chat`, `fast`, `reasoning` or `image` — and never for a model of a vendor, so the model of the product can be changed from the environment without touching the code.
