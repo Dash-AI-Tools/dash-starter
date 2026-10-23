@@ -1,7 +1,7 @@
 ---
 type: Guide
 title: Configuration
-description: The two environment files, the variables that matter and when a change needs a restart or a rebuild.
+description: The two environment files, the variables that matter, the ports of the stack and when a change needs a restart or a rebuild.
 tags: [configuration, environment, secrets, docker]
 status: stable
 generated: { by: opencode/deepseek-v4.1-flash-free, at: 2026-10-23T00:00:00Z }
@@ -60,6 +60,32 @@ The provider keys (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_GENERATIVE_AI_
 
 `DEMO_MODE` becomes `VITE_DEMO_MODE` at dev-server start or at build time, so it is
 not read again on a page reload.
+
+## The ports of the stack
+
+The name of the Compose project and the ports the host publishes are variables of the
+root `.env`, so a worktree can run its own stack next to yours.
+
+| Variable                   | Default        | What it is                            |
+| -------------------------- | -------------- | ------------------------------------- |
+| `DEV_COMPOSE_PROJECT_NAME` | `dash-starter` | The name of the development stack     |
+| `DB_HOST_PORT`             | `5433`         | The port of PostgreSQL                |
+| `MAILPIT_HOST_PORT`        | `8025`         | The web UI of the catcher of the mail |
+| `SMTP_HOST_PORT`           | `1025`         | The SMTP of the catcher of the mail   |
+| `API_HOST_PORT`            | `3333`         | The API                               |
+| `WEB_HOST_PORT`            | `5173`         | The web app                           |
+
+`COMPOSE_PROJECT_NAME` is the override of Compose itself: when it is set, it names every
+stack of the machine.
+
+The end-to-end stack has the same variables with the `E2E_` prefix:
+`E2E_COMPOSE_PROJECT_NAME` (`dash-e2e`), `E2E_DB_HOST_PORT` (`5434`),
+`E2E_MAILPIT_HOST_PORT` (`8026`), `E2E_SMTP_HOST_PORT` (`1026`), `E2E_API_HOST_PORT`
+(`3334`) and `E2E_WEB_HOST_PORT` (`5174`).
+
+`node plugins/dsh/scripts/worktree.mjs add <change-id> <slot>` gives a feature its own
+worktree, branch, environment files and stack, on the base ports plus ten times the
+slot; [the harness](../harness.md#the-worktrees) explains it.
 
 ## Mail
 

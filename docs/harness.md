@@ -346,17 +346,17 @@ node plugins/dsh/scripts/worktree.mjs remove <change-id> <slot>
 
 The harness follows the repository, so a change of the stack is a change of the harness.
 
-| The stack changes                        | The harness changes                                                                                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| A new workspace                          | The entry in `WORKSPACES` of `plugins/dsh/scripts/checks.mjs`, and the check of the workspace in `plugins/dsh/skills/review/SKILL.md`.     |
-| A new layer of the API or of the web app | The agent that owns it in `plugins/dsh/agents/`, the tag of its tasks and the command that spawns it in `plugins/dsh/skills/`.             |
-| A new protected file                     | The rule in `RULES` of `plugins/dsh/scripts/protect-files.mjs` and the check in `isSecretPath` of `plugins/dsh/scripts/checks.mjs`.        |
-| A new check (a linter, a scanner)        | The check in `plugins/dsh/scripts/checks.mjs`, so the stop hook and the gate of the commit run it.                                         |
-| A new command                            | The skill in `plugins/dsh/skills/<name>/SKILL.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`. |
-| A new agent                              | The agent in `plugins/dsh/agents/<name>.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`.       |
-| A new generator or layer                 | The row in `plugins/dsh/scripts/layers.json` and the same row in the table "Where each kind of change lives" of `docs/architecture.md`.    |
-| An AdonisJS upgrade                      | The stubs of `apps/api/stubs/make/`: see [After an AdonisJS upgrade](#after-an-adonisjs-upgrade).                                          |
-| The stack of the containers changes      | The variables of the Compose files (`README.md` names them) and the slot arithmetic of `plugins/dsh/scripts/worktree.mjs`.                 |
+| The stack changes                        | The harness changes                                                                                                                           |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| A new workspace                          | The entry in `WORKSPACES` of `plugins/dsh/scripts/checks.mjs`, and the check of the workspace in `plugins/dsh/skills/review/SKILL.md`.        |
+| A new layer of the API or of the web app | The agent that owns it in `plugins/dsh/agents/`, the tag of its tasks and the command that spawns it in `plugins/dsh/skills/`.                |
+| A new protected file                     | The rule in `RULES` of `plugins/dsh/scripts/protect-files.mjs` and the check in `isSecretPath` of `plugins/dsh/scripts/checks.mjs`.           |
+| A new check (a linter, a scanner)        | The check in `plugins/dsh/scripts/checks.mjs`, so the stop hook and the gate of the commit run it.                                            |
+| A new command                            | The skill in `plugins/dsh/skills/<name>/SKILL.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`.    |
+| A new agent                              | The agent in `plugins/dsh/agents/<name>.md`, a line in the table of this document, and `node plugins/dsh/scripts/opencode.mjs sync`.          |
+| A new generator or layer                 | The row in `plugins/dsh/scripts/layers.json` and the same row in the table "Where each kind of change lives" of `docs/architecture.md`.       |
+| An AdonisJS upgrade                      | The stubs of `apps/api/stubs/make/`: see [After an AdonisJS upgrade](#after-an-adonisjs-upgrade).                                             |
+| The stack of the containers changes      | The variables of the Compose files (`docs/guides/configuration.md` names them) and the slot arithmetic of `plugins/dsh/scripts/worktree.mjs`. |
 
 `docs/architecture.md` is the map of the stack, and it is updated in the same change that moves it.
 

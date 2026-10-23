@@ -13,7 +13,7 @@ Secondary: the end users of each product generated from the template (sign up, o
 
 ## Product Purpose
 
-Dash Starter, by the brand Dash AI, is an installable template (`npx create-dash-starter`) that ships the plumbing every AI SaaS repeats: auth, organizations and roles, onboarding, dashboard shell and component kit, AI provider layer and chat, a metered MCP server, Brevo email, Creem billing with DB-configured monthly/yearly plans, English/Spanish localization, legal pages, cookie consent, and lint/unit/e2e/CI. Success: a team runs one command and is building their own product the same day.
+Dash Starter, by the brand Dash AI, is an installable template (`curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash -s -- my-product`) that ships the plumbing every AI SaaS repeats: auth, organizations and roles, onboarding, dashboard shell and component kit, AI provider layer and chat, a metered MCP server, Brevo email, Creem billing with DB-configured monthly/yearly plans, English/Spanish localization, legal pages, cookie consent, and lint/unit/e2e/CI. Success: a team runs one command and is building their own product the same day.
 
 ## Positioning
 

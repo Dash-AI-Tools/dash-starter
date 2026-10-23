@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Lets a developer create a new, fully configured product repository from the starter template with a single `npx` command.
+Lets a developer create a new, fully configured product repository from the starter template with a single `curl … | bash` install script that runs the installer of one template release against that same release.
 
 ## Requirements
 

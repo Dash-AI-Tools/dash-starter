@@ -10,7 +10,8 @@ import { cn } from '@/lib/utils'
 /**
  * The command that creates a new product from the template.
  */
-const INSTALL_COMMAND = 'npx create-dash-starter'
+const INSTALL_COMMAND =
+  'curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash'
 
 const FAQ = [
   { q: 'faq1Q', a: 'faq1A' },
@@ -266,7 +267,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="mx-auto grid max-w-7xl gap-x-16 px-4 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-x-16 px-4 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:px-8">
         <section
           aria-labelledby="hero-title"
           className="flex flex-col gap-7 pt-14 pb-12 lg:sticky lg:top-0 lg:h-svh lg:justify-center lg:py-0"

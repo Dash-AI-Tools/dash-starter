@@ -193,6 +193,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Check the install script
+        run: shellcheck install.sh
+
       - name: Generate a project
         run: >
           node packages/create-app/bin/create-dash-starter.js "$RUNNER_TEMP/project"

@@ -26,21 +26,37 @@ Keep the copyright and the legal pages consistent with the address of the compan
 
 ## Choose the palette
 
-The product ships six palettes: `line`, `ink`, `ocean`, `forest`, `plum` and `ember`,
-each with light and dark tokens in `packages/ui/src/styles/palettes.css`, the stylesheet of
-the UI kit that the web app and Storybook both read.
+The product ships six palettes: `line` (the default), `ink`, `ocean`, `forest`, `plum`
+and `ember`, each with light and dark tokens in `packages/ui/src/styles/palettes.css`,
+part of the stylesheet of the UI kit (`@dash/ui/styles.css`) that the web app and
+Storybook both read. Components only read tokens, so a palette re-colours everything
+without code changes.
 
-- Set the default in `apps/web/src/lib/palettes.ts` (`DEFAULT_PALETTE`), or pass
-  `--palette <id>` to the installer. An unknown id fails the typecheck.
-- Signed-in users pick a palette in the dashboard top bar; the choice is saved in
-  `users.palette` and overrides the default for that user only.
-- Turn `DEMO_MODE` off in the root `.env` for a generated product; it only exists to
-  show the palettes to visitors of the template. It is a build-time value of the web
-  app, so restart the dev server or rebuild the image.
-- To add a palette, copy the `line` blocks in `palettes.css`, add the id to
-  `PALETTE_IDS`, its name to the `palette…` keys of both locales and the id to the
-  `palette` enum of `apps/api/app/validators/profile.ts`. `npm test` checks every
-  token, the WCAG AA contrast and the six station colours.
+- Every visitor sees one default palette. Pass `--palette <id>` to the installer, or
+  change one line of `apps/web/src/lib/palettes.ts` later:
+
+  ```ts
+  export const DEFAULT_PALETTE: PaletteId = 'ocean'
+  ```
+
+  An unknown id fails `npm run typecheck`.
+
+- Signed-in users pick a palette in the dashboard top bar. A pick applies at once, is
+  saved in `users.palette`, follows the user to every device and overrides the default
+  for that user only. A user who never picked one sees the default.
+- `DEMO_MODE=true` in the root `.env` shows a palette picker on the public site, so
+  visitors without an account can try every palette. Their pick is remembered in their
+  browser only; signing in replaces it with the palette saved in the account, or with
+  the default. The template runs with it on; the installer turns it off in every new
+  project. The web app reads it as `VITE_DEMO_MODE`, at dev-server start in Compose and
+  at build time in the production image, so a change needs a restart or a rebuild.
+- To add a palette, add a light block (`[data-palette='<id>']`) and a dark block
+  (`.dark[data-palette='<id>'], .dark [data-palette='<id>']`) to `palettes.css` with
+  every token of the `line` blocks, add the id to `PALETTE_IDS`, its name to the
+  `palette…` keys in `apps/web/src/locales/{en,es}/common.ts` and the id to the
+  `palette` enum of `apps/api/app/validators/profile.ts`. `npm test` fails until the
+  palette defines every token, meets WCAG AA contrast and keeps its six station
+  colours apart.
 
 ## Choose the locales
 

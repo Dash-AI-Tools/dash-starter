@@ -16,15 +16,15 @@ Read this before changing anything. If a change adds, removes or moves a workspa
 
 npm workspaces, Node `>=24.22.1` (`.nvmrc`, `engine-strict` in `.npmrc`).
 
-| Workspace             | Package               | Stack                                                             |
-| --------------------- | --------------------- | ----------------------------------------------------------------- |
-| `apps/api`            | `@dash/api`           | AdonisJS 7, Lucid (Postgres), VineJS, Japa                        |
-| `apps/web`            | `@dash/web`           | React 19, Vite, react-router, Tailwind 4, TanStack Query, Vitest  |
-| `packages/ui`         | `@dash/ui`            | The UI kit: primitives and design tokens, Vitest, local Storybook |
-| `packages/core-tools` | `@dash/core-tools`    | Node CLI: core update, generators, showcase removal (`node:test`) |
-| `e2e`                 | `@dash/e2e`           | Playwright                                                        |
-| `packages/create-app` | `create-dash-starter` | Node installer (`node:test`)                                      |
-| `plugins/dsh`         | `@dash/dsh`           | Agents, skills, hooks of Claude Code and OpenCode (`node:test`)   |
+| Workspace             | Package               | Stack                                                                    |
+| --------------------- | --------------------- | ------------------------------------------------------------------------ |
+| `apps/api`            | `@dash/api`           | AdonisJS 7, Lucid (Postgres), VineJS, Japa                               |
+| `apps/web`            | `@dash/web`           | React 19, Vite, react-router, Tailwind 4, TanStack Query, Vitest         |
+| `packages/ui`         | `@dash/ui`            | The UI kit: primitives and design tokens, Vitest, local Storybook        |
+| `packages/core-tools` | `@dash/core-tools`    | Node CLI: core update, generators, showcase removal (`node:test`)        |
+| `e2e`                 | `@dash/e2e`           | Playwright                                                               |
+| `packages/create-app` | `create-dash-starter` | Node installer (`node:test`), entry point `install.sh` (repository root) |
+| `plugins/dsh`         | `@dash/dsh`           | Agents, skills, hooks of Claude Code and OpenCode (`node:test`)          |
 
 The root `package.json` fans out to the workspaces:
 
@@ -60,7 +60,35 @@ Per workspace:
 | `packages/create-app` | —                      | `node --test "test/**/*.test.js"`  | `eslint .` | —                 | root Prettier |
 | `plugins/dsh`         | —                      | `node --test "scripts/*.test.mjs"` | —          | —                 | root Prettier |
 
+The installer runs from a GitHub release, never from npm: `install.sh` (template repository only) downloads the release tarball, checks that the version of `packages/create-app/package.json` is the tag and that Node meets `.nvmrc`, runs `npm ci --workspace create-dash-starter --omit=dev --ignore-scripts` in the download and starts `packages/create-app/bin/create-dash-starter.js` with `--template` pointing at it. Neither `install.sh` nor `packages/create-app` reaches a generated project.
+
 `packages/ui` has no `build`: it exports its TypeScript source, which Vite compiles for the web app and for Storybook. `packages/create-app` and `packages/core-tools` have no `typecheck` and no `build`; `e2e` has no `build`; `plugins/dsh` has only `test`. Formatting is a single root Prettier run over the whole repository (`prettier.config.js`), so a workspace without a `format` script is still formatted.
+
+### Layout
+
+```
+apps/api
+  app/            controllers, models, services, tools, mails, middleware
+  app/features/   the features of the product (owned by the product)
+  config/         app, auth, database, mail, limiter, drive, ai
+  database/       migrations and seeders
+  resources/lang/ en and es message catalogs
+  start/          env, kernel, routes
+  tests/          Japa unit and functional suites
+apps/web
+  src/components/ patterns, app shell and feature components
+  src/features/   the features of the product (owned by the product)
+  src/pages/      one page per route
+  src/lib/        the typed API client and the hooks of each feature
+  src/locales/    en and es translation catalogs
+packages/ui           the UI kit: primitives, styles, stories; src/custom/ is owned by the product
+packages/core-tools   core update, generators, showcase removal
+packages/create-app   the installer (template repository only)
+install.sh            the entry point of the installer (template repository only)
+plugins/dsh           the development harness: agents, commands, guardrails
+e2e                   Playwright journeys and helpers
+docs                  the OKF bundle: guides and reference
+```
 
 ## API: layers and request flow
 
@@ -255,7 +283,7 @@ For a feature named `purchase-orders`:
 
 The API reads its configuration from `apps/api/config/*.ts` (`ai.ts`, `auth.ts`, `database.ts`, `mail.ts`, `session.ts`, `shield.ts`, ...). The web app reads `VITE_*` variables (`VITE_API_URL`, `VITE_DEMO_MODE`, `VITE_ENABLE_SHOWCASE`).
 
-The Compose stacks are `docker-compose.yml` (development, project `dash-starter`) and `docker-compose.e2e.yml` (end-to-end, project `dash-e2e`); `docker-compose.prod.yml` builds the production images. Development ports: `5433` (database), `8025` (Mailpit UI), `1025` (SMTP), `3333` (API), `5173` (web). End-to-end ports: `5434`, `8026`, `1026`, `3334`, `5174`. These are the defaults: the project names and the host ports are variables of the root `.env` (`DEV_COMPOSE_PROJECT_NAME`, `DB_HOST_PORT`, ..., and the same with the `E2E_` prefix), listed in `README.md`, so a worktree runs its own stacks next to these.
+The Compose stacks are `docker-compose.yml` (development, project `dash-starter`) and `docker-compose.e2e.yml` (end-to-end, project `dash-e2e`); `docker-compose.prod.yml` builds the production images. Development ports: `5433` (database), `8025` (Mailpit UI), `1025` (SMTP), `3333` (API), `5173` (web). End-to-end ports: `5434`, `8026`, `1026`, `3334`, `5174`. These are the defaults: the project names and the host ports are variables of the root `.env` (`DEV_COMPOSE_PROJECT_NAME`, `DB_HOST_PORT`, ..., and the same with the `E2E_` prefix), listed in [configuration](./guides/configuration.md#the-ports-of-the-stack), so a worktree runs its own stacks next to these.
 
 ## Localization
 
@@ -266,33 +294,35 @@ The Compose stacks are `docker-compose.yml` (development, project `dash-starter`
 
 ## Tests
 
-| Suite          | Path                                 | Needs a database | Command                            |
-| -------------- | ------------------------------------ | ---------------- | ---------------------------------- |
-| API unit       | `apps/api/tests/unit/`               | no               | `node ace test unit`               |
-| API functional | `apps/api/tests/functional/`         | yes              | `node ace test functional`         |
-| Web unit       | `apps/web/src/**/*.test.tsx`         | no               | `vitest run`                       |
-| UI kit         | `packages/ui/src/**/*.test.{ts,tsx}` | no               | `vitest run`                       |
-| Core tools     | `packages/core-tools/test/`          | no               | `node --test "test/**/*.test.js"`  |
-| Installer      | `packages/create-app/test/`          | no               | `node --test "test/**/*.test.js"`  |
-| Harness        | `plugins/dsh/scripts/`               | no               | `node --test "scripts/*.test.mjs"` |
-| End to end     | `e2e/specs/`                         | yes (full stack) | `npm run test:e2e`                 |
+| Suite          | Path                                              | Needs a database | Command                            |
+| -------------- | ------------------------------------------------- | ---------------- | ---------------------------------- |
+| API unit       | `apps/api/tests/unit/`                            | no               | `node ace test unit`               |
+| API functional | `apps/api/tests/functional/`                      | yes              | `node ace test functional`         |
+| Web unit       | `apps/web/src/**/*.test.tsx`                      | no               | `vitest run`                       |
+| UI kit         | `packages/ui/src/**/*.test.{ts,tsx}`              | no               | `vitest run`                       |
+| Core tools     | `packages/core-tools/test/`                       | no               | `node --test "test/**/*.test.js"`  |
+| Installer      | `packages/create-app/test/`                       | no               | `node --test "test/**/*.test.js"`  |
+| Install script | `packages/create-app/test/install-script.test.js` | no               | `node --test "test/**/*.test.js"`  |
+| Harness        | `plugins/dsh/scripts/`                            | no               | `node --test "scripts/*.test.mjs"` |
+| End to end     | `e2e/specs/`                                      | yes (full stack) | `npm run test:e2e`                 |
 
 - API tests use Japa (`apps/api/tests/bootstrap.ts`); functional tests use the `Browser` helper in `apps/api/tests/helpers/browser.ts` to keep a signed-in session.
 - `node ace make:*` writes from the house-style stubs of `apps/api/stubs/make/`, and `apps/api/tests/unit/stubs.spec.ts` checks what they generate: see [the harness](./harness.md#the-stubs-of-the-api).
 - The core tools are tested without the network: the releases are local fixtures behind the `fetch` and `download` seams of `packages/core-tools/test/helpers.js`. The installer/updater conformance test is `packages/create-app/test/conformance.test.js`.
+- `packages/create-app/test/install-script.test.js` runs `install.sh` against a release tarball it builds, with stub `curl` and `npm` first on the `PATH`, so it needs no network. The runs without a terminal are detached children; the interactive run gets a pseudo-terminal from `python3` (`pty.spawn`) and is skipped when `python3` is missing.
 - The end-to-end suite needs the Compose stack: `docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait`.
 
 ## CI
 
 `.github/workflows/ci.yml` runs on pull requests and on pushes to `main`:
 
-| Job              | What it does                                                                                                                                                                                                                                                                                                                                                                                            |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lint-typecheck` | `node ace codegen`, `npm run format:check`, `npm run lint`, `npm run typecheck`                                                                                                                                                                                                                                                                                                                         |
-| `test`           | Postgres service, `node ace migration:run --force`, `npm test`                                                                                                                                                                                                                                                                                                                                          |
-| `build`          | `npm run build`, then a check that `apps/web/dist` holds no Storybook asset                                                                                                                                                                                                                                                                                                                             |
-| `e2e`            | Compose stack, `node ace db:seed`, `npm run test:e2e`                                                                                                                                                                                                                                                                                                                                                   |
-| `installer`      | Generates a project with `create-dash-starter` (Spanish, `forest`) and checks it, harness and `.dash/` included; runs `npm run core:check -- --source "$GITHUB_WORKSPACE"`, `npm run remove:showcase`, `npm run make:feature -- invoices`, `npm run make:component -- data-card` and `node ace codegen`; lint, typecheck and tests run after the generation, after the removal and after the generators |
+| Job              | What it does                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lint-typecheck` | `node ace codegen`, `npm run format:check`, `npm run lint`, `npm run typecheck`                                                                                                                                                                                                                                                                                                                                                  |
+| `test`           | Postgres service, `node ace migration:run --force`, `npm test`                                                                                                                                                                                                                                                                                                                                                                   |
+| `build`          | `npm run build`, then a check that `apps/web/dist` holds no Storybook asset                                                                                                                                                                                                                                                                                                                                                      |
+| `e2e`            | Compose stack, `node ace db:seed`, `npm run test:e2e`                                                                                                                                                                                                                                                                                                                                                                            |
+| `installer`      | `shellcheck install.sh`; generates a project with `create-dash-starter` (Spanish, `forest`) and checks it, harness and `.dash/` included; runs `npm run core:check -- --source "$GITHUB_WORKSPACE"`, `npm run remove:showcase`, `npm run make:feature -- invoices`, `npm run make:component -- data-card` and `node ace codegen`; lint, typecheck and tests run after the generation, after the removal and after the generators |
 
 No job builds, serves or uploads Storybook.
 

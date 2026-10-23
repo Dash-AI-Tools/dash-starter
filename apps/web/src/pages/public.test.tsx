@@ -212,7 +212,11 @@ describe('The landing page', () => {
         name: 'Every station of your AI SaaS, already running.',
       })
     ).toBeInTheDocument()
-    expect(screen.getByText('npx create-dash-starter')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash'
+      )
+    ).toBeInTheDocument()
 
     for (const name of ['Auth', 'Organizations', 'Billing', 'AI', 'MCP', 'Email']) {
       expect(
@@ -235,7 +239,9 @@ describe('The landing page', () => {
     renderPublic('/')
     await user.click(screen.getByRole('button', { name: 'Copy command' }))
 
-    expect(writeText).toHaveBeenCalledWith('npx create-dash-starter')
+    expect(writeText).toHaveBeenCalledWith(
+      'curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash'
+    )
     expect(await screen.findAllByText('Command copied')).not.toHaveLength(0)
   })
 

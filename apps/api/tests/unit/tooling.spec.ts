@@ -102,6 +102,7 @@ test.group('The tooling of the project', () => {
      * the project, so a broken replacement is caught.
      */
     assert.include(workflow, 'create-dash-starter.js')
+    assert.include(workflow, 'run: shellcheck install.sh')
     assert.include(workflow, 'Lint, type-check and test the project')
   }).skip(!IS_TEMPLATE, 'A generated project has no installer job')
 })

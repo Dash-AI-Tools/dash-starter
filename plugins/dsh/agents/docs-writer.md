@@ -14,7 +14,7 @@ model: inherit
   - `docs/ai.md` — the AI layer: the aliases, the providers, the configuration, the quotas, the images, the errors.
   - `docs/mcp.md` — the MCP server: the endpoint, the keys, the scopes, every tool with its scope and its input, the limits, the errors.
   - `docs/billing.md` — the billing: the catalog of the plans, the configuration of the payment provider, the webhook, the sync of the prices, the endpoints, the emails.
-  - `README.md` — the entry point of the repository: the quick start, the commands, the configuration, the layout.
+  - `README.md` — the entry point of the repository: a summary, the quick start, the installer one-liner and the table of contents of `docs/`. The commands, the configuration and the layout live in `docs/guides/` and `docs/architecture.md`.
   - `e2e/README.md` — the end-to-end suite: the stack, the variables, the journeys.
   - `CLAUDE.md` — the short entry point of the agents.
 
@@ -70,5 +70,5 @@ For the proof captures of the landing page, against the development stack: `dock
 - Every path and every command you name exists and runs. Check it with `ls` before you write it, and re-check it when the change moves a file.
 - Imitate the shape of the document you edit: the tables of `docs/architecture.md`, the steps of `docs/billing.md`, the table of the journeys of `e2e/README.md`, the table of the tools of `docs/mcp.md`.
 - `CLAUDE.md` stays under 40 lines: the requirements, the table of the documents and the OpenSpec loop. It points to `docs/architecture.md`; it never repeats it.
-- The READMEs answer "how do I run this": the quick start, the commands, the variables, the layout. They never repeat the reference documents.
+- The root `README.md` stays a summary, a quick start and a table of contents that links every page of `docs/`; anything longer goes to `docs/`. The workspace READMEs answer "how do I run this" for their workspace. No README repeats the reference documents.
 - A document that names a label of the interface takes it from the catalogs (`apps/web/src/locales/en/`, `apps/api/resources/lang/en/`), never from memory.

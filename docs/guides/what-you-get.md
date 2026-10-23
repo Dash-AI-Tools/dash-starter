@@ -1,7 +1,7 @@
 ---
 type: Guide
 title: What you get
-description: The product the template ships: public site, accounts, organizations, dashboard, chat, billing, MCP, the UI kit and the core tools.
+description: The product the template ships: the repository, the local fallbacks, public site, accounts, organizations, dashboard, chat, billing, MCP, the UI kit and the core tools.
 tags: [product, features, overview, ui, core]
 status: stable
 generated: { by: opencode/deepseek-v4.1-flash-free, at: 2026-10-23T00:00:00Z }
@@ -11,6 +11,33 @@ generated: { by: opencode/deepseek-v4.1-flash-free, at: 2026-10-23T00:00:00Z }
 
 Dash Starter is a working product, not a set of libraries. Every feature below is
 wired to the API, localized in English and Spanish, and covered by tests.
+
+## The repository
+
+| Path                  | What it is                                                                  |
+| --------------------- | --------------------------------------------------------------------------- |
+| `apps/api`            | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks               |
+| `apps/web`            | React 19 SPA: public site, dashboard, admin, chat                           |
+| `packages/ui`         | The UI kit (`@dash/ui`): primitives, design tokens, local Storybook         |
+| `packages/core-tools` | The core update, the feature and component generators, the showcase removal |
+| `packages/create-app` | The `create-dash-starter` installer (template repository only)              |
+| `e2e`                 | Playwright end-to-end journeys against the running stack                    |
+| `plugins/dsh`         | The development harness: Claude Code agents, commands and hooks             |
+| `docs`                | The OKF documentation bundle: guides and reference                          |
+
+[Architecture](../architecture.md#layout) has the folders inside each workspace.
+
+## Without a single key
+
+Every external integration has a local fallback, so the whole product boots and the
+whole test suite passes with zero third-party keys:
+
+| Integration | Local / test fallback                          | Production                              |
+| ----------- | ---------------------------------------------- | --------------------------------------- |
+| Email       | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API                 |
+| Payments    | Creem test mode + signed simulated webhooks    | Creem live                              |
+| AI          | Deterministic stub provider                    | Any configured provider                 |
+| Storage     | Local disk                                     | Local disk, or the S3 disk you register |
 
 ## The public site
 

@@ -54,7 +54,7 @@ export const manifest = {
     // the template ships them.
     ...shipped.exclude.filter((pattern) => pattern.replace(/^!/, '').startsWith('.opencode/')),
   ],
-  removePaths: ['packages/create-app', 'openspec/changes'],
+  removePaths: shipped.removePaths,
   removeSections: [{ file: 'README.md', heading: '## The installer' }],
   removeLines: [{ file: 'README.md', text: 'packages/create-app' }],
   removeWorkflowJobs: ['installer'],
@@ -171,6 +171,7 @@ export async function createTemplate() {
 
   await mkdir(join(root, 'packages/create-app'), { recursive: true })
   await writeFile(join(root, 'packages/create-app/package.json'), '{}\n')
+  await writeFile(join(root, 'install.sh'), '#!/usr/bin/env bash\n')
 
   await mkdir(join(root, 'openspec/changes/bootstrap'), { recursive: true })
   await writeFile(join(root, 'openspec/changes/bootstrap/tasks.md'), '- [ ] a task\n')

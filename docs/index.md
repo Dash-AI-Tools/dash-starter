@@ -34,8 +34,8 @@ Recent changes to this bundle are listed in the [change log](./log.md).
 
 ## The five-minute path
 
-1. `npx create-dash-starter my-product` — or clone this repository and copy the
-   environment files.
+1. `curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash -s -- my-product`
+   — or clone this repository and copy the environment files.
 2. `docker compose up -d --wait` and `docker compose exec api node ace db:seed`.
 3. Open <http://localhost:5173>, sign up, and read the verification email in Mailpit.
 4. Change the palette, the locale and the name of the product before the first feature.

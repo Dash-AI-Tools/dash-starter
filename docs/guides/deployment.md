@@ -87,7 +87,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 The new API runs the pending migrations before it serves. A migration that destroys
 data is not run automatically by this template: review it before the deploy and take a
-backup. The release process of the installer is in the [README](../../README.md).
+backup. To take in a newer release of the template itself, see [updating](./updating.md).
 
 ## A checklist
 

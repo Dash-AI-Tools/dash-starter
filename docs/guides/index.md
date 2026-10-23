@@ -5,9 +5,9 @@ description: Install, understand, customize, extend, update, test, deploy and tr
 
 # Guides
 
-- [What you get](./what-you-get.md) - the product the template ships.
-- [Getting started](./getting-started.md) - from a fresh clone to a signed-in account.
-- [Configuration](./configuration.md) - the environment, mail, payments, AI and storage.
+- [What you get](./what-you-get.md) - the product the template ships, the repository and the local fallbacks.
+- [Getting started](./getting-started.md) - from the installer or a clone to a signed-in account, and the commands.
+- [Configuration](./configuration.md) - the environment, the ports of the stack, mail, payments, AI and storage.
 - [Customizing](./customizing.md) - name, palette, locales, the showcase, features and the first change.
 - [Extending](./extending.md) - the feature registries, the generators and Storybook.
 - [Updating](./updating.md) - the update metadata, `core:check` and `core:update`.

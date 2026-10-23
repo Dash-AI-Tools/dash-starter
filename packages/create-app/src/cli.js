@@ -24,7 +24,11 @@ const OPTIONS = {
  * The usage of the installer, printed by `--help` and when the flags are wrong.
  */
 export const USAGE = `
-Usage: npx create-dash-starter [directory] [options]
+Usage:
+  curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash -s -- [directory] [options]
+
+From a clone of the template:
+  node packages/create-app/bin/create-dash-starter.js [directory] --template . [options]
 
 Options:
   --name <name>          Product name, e.g. "Acme AI"

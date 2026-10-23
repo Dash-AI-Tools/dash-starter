@@ -2,86 +2,30 @@
 
 A production-ready **AI SaaS starter**: accounts, organizations, billing, transactional email, a model-agnostic AI layer, in-app chat and an MCP server — wired together, in English and Spanish.
 
-Use it as the starting point for your next AI product.
-
----
-
-## What is inside
-
-| Path                  | What it is                                                                  |
-| --------------------- | --------------------------------------------------------------------------- |
-| `apps/api`            | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks               |
-| `apps/web`            | React 19 SPA: public site, dashboard, admin, chat                           |
-| `packages/ui`         | The UI kit (`@dash/ui`): primitives, design tokens, local Storybook         |
-| `packages/core-tools` | The core update, the feature and component generators, the showcase removal |
-| `packages/create-app` | The `create-dash-starter` installer                                         |
-| `e2e`                 | Playwright end-to-end journeys against the running stack                    |
-| `plugins/dsh`         | The development harness: Claude Code agents, commands and hooks             |
-| `docs`                | The OKF documentation bundle: guides and reference                          |
-
-Every external integration has a local fallback, so the whole product boots and the whole test suite passes **with zero third-party keys**:
-
-| Integration | Local / test fallback                          | Production                              |
-| ----------- | ---------------------------------------------- | --------------------------------------- |
-| Email       | Mailpit (SMTP) in dev, in-memory fake in tests | Brevo transactional API                 |
-| Payments    | Creem test mode + signed simulated webhooks    | Creem live                              |
-| AI          | Deterministic stub provider                    | Any configured provider                 |
-| Storage     | Local disk                                     | Local disk, or the S3 disk you register |
-
----
-
-## Documentation
-
-The documentation is an [OKF v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle in [`docs/`](docs/index.md): markdown with YAML frontmatter, readable by people and agents, and diffable in git.
-
-| Start here                                                                                   | What it covers                                                     |
-| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [What you get](docs/guides/what-you-get.md)                                                  | The product the template ships, feature by feature.                |
-| [Getting started](docs/guides/getting-started.md)                                            | From a fresh clone to a signed-in account.                         |
-| [Configuration](docs/guides/configuration.md)                                                | The environment files, mail, payments, AI, storage and secrets.    |
-| [Customizing](docs/guides/customizing.md)                                                    | Name, palette, locales, removing features and the first change.    |
-| [Extending](docs/guides/extending.md)                                                        | The feature registries, the generators and Storybook.              |
-| [Updating](docs/guides/updating.md)                                                          | The update metadata, `core:check` and `core:update`.               |
-| [Testing](docs/guides/testing.md)                                                            | The suites, the test database and the end-to-end stack.            |
-| [Deployment](docs/guides/deployment.md)                                                      | The production images, secrets, migrations and TLS.                |
-| [Troubleshooting](docs/guides/troubleshooting.md)                                            | The failures a new checkout hits first.                            |
-| [Architecture](docs/architecture.md)                                                         | The map of the repository and the file to imitate for each change. |
-| [AI](docs/ai.md), [Billing](docs/billing.md), [MCP](docs/mcp.md), [Harness](docs/harness.md) | The internals of each integration.                                 |
-
----
-
-## Requirements
-
-- Node.js 24.22.1 or newer (`nvm use` reads `.nvmrc`; 24.2.0 crashes the API tests with
-  `Unexpected module status 3`, and 22.x lacks the module hooks the TypeScript loader needs)
-- Docker with Compose v2 (for the local stack)
-- npm 10 or newer (workspaces)
+The monorepo holds the API (`apps/api`, AdonisJS 7), the web app (`apps/web`, React 19), the UI kit (`packages/ui`), the core update and the generators (`packages/core-tools`), the end-to-end journeys (`e2e`), the development harness (`plugins/dsh`) and the documentation (`docs`). Every external integration has a local fallback, so the product boots and the test suite passes with zero third-party keys. [What you get](docs/guides/what-you-get.md) tours the product; [architecture](docs/architecture.md) maps the code.
 
 ---
 
 ## Quick start
 
-```bash
-git clone <your-repo> my-product
-cd my-product
-npm install
+Requirements:
 
-# Create the environment files
+- Node.js per `.nvmrc`: run `nvm use` before any install or command.
+- Docker with Compose v2.
+- npm 10 or newer.
+
+In a checkout of the project:
+
+```bash
+nvm use
+npm install
 cp .env.example .env
 cp apps/api/.env.example apps/api/.env
-```
+(cd apps/api && node ace generate:key --force)
+node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"   # paste into the root .env as APP_KEY
 
-Generate a signing key for the API and for Compose:
-
-```bash
-cd apps/api && node ace generate:key --force
-cd ../.. && node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"   # paste into the root .env as APP_KEY
-```
-
-Then boot the stack:
-
-```bash
-docker compose up -d
+docker compose up -d --wait
+docker compose exec api node ace db:seed
 ```
 
 | Service       | URL                                         |
@@ -92,274 +36,45 @@ docker compose up -d
 | Mailpit inbox | http://localhost:8025                       |
 | Postgres      | `localhost:5433` (`dash` / `dash` / `dash`) |
 
-The API container installs the dependencies and runs the migrations before it serves, so the web app starts on a database that is ready. Seed the default plans once:
+Sign up at http://localhost:5173/signup and read the verification email in Mailpit, or sign in with the demo account `demo@example.test` / `supersecret`. To run the API and the web app on the host instead, point `DB_*` in `apps/api/.env` at a Postgres and run `npm run dev`.
 
-```bash
-docker compose exec api node ace db:seed
-```
-
-In development the seed also creates a demo account (`demo@example.test` / `supersecret`) with its own organization, so the product can be opened without signing up. The seeder is ignored in every other environment.
-
-Sign up at http://localhost:5173/signup — the verification email lands in Mailpit.
-
-### Running without Docker
-
-```bash
-npm run dev            # API on :3333, web on :5173
-```
-
-The Vite dev server proxies `/api` and `/mcp` to the API, so the browser only ever talks to one origin and session cookies stay first-party. Point `DB_*` in `apps/api/.env` at your own Postgres.
-
-The API test suite uses a separate `dash_test` database. Create it once with:
-
-```bash
-docker compose exec db psql -U dash -d dash -c "CREATE DATABASE dash_test"
-cd apps/api && NODE_ENV=test node ace migration:run --force
-```
-
----
-
-## Commands
-
-Run at the repository root; each one fans out to every workspace.
-
-| Command                            | What it does                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------- |
-| `npm run dev`                      | Start the API and the web app with hot reload                             |
-| `npm run build`                    | Build the API and the web app                                             |
-| `npm run lint`                     | Lint every workspace                                                      |
-| `npm run format`                   | Format every workspace with Prettier                                      |
-| `npm run format:check`             | Check formatting without writing                                          |
-| `npm run typecheck`                | Type-check every workspace                                                |
-| `npm test`                         | Run the test suite of every workspace                                     |
-| `npm run test:e2e`                 | Run the Playwright suite against the running stack                        |
-| `npm run storybook`                | Serve the stories of the UI kit on http://localhost:6006 (local only)     |
-| `npm run make:feature -- <name>`   | Scaffold a feature in the API and the web app, outside the core           |
-| `npm run make:component -- <name>` | Scaffold a component, its test and its story in `packages/ui/src/custom/` |
-| `npm run remove:showcase`          | Remove the in-app component showcase                                      |
-| `npm run core:check`               | Report what a core update would change, without writing                   |
-| `npm run core:update`              | Update the core files from a template release                             |
-
-The core tools take their arguments after `--`, for example `npm run core:check -- --to 0.2.0`. Each prints its options with `--help`.
-
-### Features, components and the showcase
-
-```bash
-npm run make:feature -- invoices        # GET /api/v1/orgs/:orgSlug/invoices and the page /app/:orgSlug/invoices
-npm run make:component -- data-card     # import { DataCard } from '@dash/ui/custom'
-cd apps/api && node ace codegen         # the typed client learns the new endpoint
-```
-
-The generators write only to the folders the product owns (`apps/api/app/features/`, `apps/web/src/features/`, `packages/ui/src/custom/`) and register the feature through `apps/api/app/features/index.ts` and `apps/web/src/features/index.ts`. [Extending](docs/guides/extending.md) lists every file.
-
-`npm run remove:showcase` deletes the development showcase at `/app/:orgSlug/dev/components`: its page and tests in `apps/web/src/pages/`, its catalogs `apps/web/src/locales/{en,es}/showcase.ts`, and its route and catalog lines in `apps/web/src/main.tsx` and `apps/web/src/locales/{en,es}/index.ts`. Home, the dashboard, the UI kit and Storybook stay. A second run changes nothing and exits 0. In a generated project the removal is recorded, so a core update never brings the showcase back.
-
-### Updating the core
-
-A project generated by the installer can take in newer template releases. The update replaces the core files the project has not modified, reapplies the name, locale and palette of the product, keeps and reports the core files the team edited, and never writes the feature folders, the env files, the docs or the manifests.
-
-```bash
-npm run core:check                                # what an update would change
-npm run core:update -- --dry-run                  # the same, as an update preview
-npm run core:update                               # apply the latest release
-npm run core:update -- --to 0.2.0                 # apply a given release
-npm run core:check -- --source ../dash-starter    # compare with a local checkout, offline
-```
-
-[Updating](docs/guides/updating.md) covers the metadata, the report, the exit codes and how to resolve a kept file.
-
----
-
-## End-to-end tests
-
-The journeys live in `e2e/` and drive a real browser against the real stack: the API, the database, Mailpit and a signed webhook of the payment provider. They need the stack up, so they use their own ports and never touch the ones of your development session.
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml exec api node ace db:seed
-
-npm run test:e2e
-```
-
-| Service    | URL                   |
-| ---------- | --------------------- |
-| Web app    | http://localhost:5174 |
-| API        | http://localhost:3334 |
-| Mailpit    | http://localhost:8026 |
-| PostgreSQL | localhost:5434        |
-
-`e2e/README.md` documents the helpers, the variables (`E2E_WEB_URL`, `E2E_MAILPIT_URL`, `E2E_CREEM_WEBHOOK_SECRET`) and the journeys.
-
-### The ports of the stack
-
-The name of the Compose project and the ports the host publishes are variables, so a worktree can run its own stack next to yours. The defaults are the ones above.
-
-| Variable                   | Default        | What it is                            |
-| -------------------------- | -------------- | ------------------------------------- |
-| `DEV_COMPOSE_PROJECT_NAME` | `dash-starter` | The name of the development stack     |
-| `DB_HOST_PORT`             | `5433`         | The port of PostgreSQL                |
-| `MAILPIT_HOST_PORT`        | `8025`         | The web UI of the catcher of the mail |
-| `SMTP_HOST_PORT`           | `1025`         | The SMTP of the catcher of the mail   |
-| `API_HOST_PORT`            | `3333`         | The API                               |
-| `WEB_HOST_PORT`            | `5173`         | The web app                           |
-
-`COMPOSE_PROJECT_NAME` is the override of Compose itself: when it is set, it names every stack of the machine.
-
-The end-to-end stack has the same variables with the `E2E_` prefix: `E2E_COMPOSE_PROJECT_NAME` (`dash-e2e`), `E2E_DB_HOST_PORT` (`5434`), `E2E_MAILPIT_HOST_PORT` (`8026`), `E2E_SMTP_HOST_PORT` (`1026`), `E2E_API_HOST_PORT` (`3334`) and `E2E_WEB_HOST_PORT` (`5174`).
-
-The harness gives a feature its own worktree, with its own branch, its own environment files and its own stack:
-
-```bash
-node plugins/dsh/scripts/worktree.mjs add <change-id> <slot>
-cd .claude/worktrees/<change-id>
-docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
-```
-
-The slot takes the base port plus ten times the slot, so slot 1 and slot 2 never fight for a port. `node plugins/dsh/scripts/worktree.mjs remove <change-id> <slot>` takes the worktree, its stack and its branch down. `docs/harness.md` explains the whole harness.
-
----
-
-## Configuration
-
-All API configuration lives in `apps/api/.env` and is validated at boot: a missing or malformed value stops the API with a message naming the variable. See `apps/api/.env.example` for the full list.
-
-The variables you are most likely to change:
-
-| Variable                                 | Meaning                                                                                                                                              |
-| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `APP_KEY`                                | Signing key. Required.                                                                                                                               |
-| `APP_URL`                                | Public URL of the API, used to build links in emails.                                                                                                |
-| `DEFAULT_LOCALE`                         | `en` or `es`.                                                                                                                                        |
-| `MAIL_TRANSPORT`                         | `smtp`, `brevo` or `fake`.                                                                                                                           |
-| `BREVO_API_KEY`                          | Required in production.                                                                                                                              |
-| `CREEM_API_KEY`, `CREEM_WEBHOOK_SECRET`  | Creem credentials and the webhook signing secret.                                                                                                    |
-| `AI_PROVIDER`                            | Default provider of the aliases: `stub`, `anthropic`, `openai`, `google`, `deepseek`, `openrouter`, `qwen`, `kimi`, `glm`, `ollama` or `compatible`. |
-| `AI_CHAT_PROVIDER`, `AI_CHAT_MODEL` etc. | The provider and the model of each alias.                                                                                                            |
-
-See `docs/ai.md`, `docs/billing.md` and `docs/mcp.md` for the details of each integration.
-
----
-
-## Color palettes
-
-The product ships six palettes: `line` (the default), `ink`, `ocean`, `forest`, `plum` and `ember`. Each one is a full set of design tokens for light and dark mode in `packages/ui/src/styles/palettes.css`, the stylesheet of the UI kit (`@dash/ui/styles.css`); components only read tokens, so a palette re-colours everything without code changes.
-
-**Choose the palette of the product.** Every visitor sees one default palette. The installer asks for it (`--palette <id>`); to change it later, edit one line in `apps/web/src/lib/palettes.ts`:
-
-```ts
-export const DEFAULT_PALETTE: PaletteId = 'ocean'
-```
-
-An id that does not exist fails `npm run typecheck`.
-
-**Signed-in users.** The top bar of the dashboard has the palette picker. A pick applies at once, is saved in the account (`users.palette`) and follows the user to every device; it overrides the default for that user only. A user who never picked one sees the default.
-
-**Demo mode.** `DEMO_MODE=true` in the root `.env` shows a palette picker on the public site, so visitors without an account can try every palette. Their pick is remembered in their browser only; signing in replaces it with the palette saved in the account, or with the default. The template runs with it on; the installer turns it off in every new project. The web app reads it as `VITE_DEMO_MODE`, at dev-server start in Compose and at build time in the production image, so changing it needs a restart or a rebuild.
-
-**Add a palette.** Add a light block (`[data-palette='<id>']`) and a dark block (`.dark[data-palette='<id>'], .dark [data-palette='<id>']`) to `palettes.css` with every token of the `line` blocks, add the id to `PALETTE_IDS`, its name to the `palette…` keys in `src/locales/{en,es}/common.ts` and the id to the `palette` enum of `apps/api/app/validators/profile.ts`. `npm test` fails until the palette defines every token, meets WCAG AA contrast and keeps its six station colours apart.
+[Getting started](docs/guides/getting-started.md) explains each step, the commands and the checks.
 
 ---
 
 ## The installer
 
-```bash
-npx create-dash-starter my-product
-```
-
-The installer downloads the template release matching its own version, rebrands every placeholder, writes the `.env` files with fresh secrets, writes the update metadata in `.dash/`, initializes git with the commit gate of `.githooks` and — optionally — creates a GitHub repository and boots the stack.
-
-The generated project keeps `packages/ui` and `packages/core-tools`; the installer itself and `openspec/changes` are left out.
-
-Flags (all optional, all work with `--yes` for a non-interactive run):
-
-```
---name <name>          Product name, e.g. "Acme AI"
---slug <slug>          Kebab-case slug, e.g. acme-ai
---description <text>   One-line description
---locale <en|es>       Default locale
---palette <id>         Default color palette: line, ink, ocean, forest, plum or ember
---email <address>      Support email
---template <path|url>  Use a local directory instead of the published release
---yes                  Accept every default without prompting
---no-install           Skip `npm install`
---no-boot              Skip `docker compose up`
---no-git               Skip `git init`
---github               Create a private GitHub repository with `gh`
-```
-
-### The update metadata
-
-The installer writes two files once the project has its final bytes:
-
-| File                 | What it holds                                                                                                                       |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `.dash/install.json` | The identity of the product, the token map of the rebrand, the template removals, the locale, the palette and `removedCapabilities` |
-| `.dash/core.json`    | The upstream repository, the installed version, the core and product globs, and a SHA-256 checksum of every core file               |
-
-- `.dash/` holds no secret: the keys live in the env files only.
-- It belongs in git. The installer's first commit includes it; `core:update` rewrites `.dash/core.json`, and `remove:showcase` rewrites both files.
-- It is what makes `npm run core:update` and `npm run core:check` work. Only projects generated from the release that introduced it onward can update; a clone of the template has none.
-- The directory is always `.dash`, whatever the product is called. The recorded repository is `DASH_TEMPLATE_REPO` when it is set at install time, `github:Dash-AI-Tools/dash-starter` otherwise.
-
-### Releases
-
-The installer and the template are released together: the version of the installer is the version of the template, and the installer downloads the release tagged `v<version>`. To publish a new version, bump the version of the root `package.json`, the version of `packages/create-app/package.json` and the version of `packages/create-app/template.json`, then tag the commit:
+Create a new product from the latest release of the template:
 
 ```bash
-npm version 0.2.0 --workspaces --include-workspace-root --no-git-tag-version
-git tag v0.2.0
-git push origin v0.2.0
+curl -fsSL https://raw.githubusercontent.com/Dash-AI-Tools/dash-starter/main/install.sh | bash -s -- my-product
 ```
 
-The tag is what the installer resolves, so a tag that does not exist makes the installer fail with a clear message instead of generating a project from an older release. `npm run core:update` resolves the same tags: `--to 0.2.0` selects `v0.2.0`, and no `--to` takes the latest GitHub release.
+[`packages/create-app/README.md`](packages/create-app/README.md) lists the flags, the environment variables, the prerequisites and the release contract.
 
 ---
 
-## Deployment
+## Documentation
 
-`docker-compose.prod.yml` builds optimized images, runs migrations before the API accepts traffic and serves the SPA, `/api` and `/mcp` from a single origin behind nginx.
+The documentation is an [OKF v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle in [`docs/`](docs/index.md): markdown with YAML frontmatter, readable by people and agents.
 
-```bash
-docker compose -f docker-compose.prod.yml up -d --build
-```
-
-The web app is then on http://localhost:8080.
-
----
-
-## Project layout
-
-```
-apps/api
-  app/            controllers, models, services, tools, mails, middleware
-  app/features/   the features of the product (owned by the product)
-  config/         app, auth, database, mail, limiter, drive, ai
-  database/       migrations and seeders
-  resources/lang/ en and es message catalogs
-  start/          env, kernel, routes
-  tests/          Japa unit and functional suites
-apps/web
-  src/components/ patterns, app shell and feature components
-  src/features/   the features of the product (owned by the product)
-  src/pages/      one page per route
-  src/lib/        the typed API client and the hooks of each feature
-  src/locales/    en and es translation catalogs
-packages/ui           the UI kit: primitives, styles, stories; src/custom/ is owned by the product
-packages/core-tools   core update, generators, showcase removal
-packages/create-app   the installer
-plugins/dsh           the development harness: agents, commands, guardrails
-e2e                   Playwright journeys and helpers
-docs                  the OKF bundle: guides and reference
-```
-
----
-
-## Contributing
-
-```bash
-npm run lint && npm run format:check && npm run typecheck && npm test
-```
-
-`npm install` points git at `.githooks` (the `prepare` script), so every commit passes through `.githooks/pre-commit`: the staged files are formatted, linted, typechecked and tested, and a staged secret is refused. `git commit --no-verify` skips it. `docs/harness.md` describes the gate and the rest of the harness.
-
-Changes land as conventional commits. The template is a starting point: delete what you do not need.
+| Page                                              | What it covers                                                                       |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [Index](docs/index.md)                            | The entry point of the bundle and the five-minute path.                              |
+| [Guides](docs/guides/index.md)                    | The list of the guides.                                                              |
+| [What you get](docs/guides/what-you-get.md)       | The product, feature by feature, the repository and the local fallbacks.             |
+| [Getting started](docs/guides/getting-started.md) | From the installer or a clone to a signed-in account; the commands and the checks.   |
+| [Configuration](docs/guides/configuration.md)     | The environment files, the ports of the stack, mail, payments, AI, storage, secrets. |
+| [Customizing](docs/guides/customizing.md)         | Name, palettes, locales, removing features and the showcase, the first change.       |
+| [Extending](docs/guides/extending.md)             | The feature registries, `make:feature`, `make:component` and Storybook.              |
+| [Updating](docs/guides/updating.md)               | The update metadata, `core:check` and `core:update`.                                 |
+| [Testing](docs/guides/testing.md)                 | The suites, the test database, the end-to-end stack and CI.                          |
+| [Deployment](docs/guides/deployment.md)           | The production images, secrets, migrations and TLS.                                  |
+| [Troubleshooting](docs/guides/troubleshooting.md) | The failures a new checkout hits first.                                              |
+| [Architecture](docs/architecture.md)              | The map of the repository, the layout and the file to imitate for each change.       |
+| [AI](docs/ai.md)                                  | The aliases, the providers, the quotas, the images and the errors.                   |
+| [Billing](docs/billing.md)                        | The plans, Creem, the webhook, the price sync and the emails.                        |
+| [MCP](docs/mcp.md)                                | The endpoint, the API keys, the scopes and every tool.                               |
+| [Harness](docs/harness.md)                        | The `dsh` plugin: agents, commands, guardrails, the commit gate and the worktrees.   |
+| [Change log](docs/log.md)                         | The changes to the documentation, newest first.                                      |
+| [The installer](packages/create-app/README.md)    | Flags, environment variables, the update metadata and the releases.                  |

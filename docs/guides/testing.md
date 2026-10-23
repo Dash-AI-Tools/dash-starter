@@ -25,16 +25,17 @@ Run from the repository root; each command fans out to every workspace.
 
 ## The suites
 
-| Suite          | Path                                 | Needs a database | Command                            |
-| -------------- | ------------------------------------ | ---------------- | ---------------------------------- |
-| API unit       | `apps/api/tests/unit/`               | no               | `node ace test unit`               |
-| API functional | `apps/api/tests/functional/`         | yes              | `node ace test functional`         |
-| Web unit       | `apps/web/src/**/*.test.tsx`         | no               | `vitest run`                       |
-| UI kit         | `packages/ui/src/**/*.test.{ts,tsx}` | no               | `vitest run`                       |
-| Core tools     | `packages/core-tools/test/`          | no               | `node --test "test/**/*.test.js"`  |
-| Installer      | `packages/create-app/test/`          | no               | `node --test "test/**/*.test.js"`  |
-| Harness        | `plugins/dsh/scripts/`               | no               | `node --test "scripts/*.test.mjs"` |
-| End to end     | `e2e/specs/`                         | the full stack   | `npm run test:e2e`                 |
+| Suite          | Path                                              | Needs a database | Command                            |
+| -------------- | ------------------------------------------------- | ---------------- | ---------------------------------- |
+| API unit       | `apps/api/tests/unit/`                            | no               | `node ace test unit`               |
+| API functional | `apps/api/tests/functional/`                      | yes              | `node ace test functional`         |
+| Web unit       | `apps/web/src/**/*.test.tsx`                      | no               | `vitest run`                       |
+| UI kit         | `packages/ui/src/**/*.test.{ts,tsx}`              | no               | `vitest run`                       |
+| Core tools     | `packages/core-tools/test/`                       | no               | `node --test "test/**/*.test.js"`  |
+| Installer      | `packages/create-app/test/`                       | no               | `node --test "test/**/*.test.js"`  |
+| Install script | `packages/create-app/test/install-script.test.js` | no               | `node --test "test/**/*.test.js"`  |
+| Harness        | `plugins/dsh/scripts/`                            | no               | `node --test "scripts/*.test.mjs"` |
+| End to end     | `e2e/specs/`                                      | the full stack   | `npm run test:e2e`                 |
 
 The API functional tests use Japa and the `Browser` helper in
 `apps/api/tests/helpers/browser.ts` to keep a signed-in session. The web tests use
@@ -44,6 +45,8 @@ components touch.
 The UI kit has its own Vitest setup, `packages/ui/src/test/setup.ts`. Its suite also
 fails when a primitive has no story, imports the web app, or when a workflow or an image
 builds Storybook. The core tools run on local fixtures and never reach the network.
+The install script test runs `install.sh` with stub `curl` and `npm` on the `PATH`, and
+its interactive case needs `python3` for a pseudo-terminal; it is skipped without it.
 
 ## The test database
 
@@ -95,13 +98,13 @@ review.
 
 `.github/workflows/ci.yml` runs the same checks on every pull request and on `main`:
 
-| Job              | What it does                                                                                                                                              |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lint-typecheck` | `node ace codegen`, format, lint, typecheck                                                                                                               |
-| `test`           | Postgres service, migrations, `npm test`                                                                                                                  |
-| `build`          | `npm run build`; the web build must hold no Storybook asset                                                                                               |
-| `e2e`            | The Compose stack, the seed, `npm run test:e2e`                                                                                                           |
-| `installer`      | Generates a project with the installer and checks it; then runs `core:check`, `remove:showcase` and both generators on it, with lint, typecheck and tests |
+| Job              | What it does                                                                                                                                                                       |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lint-typecheck` | `node ace codegen`, format, lint, typecheck                                                                                                                                        |
+| `test`           | Postgres service, migrations, `npm test`                                                                                                                                           |
+| `build`          | `npm run build`; the web build must hold no Storybook asset                                                                                                                        |
+| `e2e`            | The Compose stack, the seed, `npm run test:e2e`                                                                                                                                    |
+| `installer`      | `shellcheck install.sh`; generates a project with the installer and checks it; then runs `core:check`, `remove:showcase` and both generators on it, with lint, typecheck and tests |
 
 The commit gate runs a smaller, faster version of the same checks on the staged files;
 [the harness](../harness.md) describes it.

@@ -315,7 +315,7 @@ test('the repository of the project uses the gate of the commit', async () => {
   await readFile(join(target, '.githooks/pre-commit'), 'utf8')
 })
 
-test('the installer and the history of the change do not travel', async () => {
+test('the installer, its script and the history of the change do not travel', async () => {
   const template = await createTemplate()
   const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
   const target = join(workspace, 'acme-ai')
@@ -328,6 +328,7 @@ test('the installer and the history of the change do not travel', async () => {
   })
 
   await assert.rejects(() => readFile(join(target, 'packages/create-app/package.json'), 'utf8'))
+  await assert.rejects(() => readFile(join(target, 'install.sh'), 'utf8'))
   await assert.rejects(() => readFile(join(target, 'openspec/changes/bootstrap/tasks.md'), 'utf8'))
 })
 
@@ -635,7 +636,10 @@ test('the cores and the metadata travel while the installer does not', async () 
   assert.ok(files.includes('.dash/install.json'))
   assert.equal(
     files.some(
-      (file) => file.startsWith('packages/create-app/') || file.startsWith('openspec/changes/')
+      (file) =>
+        file.startsWith('packages/create-app/') ||
+        file === 'install.sh' ||
+        file.startsWith('openspec/changes/')
     ),
     false
   )

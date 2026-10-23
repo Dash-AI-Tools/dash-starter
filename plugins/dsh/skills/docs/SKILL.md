@@ -12,6 +12,6 @@ argument-hint: '[change-id]'
   - a new AI capability, provider or model -> `docs/ai.md`;
   - a new workspace, layer, module boundary or shared contract -> `docs/architecture.md`;
   - a new agent, command or hook -> `docs/harness.md`;
-  - a new way to run or check the repository -> the root `README.md` and `e2e/README.md`.
+  - a new way to run or check the repository -> `docs/guides/` (and the quick start of the root `README.md` only when it changes the first run), and `e2e/README.md`.
 - A decision that the change does not settle is proposed, not written: the writer lists it as an open question.
 - Report the documents that were updated and the open questions.

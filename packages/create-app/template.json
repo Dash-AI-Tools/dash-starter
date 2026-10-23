@@ -68,9 +68,10 @@
     "package-lock.json",
     "**/package-lock.json",
     "openspec/changes/**",
-    "packages/create-app/**"
+    "packages/create-app/**",
+    "install.sh"
   ],
-  "removePaths": ["packages/create-app", "openspec/changes"],
+  "removePaths": ["packages/create-app", "install.sh", "openspec/changes"],
   "removeSections": [{ "file": "README.md", "heading": "## The installer" }],
   "removeLines": [{ "file": "README.md", "text": "packages/create-app" }],
   "removeWorkflowJobs": ["installer"],

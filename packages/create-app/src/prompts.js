@@ -14,10 +14,11 @@ const AI_PROVIDERS = Object.keys(AI_KEYS)
 export class Cancelled extends Error {}
 
 /**
- * Runs a question of the installer and refuses the cancellation.
+ * Waits for the answer of a question of the installer and refuses the
+ * cancellation. The question is the prompt itself, already on screen.
  */
 async function ask(question) {
-  const answer = await question()
+  const answer = await question
 
   if (isCancel(answer)) {
     cancel('The installation was cancelled.')
