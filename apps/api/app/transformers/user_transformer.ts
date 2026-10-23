@@ -13,6 +13,7 @@ export default class UserTransformer extends BaseTransformer<User> {
       'emailVerifiedAt',
       'locale',
       'theme',
+      'palette',
       'avatarPath',
       'pendingEmail',
       'termsVersion',

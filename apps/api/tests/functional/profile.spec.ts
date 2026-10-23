@@ -100,6 +100,58 @@ test.group('Profile', () => {
     assert.equal(user!.theme, 'dark')
   })
 
+  test('saves the palette and returns it in the session', async ({ client, assert }) => {
+    await createUser('ada@example.com')
+    const browser = await signIn(client, 'ada@example.com')
+
+    const response = await browser.patch('/api/v1/account/profile', {
+      body: { palette: 'plum' },
+    })
+
+    response.assertStatus(200)
+    assert.equal(response.body().user.palette, 'plum')
+
+    const user = await User.findBy('email', 'ada@example.com')
+    assert.equal(user!.palette, 'plum')
+
+    const session = await browser.get('/api/v1/auth/session')
+    session.assertStatus(200)
+    assert.equal(session.body().user.palette, 'plum')
+  })
+
+  test('refuses an unknown palette and keeps the saved one', async ({ client, assert }) => {
+    await createUser('ada@example.com')
+    const browser = await signIn(client, 'ada@example.com')
+
+    await browser.patch('/api/v1/account/profile', { body: { palette: 'plum' } })
+
+    const response = await browser.patch('/api/v1/account/profile', {
+      body: { palette: 'neon' },
+    })
+
+    response.assertStatus(422)
+    const error = response
+      .body()
+      .errors.find((entry: { field: string }) => entry.field === 'palette')
+    assert.equal(error.code, 'enum')
+
+    const user = await User.findBy('email', 'ada@example.com')
+    assert.equal(user!.palette, 'plum')
+  })
+
+  test('never shares the palette with another user', async ({ client, assert }) => {
+    await createUser('ada@example.com')
+    await createUser('grace@example.com')
+
+    const ada = await signIn(client, 'ada@example.com')
+    const grace = await signIn(client, 'grace@example.com')
+
+    await ada.patch('/api/v1/account/profile', { body: { palette: 'plum' } })
+
+    const graceSession = await grace.get('/api/v1/auth/session')
+    assert.isNull(graceSession.body().user.palette)
+  })
+
   test('refuses a locale and a theme it does not know', async ({ client, assert }) => {
     await createUser('ada@example.com')
     const browser = await signIn(client, 'ada@example.com')

@@ -337,7 +337,7 @@ export class SubscriptionSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'createdAt', 'email', 'emailVerifiedAt', 'fullName', 'id', 'lastOrganizationId', 'locale', 'password', 'pendingEmail', 'termsAcceptedAt', 'termsVersion', 'theme', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'createdAt', 'email', 'emailVerifiedAt', 'fullName', 'id', 'lastOrganizationId', 'locale', 'palette', 'password', 'pendingEmail', 'termsAcceptedAt', 'termsVersion', 'theme', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null
@@ -355,6 +355,8 @@ export class UserSchema extends BaseModel {
   declare lastOrganizationId: number | null
   @column()
   declare locale: string
+  @column()
+  declare palette: string | null
   @column({ serializeAs: null })
   declare password: string
   @column()

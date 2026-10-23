@@ -92,11 +92,11 @@ createRoot(document.getElementById('root')!).render(
     <I18nProvider>
       <ConsentProvider>
         <ThemeProvider>
-          <PaletteProvider>
-            <AppProviders>
+          <AppProviders>
+            <PaletteProvider>
               <RouterProvider router={router} />
-            </AppProviders>
-          </PaletteProvider>
+            </PaletteProvider>
+          </AppProviders>
         </ThemeProvider>
       </ConsentProvider>
     </I18nProvider>

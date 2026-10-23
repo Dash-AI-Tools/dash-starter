@@ -11,6 +11,12 @@ const LOCALES = ['en', 'es'] as const
 const THEMES = ['light', 'dark', 'system'] as const
 
 /**
+ * The colour palettes a user can save. They match the palettes of the web
+ * app in `apps/web/src/lib/palettes.ts`.
+ */
+const PALETTES = ['line', 'ink', 'ocean', 'forest', 'plum', 'ember'] as const
+
+/**
  * The payload of the update of the profile. Every field is optional, so the
  * form can send only what changed.
  */
@@ -18,6 +24,7 @@ export const updateProfileValidator = vine.create({
   fullName: vine.string().trim().minLength(1).maxLength(120).optional(),
   locale: vine.enum(LOCALES).optional(),
   theme: vine.enum(THEMES).optional(),
+  palette: vine.enum(PALETTES).optional(),
 })
 
 /**

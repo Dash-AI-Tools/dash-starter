@@ -27,6 +27,7 @@ const user = {
   emailVerifiedAt: NOW,
   locale: 'en',
   theme: 'system',
+  palette: null,
   avatarPath: null,
   createdAt: NOW,
   updatedAt: NOW,
