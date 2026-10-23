@@ -129,11 +129,13 @@ export async function removeWorktree({ root = repoRoot(), changeId, slot }) {
   const path = worktreePath(root, changeId)
   if (!existsSync(path)) throw new Error(`${path} does not exist`)
 
-  // The stacks of the worktree go down with it.
-  await run('docker', ['compose', '-f', 'docker-compose.yml', 'down'], path)
+  // The stacks of the worktree go down with it, volumes included: the next
+  // worktree of the same slot gets the same project name, and must not start
+  // on the database of this one.
+  await run('docker', ['compose', '-f', 'docker-compose.yml', 'down', '-v'], path)
   await run(
     'docker',
-    ['compose', '-f', 'docker-compose.yml', '-f', 'docker-compose.e2e.yml', 'down'],
+    ['compose', '-f', 'docker-compose.yml', '-f', 'docker-compose.e2e.yml', 'down', '-v'],
     path
   )
 
