@@ -18,7 +18,7 @@ The harness SHALL be delivered as a project-local Claude Code plugin named `dsh`
 
 ### Requirement: Specialist agents
 
-The harness SHALL provide the agents `feature-orchestrator`, `backend-dev`, `frontend-dev`, `mcp-dev`, `ai-dev`, `docs-writer`, `e2e-tester` and `security-reviewer`. Each definition SHALL state its scope, the paths it owns, the paths it must not touch, the commands it runs and its definition of done, using this repository's real paths and commands. The definition of every agent that writes code SHALL tell it to scaffold through the generators of the harness before writing a file by hand, and to read the trimmed check output instead of the raw one.
+The harness SHALL provide the agents `feature-orchestrator`, `backend-dev`, `frontend-dev`, `mcp-dev`, `ai-dev`, `docs-writer`, `e2e-tester` and `security-reviewer`. Each definition SHALL state its scope, the paths it owns, the paths it must not touch, the commands it runs and its definition of done, using this repository's real paths and commands.
 
 #### Scenario: Agent definition is complete
 
@@ -29,6 +29,10 @@ The harness SHALL provide the agents `feature-orchestrator`, `backend-dev`, `fro
 
 - **WHEN** `frontend-dev` is asked to implement a task that needs a new API endpoint
 - **THEN** it stops and reports the missing backend task instead of editing `apps/api/`
+
+### Requirement: Generate before writing
+
+The definition of every agent that writes code SHALL tell it to scaffold through the generators of the harness before writing a file by hand, and to read the trimmed check output instead of the raw one.
 
 #### Scenario: A specialist generates before it writes
 
