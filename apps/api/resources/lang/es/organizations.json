@@ -5,5 +5,16 @@
   "invitation_sent": "La invitación se envió a {email}",
   "name_mismatch": "El nombre no coincide con la organización ({name})",
   "invitation_not_pending": "La invitación ya se ha utilizado",
-  "cannot_transfer_to_self": "La propiedad no se puede transferir a uno mismo"
+  "cannot_transfer_to_self": "La propiedad no se puede transferir a uno mismo",
+  "import_file_missing": "Adjunta un archivo CSV",
+  "import_file_type": "El archivo debe ser un CSV",
+  "import_file_too_large": "El archivo debe pesar 1 MB o menos",
+  "import_too_many_rows": "El archivo debe tener 500 filas o menos",
+  "import_empty": "El archivo no tiene filas que importar",
+  "import_header_missing": "La primera línea debe ser una cabecera con una columna email",
+  "import_invalid_email": "\"{email}\" no es una dirección de correo electrónico válida",
+  "import_invalid_role": "\"{role}\" no es un rol válido. Usa owner, admin o member",
+  "import_row_failed": "No se pudo importar la fila",
+  "import_too_many_columns": "La fila no puede tener más columnas que la cabecera",
+  "import_email_missing": "La fila no tiene dirección de correo electrónico"
 }

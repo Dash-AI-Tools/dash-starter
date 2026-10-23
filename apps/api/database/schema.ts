@@ -94,6 +94,29 @@ export class BillingEventSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class BulkImportSchema extends BaseModel {
+  static $columns = ['createdAt', 'errors', 'fileName', 'id', 'importedRows', 'organizationId', 'state', 'totalRows', 'updatedAt'] as const
+  $columns = BulkImportSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare errors: any | null
+  @column()
+  declare fileName: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare importedRows: number
+  @column()
+  declare organizationId: number
+  @column()
+  declare state: string
+  @column()
+  declare totalRows: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class ConversationSchema extends BaseModel {
   static $columns = ['createdAt', 'id', 'organizationId', 'title', 'updatedAt', 'userId'] as const
   $columns = ConversationSchema.$columns

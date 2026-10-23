@@ -18,6 +18,10 @@ const FAILED_LOGIN_WINDOW = '15 minutes'
 const CHAT_REQUESTS = 20
 const CHAT_WINDOW = '1 minute'
 
+/** Bulk imports allowed per organization and window. */
+const IMPORT_REQUESTS = 5
+const IMPORT_WINDOW = '1 hour'
+
 /** Window of the budgets of the MCP server. */
 const MCP_WINDOW = '1 minute'
 
@@ -30,6 +34,7 @@ const emailLimiter = () => limiter.use({ requests: EMAIL_REQUESTS, duration: EMA
 const failedLoginLimiter = () =>
   limiter.use({ requests: FAILED_LOGIN_REQUESTS, duration: FAILED_LOGIN_WINDOW })
 const chatLimiter = () => limiter.use({ requests: CHAT_REQUESTS, duration: CHAT_WINDOW })
+const importLimiter = () => limiter.use({ requests: IMPORT_REQUESTS, duration: IMPORT_WINDOW })
 /**
  * The limiter of the MCP server depends on the plan of the organization, so
  * the manager keeps one for every limit it is asked for.
@@ -85,6 +90,14 @@ export async function penalizeFailedLogin<T>(
  */
 export async function consumeChatBudget(userId: number): Promise<void> {
   await chatLimiter().consume(`chat:user:${userId}`)
+}
+
+/**
+ * Applies the per-organization budget of the bulk imports, so one import
+ * cannot be used to send an unbounded number of invitations.
+ */
+export async function consumeImportBudget(organizationId: number): Promise<void> {
+  await importLimiter().consume(`imports:org:${organizationId}`)
 }
 
 /**

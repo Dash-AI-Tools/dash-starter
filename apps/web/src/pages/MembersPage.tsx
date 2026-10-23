@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useCallback, useMemo, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
 import { InviteDialog } from '@/components/organizations/invite-dialog'
 import { DataTable } from '@/components/patterns/data-table'
@@ -138,7 +138,7 @@ export default function MembersPage() {
                       toast.error(toApiFailure(error).error.message || t('noPermission'))
                     }
                   }}
-                  className="h-7 rounded-lg border border-input bg-transparent px-2 text-sm"
+                  className="h-7 rounded-lg border border-input bg-transparent px-2.5 text-sm"
                 >
                   <option value="admin">{t('roleAdmin')}</option>
                   <option value="member">{t('roleMember')}</option>
@@ -177,7 +177,16 @@ export default function MembersPage() {
     <div className="space-y-6 p-6">
       <PageHeader
         title={t('membersTitle')}
-        actions={manages ? <InviteDialog orgSlug={orgSlug} /> : null}
+        actions={
+          manages ? (
+            <div className="flex items-center gap-2">
+              <Button variant="outline" render={<Link to={`/app/${orgSlug}/members/import`} />}>
+                {t('importMembers')}
+              </Button>
+              <InviteDialog orgSlug={orgSlug} />
+            </div>
+          ) : null
+        }
       />
 
       <DataTable

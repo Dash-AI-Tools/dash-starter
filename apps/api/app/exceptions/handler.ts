@@ -45,6 +45,7 @@ const ERROR_OVERRIDES: Record<string, { status: number; message: string }> = {
   E_INVALID_API_KEY: { status: 401, message: 'invalid_api_key' },
   E_API_KEY_NOT_FOUND: { status: 404, message: 'api_key_not_found' },
   E_MCP_NOT_ENABLED: { status: 403, message: 'mcp_not_enabled' },
+  E_BULK_IMPORT_NOT_FOUND: { status: 404, message: 'bulk_import_not_found' },
 }
 
 /**
@@ -81,6 +82,7 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   invalid_api_key: 'The API key is not valid',
   api_key_not_found: 'The API key was not found',
   mcp_not_enabled: 'The MCP server is not available on your plan. Upgrade to unlock it',
+  bulk_import_not_found: 'The import was not found',
 }
 
 export default class HttpExceptionHandler extends ExceptionHandler {

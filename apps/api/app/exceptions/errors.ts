@@ -200,3 +200,14 @@ export const E_MCP_NOT_ENABLED = createError(
   'E_MCP_NOT_ENABLED',
   403
 )
+
+/**
+ * The bulk import does not exist, or it belongs to another organization.
+ * Both answers are the same, so the API never reveals the imports of the
+ * other organizations.
+ */
+export const E_BULK_IMPORT_NOT_FOUND = createError(
+  'The import was not found',
+  'E_BULK_IMPORT_NOT_FOUND',
+  404
+)

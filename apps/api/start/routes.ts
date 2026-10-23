@@ -99,6 +99,18 @@ router
       .use(middleware.auth())
 
     /**
+     * The bulk import of invitations. The file is read in the request and
+     * every row becomes an invitation; the state of the import stays in the
+     * history of the organization.
+     */
+    router
+      .group(() => {
+        router.post('orgs/:orgSlug/imports', [controllers.BulkImport, 'store'])
+        router.get('orgs/:orgSlug/imports/:id', [controllers.BulkImport, 'show'])
+      })
+      .use([middleware.auth(), middleware.org(), middleware.verified()])
+
+    /**
      * The setup of the first organization of the user: the progress is saved
      * after every step, so the user can come back to it later.
      */

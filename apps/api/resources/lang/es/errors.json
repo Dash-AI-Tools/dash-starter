@@ -29,5 +29,6 @@
   "conversation_not_found": "No se encontró la conversación",
   "invalid_api_key": "La clave API no es válida",
   "api_key_not_found": "No se encontró la clave API",
-  "mcp_not_enabled": "El servidor MCP no está disponible en tu plan. Mejora el plan para desbloquearlo"
+  "mcp_not_enabled": "El servidor MCP no está disponible en tu plan. Mejora el plan para desbloquearlo",
+  "bulk_import_not_found": "No se encontró la importación"
 }

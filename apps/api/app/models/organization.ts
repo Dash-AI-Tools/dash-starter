@@ -1,6 +1,7 @@
 import { OrganizationSchema } from '#database/schema'
 import { hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
+import BulkImport from '#models/bulk_import'
 import Invitation from '#models/invitation'
 import Membership from '#models/membership'
 
@@ -31,6 +32,12 @@ export default class Organization extends OrganizationSchema {
    */
   @hasMany(() => Invitation)
   declare invitations: HasMany<typeof Invitation>
+
+  /**
+   * The bulk imports of invitations of the organization.
+   */
+  @hasMany(() => BulkImport)
+  declare imports: HasMany<typeof BulkImport>
 
   /**
    * The progress of the setup of the organization.

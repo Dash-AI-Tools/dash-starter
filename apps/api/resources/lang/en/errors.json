@@ -29,5 +29,6 @@
   "conversation_not_found": "The conversation was not found",
   "invalid_api_key": "The API key is not valid",
   "api_key_not_found": "The API key was not found",
-  "mcp_not_enabled": "The MCP server is not available on your plan. Upgrade to unlock it"
+  "mcp_not_enabled": "The MCP server is not available on your plan. Upgrade to unlock it",
+  "bulk_import_not_found": "The import was not found"
 }

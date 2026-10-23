@@ -48,6 +48,10 @@ const routes: RouteObject[] = [
       { path: 'chat', ...page(() => import('./pages/ChatPage')) },
       { path: 'members', ...page(() => import('./pages/MembersPage')) },
       {
+        path: 'members/import',
+        ...page(() => import('./pages/ImportMembersPage')),
+      },
+      {
         path: 'settings',
         ...page(() => import('./pages/OrganizationSettingsPage')),
       },
