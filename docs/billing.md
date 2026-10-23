@@ -14,6 +14,7 @@ The billing of the starter is built on [Creem](https://creem.io). The catalog of
 - [The catalog of plans](#the-catalog-of-plans)
 - [Configuring Creem](#configuring-creem)
 - [The webhook](#the-webhook)
+- [The invoices](#the-invoices)
 - [Syncing the prices](#syncing-the-prices)
 - [The endpoints](#the-endpoints)
 - [The emails](#the-emails)
@@ -138,6 +139,73 @@ A failed payment does not take the access away right away: the organization keep
 
 ---
 
+## The invoices
+
+The API keeps its own history of what each organization paid or failed to pay. The invoices are written by the webhook, from the events of Creem; no endpoint creates, edits or deletes one. The code is in `apps/api/app/services/invoices.ts`.
+
+### The table
+
+The invoices are rows of the `invoices` table:
+
+| Column              | What it holds                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `organization_id`   | The organization. The invoices are deleted with it, never by the application.      |
+| `plan`              | The name of the plan that was billed, in the default language of the organization. |
+| `amount`            | The amount, as an integer of cents. Money never travels as a float.                |
+| `currency`          | The ISO code of the currency, three letters.                                       |
+| `state`             | `paid` or `failed`.                                                                |
+| `provider_event_id` | The id of the event of Creem that recorded the invoice. Unique.                    |
+| `created_at`        | When the invoice was recorded. The list is ordered by it.                          |
+
+The amount and the currency are those of the price of the subscription in `plan_prices`.
+
+### The events that record an invoice
+
+| Event                   | The invoice is |
+| ----------------------- | -------------- |
+| `subscription.paid`     | `paid`         |
+| `subscription.past_due` | `failed`       |
+
+Every other event records no invoice. `checkout.completed` records none on purpose: Creem reports the payment of the first period with its own `subscription.paid`, so an invoice on the checkout would count that payment twice. An event that is ignored because it is older than the last applied one records no invoice either.
+
+### Replays
+
+The invoice is recorded inside the transaction that applies the event, right before the event is marked as processed. A replayed delivery is stopped twice:
+
+1. The event is already in `billing_events`, so it is answered as a duplicate and nothing is applied.
+2. `provider_event_id` is unique, so even an event that got past the first check finds its invoice and creates no second one.
+
+The same transaction applies the subscription and records the invoice: either both change or neither does.
+
+### The list
+
+`GET /api/v1/orgs/:orgSlug/billing/invoices` returns the invoices of the organization, newest first:
+
+```json
+{
+  "invoices": [
+    {
+      "id": 2,
+      "plan": "Pro",
+      "amount": 1900,
+      "currency": "USD",
+      "state": "paid",
+      "createdAt": "2026-10-01T08:00:00.000+00:00"
+    }
+  ]
+}
+```
+
+The list is reserved to the `manageBilling` ability: the admins and the owner read it, a member gets 403. It holds only the invoices of the organization of the path.
+
+The billing page lists the invoices with the plan, the amount, the state and the date. The amount is formatted with `Intl.NumberFormat` and its currency, in the language of the interface. An organization without invoices sees an empty state.
+
+### What the invoices do not do
+
+There is no PDF, no tax, and no way to edit or void an invoice: Creem is the only source of their state. The receipts of Creem stay in the customer portal.
+
+---
+
 ## Syncing the prices
 
 The prices of the database and the products of Creem are two catalogs that have to agree. The command compares them and fixes the missing half:
@@ -168,6 +236,7 @@ The prices that cost nothing are skipped: the free plan is not sold.
 | `GET`  | `/api/v1/plans`                             | The public catalog, localized to the locale of the request.                               |
 | `GET`  | `/api/v1/orgs/:orgSlug/billing`             | The plan, the status, the period end and the usage of the organization.                   |
 | `POST` | `/api/v1/orgs/:orgSlug/billing/checkout`    | Creates the checkout and returns the URL of Creem. Needs an admin with a confirmed email. |
+| `GET`  | `/api/v1/orgs/:orgSlug/billing/invoices`    | The invoices of the organization, newest first. Needs an admin or the owner.              |
 | `POST` | `/api/v1/orgs/:orgSlug/billing/change-plan` | Moves the subscription to another plan or interval.                                       |
 | `POST` | `/api/v1/orgs/:orgSlug/billing/cancel`      | Cancels the subscription, right away or when the period ends.                             |
 | `GET`  | `/api/v1/orgs/:orgSlug/billing/portal`      | The link of the customer portal, with the invoices and the payment methods.               |

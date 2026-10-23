@@ -158,6 +158,7 @@ router
       .group(() => {
         router.get('orgs/:orgSlug/billing', [controllers.Billing, 'show'])
         router.get('orgs/:orgSlug/billing/portal', [controllers.Billing, 'portal'])
+        router.get('orgs/:orgSlug/billing/invoices', [controllers.Billing, 'invoices'])
         router.post('orgs/:orgSlug/billing/change-plan', [controllers.Billing, 'changePlan'])
         router.post('orgs/:orgSlug/billing/cancel', [controllers.Billing, 'cancel'])
       })

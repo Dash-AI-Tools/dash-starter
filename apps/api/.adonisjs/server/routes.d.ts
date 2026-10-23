@@ -50,6 +50,7 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.invoices': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.change_plan': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.cancel': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.checkout': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -84,6 +85,7 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.invoices': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'api_key.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
@@ -108,6 +110,7 @@ export type ScannedRoutes = {
     'plan.index': { paramsTuple?: []; params?: {} }
     'billing.show': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'billing.portal': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
+    'billing.invoices': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'api_key.index': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.status': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }
     'chat.conversations': { paramsTuple: [ParamValue]; params: {'orgSlug': ParamValue} }

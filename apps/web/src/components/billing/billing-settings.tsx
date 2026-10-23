@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { toast } from 'sonner'
+import { InvoicesSection } from '@/components/billing/invoices-section'
 import { PageHeader } from '@/components/patterns/page-header'
 import {
   Badge,
@@ -293,6 +294,8 @@ export function BillingSettings({ orgSlug }: { orgSlug: string }) {
           </Button>
         ) : null}
       </section>
+
+      <InvoicesSection orgSlug={orgSlug} />
 
       <Dialog open={changing} onOpenChange={setChanging}>
         <DialogContent className="max-w-2xl">

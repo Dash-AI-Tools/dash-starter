@@ -161,6 +161,29 @@ export class InvitationSchema extends BaseModel {
   declare updatedAt: DateTime
 }
 
+export class InvoiceSchema extends BaseModel {
+  static $columns = ['amount', 'createdAt', 'currency', 'id', 'organizationId', 'plan', 'providerEventId', 'state', 'updatedAt'] as const
+  $columns = InvoiceSchema.$columns
+  @column()
+  declare amount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currency: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare organizationId: number
+  @column()
+  declare plan: string
+  @column()
+  declare providerEventId: string
+  @column()
+  declare state: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+}
+
 export class McpUsageEventSchema extends BaseModel {
   static $columns = ['apiKeyId', 'createdAt', 'durationMs', 'id', 'organizationId', 'outcome', 'tool', 'updatedAt'] as const
   $columns = McpUsageEventSchema.$columns

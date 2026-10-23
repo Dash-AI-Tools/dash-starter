@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { MemoryRouter, Route, Routes } from 'react-router'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { API_BASE_URL } from '@/lib/api'
 import { I18nProvider } from '@/lib/i18n'
 import BillingPage from '@/pages/BillingPage'
@@ -26,6 +26,7 @@ const CHECKOUT = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/checkout`
 const CHANGE_PLAN = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/change-plan`
 const CANCEL = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/cancel`
 const PORTAL = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/portal`
+const INVOICES = `${API_BASE_URL}/api/v1/orgs/acme-labs/billing/invoices`
 
 const RENEWAL = '2026-06-15T12:00:00.000Z'
 
@@ -105,13 +106,47 @@ const plans = [
 ]
 
 /**
- * Serves the state of the billing and the catalog of plans.
+ * The invoices of an organization, newest first, as the API returns them.
  */
-function serveBilling(current: () => Record<string, unknown>) {
+const invoices = [
+  {
+    id: 2,
+    plan: 'Business',
+    amount: 4900,
+    currency: 'USD',
+    state: 'failed',
+    createdAt: '2026-05-15T12:00:00.000Z',
+  },
+  {
+    id: 1,
+    plan: 'Pro',
+    amount: 2900,
+    currency: 'USD',
+    state: 'paid',
+    createdAt: '2026-04-15T12:00:00.000Z',
+  },
+]
+
+/**
+ * Serves the state of the billing, the catalog of plans and the invoices.
+ */
+function serveBilling(
+  current: () => Record<string, unknown>,
+  listed: Record<string, unknown>[] = []
+) {
   server.use(
     http.get(BILLING, () => HttpResponse.json({ billing: current() })),
-    http.get(PLANS, () => HttpResponse.json({ plans }))
+    http.get(PLANS, () => HttpResponse.json({ plans })),
+    http.get(INVOICES, () => HttpResponse.json({ invoices: listed }))
   )
+}
+
+/**
+ * The rows of the table of invoices, below its header.
+ */
+async function invoiceRows() {
+  const table = await screen.findByRole('table')
+  return within(table).getAllByRole('row').slice(1)
 }
 
 /**
@@ -136,6 +171,10 @@ function renderBilling(path = '/app/acme-labs/settings/billing') {
 describe('The billing of an organization', () => {
   beforeEach(() => {
     redirectTo.mockClear()
+  })
+
+  afterEach(() => {
+    document.cookie = 'locale=; path=/; max-age=0'
   })
 
   it('shows the plan, the status and the next renewal', async () => {
@@ -313,5 +352,79 @@ describe('The billing of an organization', () => {
     await waitFor(() => {
       expect(redirectTo).toHaveBeenCalledWith('https://portal.test/cus_1')
     })
+  })
+
+  it('lists the invoices in English', async () => {
+    serveBilling(() => billing(), invoices)
+
+    renderBilling()
+
+    expect(await screen.findByText('Invoices')).toBeInTheDocument()
+
+    const table = await screen.findByRole('table')
+    for (const header of ['Plan', 'Amount', 'State', 'Date']) {
+      expect(within(table).getByRole('columnheader', { name: header })).toBeInTheDocument()
+    }
+
+    const [failed, paid] = await invoiceRows()
+    expect(within(failed).getByText('Business')).toBeInTheDocument()
+    expect(within(failed).getByText('$49.00')).toBeInTheDocument()
+    expect(within(failed).getByText('Failed')).toBeInTheDocument()
+    expect(within(failed).getByText('May 15, 2026')).toBeInTheDocument()
+
+    expect(within(paid).getByText('Pro')).toBeInTheDocument()
+    expect(within(paid).getByText('$29.00')).toBeInTheDocument()
+    expect(within(paid).getByText('Paid')).toBeInTheDocument()
+    expect(within(paid).getByText('Apr 15, 2026')).toBeInTheDocument()
+  })
+
+  it('lists the invoices in Spanish', async () => {
+    document.cookie = 'locale=es; path=/'
+    serveBilling(() => billing(), invoices)
+
+    renderBilling()
+
+    expect(await screen.findByText('Facturas')).toBeInTheDocument()
+
+    const table = await screen.findByRole('table')
+    for (const header of ['Plan', 'Importe', 'Estado', 'Fecha']) {
+      expect(within(table).getByRole('columnheader', { name: header })).toBeInTheDocument()
+    }
+
+    /**
+     * The separators of the Spanish formats depend on the ICU data of the
+     * runtime, so the expected text comes from the same Intl call, with its
+     * spaces normalized as Testing Library normalizes the text of the page.
+     */
+    const normalized = (text: string) => text.replace(/\s+/g, ' ')
+    const amount = (cents: number) =>
+      normalized(
+        new Intl.NumberFormat('es', { style: 'currency', currency: 'USD' }).format(cents / 100)
+      )
+    const date = (value: string) =>
+      normalized(new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(new Date(value)))
+
+    const [failed, paid] = await invoiceRows()
+    expect(within(failed).getByText('Business')).toBeInTheDocument()
+    expect(within(failed).getByText(amount(4900))).toHaveTextContent(/49,00/)
+    expect(within(failed).getByText('Fallida')).toBeInTheDocument()
+    expect(within(failed).getByText(date('2026-05-15T12:00:00.000Z'))).toBeInTheDocument()
+
+    expect(within(paid).getByText('Pro')).toBeInTheDocument()
+    expect(within(paid).getByText(amount(2900))).toHaveTextContent(/29,00/)
+    expect(within(paid).getByText('Pagada')).toBeInTheDocument()
+    expect(within(paid).getByText(date('2026-04-15T12:00:00.000Z'))).toBeInTheDocument()
+  })
+
+  it('shows the empty state when there is no invoice', async () => {
+    serveBilling(() => billing(), [])
+
+    renderBilling()
+
+    expect(await screen.findByText('No invoices yet')).toBeInTheDocument()
+    expect(
+      screen.getByText('Your invoices appear here once the first period is billed.')
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 })

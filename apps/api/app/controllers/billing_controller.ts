@@ -7,6 +7,8 @@ import {
   portalLink,
   startCheckout,
 } from '#services/billing'
+import { listInvoices } from '#services/invoices'
+import InvoiceTransformer from '#transformers/invoice_transformer'
 import { changePlanValidator, checkoutValidator, cancelValidator } from '#validators/billing'
 
 export default class BillingController {
@@ -76,6 +78,17 @@ export default class BillingController {
 
     return serialize.withoutWrapping({
       portalUrl: await portalLink(organization),
+    })
+  }
+
+  /**
+   * The invoices of the organization, newest first.
+   */
+  async invoices({ organization, bouncer, membership, serialize }: HttpContext) {
+    await bouncer.authorize('manageBilling', membership)
+
+    return serialize.withoutWrapping({
+      invoices: InvoiceTransformer.transform(await listInvoices(organization)),
     })
   }
 }

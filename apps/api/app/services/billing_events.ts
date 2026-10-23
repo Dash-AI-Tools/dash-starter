@@ -9,6 +9,7 @@ import PaymentFailed from '#mails/payment_failed'
 import SubscriptionCanceled from '#mails/subscription_canceled'
 import SubscriptionStarted from '#mails/subscription_started'
 import { GRACE_PERIOD_DAYS } from '#services/entitlements'
+import { recordInvoice } from '#services/invoices'
 import env from '#start/env'
 import type { TransactionClientContract } from '@adonisjs/lucid/types/database'
 import mail from '@adonisjs/mail/services/main'
@@ -56,7 +57,10 @@ export type Transition = {
   previousStatus: SubscriptionStatus | null
   organization: Organization
   planName: string
+  /** The amount of the plan, in units of the currency, as the emails show it. */
   amount: number
+  /** The same amount, in cents, as the invoices keep it. */
+  amountCents: number
   currency: string
   renewsAt?: Date
 }
@@ -124,6 +128,7 @@ export async function processEvent(
       return { kind: 'ignored' as const }
     }
 
+    await recordInvoice(transition, trx)
     await markProcessed(event.id, trx)
 
     return { kind: 'applied' as const, transition }
@@ -286,6 +291,7 @@ async function applyEvent(
     organization,
     planName: plan ? plan.name[localeOf(organization)] : '',
     amount: price ? price.amountCents / 100 : 0,
+    amountCents: price?.amountCents ?? 0,
     currency: price?.currency ?? 'USD',
     renewsAt: periodEnd ? periodEnd.toJSDate() : undefined,
   }

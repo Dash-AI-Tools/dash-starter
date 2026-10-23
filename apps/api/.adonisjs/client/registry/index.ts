@@ -282,6 +282,12 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"portal"]],
     types: placeholder as Registry['billing.portal']['types'],
   },
+  'billing.invoices': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/billing/invoices',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"billing"],[0,"invoices"]],
+    types: placeholder as Registry['billing.invoices']['types'],
+  },
   'billing.change_plan': {
     methods: ["POST"],
     pattern: '/api/v1/orgs/:orgSlug/billing/change-plan',

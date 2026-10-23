@@ -9,6 +9,7 @@ import type ApiKeyTransformer from '#transformers/api_key_transformer'
 import type BulkImportTransformer from '#transformers/bulk_import_transformer'
 import type ConversationTransformer from '#transformers/conversation_transformer'
 import type InvitationTransformer from '#transformers/invitation_transformer'
+import type InvoiceTransformer from '#transformers/invoice_transformer'
 import type MembershipTransformer from '#transformers/membership_transformer'
 import type MessageTransformer from '#transformers/message_transformer'
 import type OrganizationTransformer from '#transformers/organization_transformer'
@@ -30,6 +31,10 @@ export namespace Data {
   export type Invitation = InferData<InvitationTransformer>
   export namespace Invitation {
     export type Variants = InferVariants<InvitationTransformer>
+  }
+  export type Invoice = InferData<InvoiceTransformer>
+  export namespace Invoice {
+    export type Variants = InferVariants<InvoiceTransformer>
   }
   export type Membership = InferData<MembershipTransformer>
   export namespace Membership {

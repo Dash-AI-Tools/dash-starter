@@ -9,7 +9,7 @@ The system SHALL record one invoice per paid or failed billing period of the org
 #### Scenario: A paid period creates a paid invoice
 
 - **WHEN** the webhook of the payment provider reports `subscription.paid` for the organization
-- **THEN** an invoice is recorded with the plan, the amount and the currency of the event, in the state `paid`
+- **THEN** an invoice is recorded with the plan, the amount in cents and the currency of the price of that plan, in the state `paid`
 
 #### Scenario: A failed charge creates a failed invoice
 

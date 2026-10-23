@@ -81,6 +81,7 @@ export interface ApiDefinition {
   billing: {
     show: typeof routes['billing.show']
     portal: typeof routes['billing.portal']
+    invoices: typeof routes['billing.invoices']
     changePlan: typeof routes['billing.change_plan']
     cancel: typeof routes['billing.cancel']
     checkout: typeof routes['billing.checkout']

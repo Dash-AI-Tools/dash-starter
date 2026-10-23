@@ -605,6 +605,19 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['portal']>>>
     }
   }
+  'billing.invoices': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/billing/invoices'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['invoices']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['invoices']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/billing_controller').default['invoices']>>>
+    }
+  }
   'billing.change_plan': {
     methods: ["POST"]
     pattern: '/api/v1/orgs/:orgSlug/billing/change-plan'
