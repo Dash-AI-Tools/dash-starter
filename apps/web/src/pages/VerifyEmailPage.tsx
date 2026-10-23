@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router'
-import { Button } from '@/components/ui/button'
+import { Button } from '@dash/ui'
 import { client } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
 

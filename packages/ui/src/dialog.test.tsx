@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+} from './dialog'
+import { Button } from './button'
 
 function DialogFixture() {
   const [open, setOpen] = useState(false)

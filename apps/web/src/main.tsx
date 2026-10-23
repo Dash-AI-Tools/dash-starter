@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router'
-import './index.css'
+import '@dash/ui/styles.css'
 import PublicLayout from './layouts/PublicLayout'
 import { I18nProvider } from './lib/i18n'
 import { ConsentProvider } from './providers/consent-provider'

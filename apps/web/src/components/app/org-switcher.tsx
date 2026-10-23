@@ -1,8 +1,8 @@
 import { Building2, Check, ChevronsUpDown, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { useI18n } from '@/lib/i18n'

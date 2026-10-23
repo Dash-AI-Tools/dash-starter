@@ -1,8 +1,10 @@
 import { LogOut, Settings, User } from 'lucide-react'
 import { useNavigate } from 'react-router'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -10,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@dash/ui'
 import { OPEN_COOKIE_PREFERENCES } from '@/lib/consent'
 import { useI18n } from '@/lib/i18n'
 import { orgPath } from '@/lib/nav'

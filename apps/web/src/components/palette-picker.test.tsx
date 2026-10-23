@@ -56,6 +56,11 @@ function renderPicker(canChoose: boolean, session: string | null = null) {
 describe('PalettePicker', () => {
   beforeEach(() => {
     localStorage.clear()
+    /**
+     * The visitor starts on the Line palette whatever the default of the
+     * project is: a generated project may ship another one.
+     */
+    localStorage.setItem('palette', 'line')
     document.cookie = 'locale=; path=/; max-age=0'
     delete document.documentElement.dataset.palette
   })

@@ -1,13 +1,6 @@
 import { PRIVACY_UPDATED_AT } from '@dash/api/legal'
 import { LegalDocument } from '@/components/legal/legal-document'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@dash/ui'
 import { CONSENT_COOKIE } from '@/lib/consent'
 import { LOCALE_COOKIE, useI18n, type TranslationKey } from '@/lib/i18n'
 import { usePublicPageMeta } from '@/lib/use-page-meta'

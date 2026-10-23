@@ -22,18 +22,6 @@ export default defineConfig([
     },
   },
   {
-    // shadcn-generated components export variants alongside components and come
-    // from the shadcn registry, so their markup is not ours to change
-    files: ['src/components/ui/**'],
-    rules: {
-      'react-refresh/only-export-components': 'off',
-      'jsx-a11y/anchor-has-content': 'off',
-      'jsx-a11y/click-events-have-key-events': 'off',
-      'jsx-a11y/label-has-associated-control': 'off',
-      'jsx-a11y/no-noninteractive-element-interactions': 'off',
-    },
-  },
-  {
     // lib and provider modules pair a component with its helpers
     files: ['src/lib/**', 'src/providers/**'],
     rules: { 'react-refresh/only-export-components': 'off' },

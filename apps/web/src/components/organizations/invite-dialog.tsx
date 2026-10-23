@@ -4,15 +4,15 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { useI18n } from '@/lib/i18n'

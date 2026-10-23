@@ -18,6 +18,12 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:e2e": "npm run test:e2e --workspace e2e",
+    "storybook": "npm run storybook --workspace @dash/ui",
+    "core:update": "node packages/core-tools/bin/core.js update",
+    "core:check": "node packages/core-tools/bin/core.js check",
+    "make:feature": "node packages/core-tools/bin/core.js make:feature",
+    "make:component": "node packages/core-tools/bin/core.js make:component",
+    "remove:showcase": "node packages/core-tools/bin/core.js remove:showcase",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "engines": {

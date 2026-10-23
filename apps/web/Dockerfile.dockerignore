@@ -1,0 +1,9 @@
+# The context of the image is the repository root, so the ignore file of the
+# web app would never apply: this one is read for this Dockerfile alone.
+**/node_modules
+**/dist
+**/build
+**/tmp
+**/.env*
+!**/.env.example
+.git

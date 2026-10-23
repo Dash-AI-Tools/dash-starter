@@ -4,11 +4,15 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -16,15 +20,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@dash/ui'
 import { API_BASE_URL } from '@/lib/api'
 import { useApiKeys, useCreateApiKey, useRevokeApiKey, type ApiKey } from '@/lib/api-keys'
 import { useI18n } from '@/lib/i18n'

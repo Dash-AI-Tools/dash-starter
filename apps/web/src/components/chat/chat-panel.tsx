@@ -7,18 +7,18 @@ import { toast } from 'sonner'
 import { ChatMessage } from '@/components/chat/message'
 import { EmptyState } from '@/components/patterns/empty-state'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
+  Badge,
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+  Input,
+  Textarea,
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import {
   chatFailure,

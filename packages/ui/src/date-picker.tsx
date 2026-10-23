@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { CalendarIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { formatDate, type Locale } from '@/lib/i18n'
+import { Button } from './button'
+import { Calendar } from './calendar'
+import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { cn } from './utils'
 
 /**
  * A date picker: a button that opens a calendar and reports the day picked.
- * The date is formatted with the conventions of the active locale.
+ * The date is formatted with the conventions of the locale it is given, so the
+ * kit needs nothing from the catalogs of the app.
  */
 export function DatePicker({
   value,
@@ -21,8 +21,8 @@ export function DatePicker({
   value?: Date
   /** Called with the picked date, or `undefined` when the selection is cleared. */
   onChange: (date: Date | undefined) => void
-  /** The locale used to format the date. */
-  locale?: Locale
+  /** The locale used to format the date, as a BCP 47 tag (`en`, `es`, ...). */
+  locale?: string
   /** The label of the button when no date is selected. */
   placeholder?: string
   className?: string
@@ -45,7 +45,9 @@ export function DatePicker({
         }
       >
         <CalendarIcon className="size-4" />
-        {value ? formatDate(locale, value, { dateStyle: 'medium' }) : placeholder}
+        {value
+          ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(value)
+          : placeholder}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

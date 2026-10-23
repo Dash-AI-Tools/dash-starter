@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Check, Copy, Flag } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@dash/ui'
 import { useI18n, type TranslationKey } from '@/lib/i18n'
 import { STATIONS, STATION_KEY_NAMES, stationColor, type StationId } from '@/lib/stations'
 import { usePublicPageMeta } from '@/lib/use-page-meta'

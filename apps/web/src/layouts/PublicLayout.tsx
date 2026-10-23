@@ -4,7 +4,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { PalettePicker } from '@/components/palette-picker'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useConsent } from '@/providers/consent-provider'
-import { Button } from '@/components/ui/button'
+import { Button } from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 import { useCurrentUser } from '@/lib/session'
 

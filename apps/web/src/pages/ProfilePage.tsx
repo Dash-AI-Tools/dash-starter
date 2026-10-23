@@ -4,18 +4,24 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+  Input,
+  Label,
+} from '@dash/ui'
 import { client, uploadAvatar } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { LOCALES, useI18n, type Locale } from '@/lib/i18n'

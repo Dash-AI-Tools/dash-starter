@@ -1,16 +1,16 @@
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
+  Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@dash/ui'
 import { usePlans, type Plan, type PlanInterval } from '@/lib/billing'
 import { useI18n } from '@/lib/i18n'
 import { useCurrentUser } from '@/lib/session'

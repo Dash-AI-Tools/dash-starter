@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Checkbox } from '@dash/ui'
 
 /**
  * A column that selects the row it belongs to. It has to be part of the

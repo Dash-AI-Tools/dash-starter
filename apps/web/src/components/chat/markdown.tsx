@@ -3,7 +3,7 @@ import { Check, Copy } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
-import { Button } from '@/components/ui/button'
+import { Button } from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 
 /**

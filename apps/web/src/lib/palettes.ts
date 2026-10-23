@@ -2,8 +2,8 @@ import type { TranslationKey } from '@/lib/i18n'
 
 /**
  * The colour palettes the product ships with. Each one is a full set of
- * design tokens in `styles/palettes.css`, applied with `data-palette` on the
- * document root.
+ * design tokens in the `palettes.css` of `@dash/ui`, applied with
+ * `data-palette` on the document root.
  */
 export const PALETTE_IDS = ['line', 'ink', 'ocean', 'forest', 'plum', 'ember'] as const
 

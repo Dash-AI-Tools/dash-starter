@@ -6,16 +6,16 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
+  Input,
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { useI18n } from '@/lib/i18n'

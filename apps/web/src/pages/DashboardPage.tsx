@@ -4,18 +4,23 @@ import { Link, useParams } from 'react-router'
 import { AreaChartCard, type ChartDatum } from '@/components/patterns/charts'
 import { EmptyState } from '@/components/patterns/empty-state'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
+  Avatar,
+  AvatarFallback,
+  Badge,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@dash/ui'
 import { useDashboard, type DashboardActivity } from '@/lib/dashboard'
 import { useI18n, type TranslationKey } from '@/lib/i18n'
 import { canAccess, orgPath } from '@/lib/nav'

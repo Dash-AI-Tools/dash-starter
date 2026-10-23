@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileUpload } from '@/components/ui/file-upload'
 import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  FileUpload,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@dash/ui'
 import { toApiFailure } from '@/lib/api-error'
 import { useBulkImport } from '@/lib/imports'
 import { useI18n } from '@/lib/i18n'

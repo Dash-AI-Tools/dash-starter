@@ -4,11 +4,19 @@ import { Controller, useFormContext, type FieldPath, type FieldValues } from 're
 import { useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { Form } from '@/components/patterns/form'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Field, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Field,
+  FieldLabel,
+  Input,
+  RadioGroup,
+  RadioGroupItem,
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { redirectTo } from '@/lib/billing'

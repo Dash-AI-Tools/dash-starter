@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { TERMS_VERSION } from '@dash/api/legal'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { useI18n } from '@/lib/i18n'

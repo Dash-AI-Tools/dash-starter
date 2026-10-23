@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -7,7 +7,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 import { PALETTE_IDS, PALETTE_LABELS, isPaletteId, type PaletteId } from '@/lib/palettes'
 import { cn } from '@/lib/utils'

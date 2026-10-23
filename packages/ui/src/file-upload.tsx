@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { Upload, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { Button } from './button'
+import { cn } from './utils'
 
 /**
  * A file input with the selected file shown next to it. The size and type

@@ -10,15 +10,15 @@ import {
   type SubmitHandler,
 } from 'react-hook-form'
 import type { z } from 'zod'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Field,
   FieldContent,
   FieldDescription,
   FieldError as FieldErrorMessage,
   FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
+  Input,
+} from '@dash/ui'
 import { toApiFailure } from '@/lib/api-error'
 import { cn } from '@/lib/utils'
 

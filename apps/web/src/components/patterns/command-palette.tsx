@@ -7,7 +7,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
+} from '@dash/ui'
 
 /**
  * A group of commands shown in the palette.

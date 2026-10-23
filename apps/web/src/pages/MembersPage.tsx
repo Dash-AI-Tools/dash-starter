@@ -6,25 +6,24 @@ import { toast } from 'sonner'
 import { InviteDialog } from '@/components/organizations/invite-dialog'
 import { DataTable } from '@/components/patterns/data-table'
 import { PageHeader } from '@/components/patterns/page-header'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
+  Avatar,
+  AvatarFallback,
+  Badge,
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
 import { useI18n } from '@/lib/i18n'

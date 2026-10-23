@@ -4,20 +4,18 @@ import { UserMenu } from '@/components/app/user-menu'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { PalettePicker } from '@/components/palette-picker'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 import { navItemForPath, orgPath } from '@/lib/nav'
 import { useOrganization } from '@/lib/organizations'

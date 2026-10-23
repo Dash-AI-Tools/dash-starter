@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useConsent } from '@/providers/consent-provider'
-import { Button } from '@/components/ui/button'
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Switch } from '@/components/ui/switch'
+  Switch,
+} from '@dash/ui'
 import { DEFAULT_CHOICES, type ConsentChoices } from '@/lib/consent'
 import { useI18n } from '@/lib/i18n'
 
