@@ -1,23 +1,41 @@
 # Spec Delta
 
-## Purpose
-
-The invoices of an organization: what it was billed, how much and when.
-
 ## ADDED Requirements
 
-### Requirement: Invoicing
+### Requirement: Invoices from the payment provider
 
-The system SHALL keep one invoice per payment of the organization, with the plan, the amount, the currency and the state.
+The system SHALL record one invoice per paid or failed billing period of the organization, from the events of the payment provider, with the plan, the amount in cents, the currency and the state, and SHALL never record the same event twice.
 
-#### Scenario: The event of the provider creates the invoice
-- **WHEN** the webhook of the payment provider reports a settled subscription of the organization
-- **THEN** an invoice is created with the plan, the amount and the currency of the event, in the state `paid`
+#### Scenario: A paid period creates a paid invoice
 
-#### Scenario: The list of the invoices belongs to the organization
-- **WHEN** a member of the organization asks for the invoices
-- **THEN** the system returns the invoices of their own organization, newest first, and no invoice of another organization
+- **WHEN** the webhook of the payment provider reports `subscription.paid` for the organization
+- **THEN** an invoice is recorded with the plan, the amount and the currency of the event, in the state `paid`
 
-#### Scenario: The dashboard shows the invoices
-- **WHEN** a member opens the page of the invoices of the dashboard
-- **THEN** the page lists the invoices of the organization with the plan, the amount and the state, in the language of the interface
+#### Scenario: A failed charge creates a failed invoice
+
+- **WHEN** the webhook reports `subscription.past_due` for the organization
+- **THEN** an invoice is recorded in the state `failed`
+
+#### Scenario: A replayed event creates no second invoice
+
+- **WHEN** the same event is delivered twice
+- **THEN** the organization has a single invoice for it
+
+### Requirement: Invoice list
+
+The system SHALL list the invoices of an organization, newest first, only to the roles that manage its billing.
+
+#### Scenario: An admin lists the invoices of the organization
+
+- **WHEN** an admin or the owner asks for the invoices of the organization
+- **THEN** the system returns its invoices, newest first, and no invoice of another organization
+
+#### Scenario: A member cannot read the invoices
+
+- **WHEN** a member without the billing role asks for the invoices
+- **THEN** the system refuses the request
+
+#### Scenario: The billing page shows the invoices
+
+- **WHEN** an admin opens the billing page
+- **THEN** the page lists the invoices with the plan, the amount, the state and the date, in the language of the interface, or an empty state when there is none
