@@ -1,3 +1,5 @@
+import './env'
+
 /**
  * The catcher of the emails of the stack. The suite reads the messages of
  * Mailpit to follow the links the application sends by email.

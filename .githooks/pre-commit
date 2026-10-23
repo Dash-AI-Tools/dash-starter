@@ -1,0 +1,9 @@
+#!/bin/sh
+# The gate of the commit. It checks the staged files: the formatter, the linter
+# of the workspace that owns them, the typecheck and the fast tests of the
+# affected workspaces, and the refusal of the files that carry secrets.
+# `git commit --no-verify` skips it.
+set -e
+
+repo_root=$(git rev-parse --show-toplevel)
+exec node "$repo_root/plugins/dsh/scripts/pre-commit.mjs"

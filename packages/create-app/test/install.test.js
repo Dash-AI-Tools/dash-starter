@@ -36,7 +36,16 @@ const manifest = {
     'dash': 'slug',
   },
   files: ['**/*'],
-  exclude: ['node_modules/**', '**/node_modules/**', '**/dist/**', 'package-lock.json'],
+  exclude: [
+    'node_modules/**',
+    '**/node_modules/**',
+    '**/dist/**',
+    'package-lock.json',
+    '.claude/settings.local.json',
+    '.claude/worktrees/**',
+    '.claude/.headroom*',
+    '.claude/dsh-allow',
+  ],
   removePaths: ['packages/create-app', 'openspec/changes'],
   removeSections: [{ file: 'README.md', heading: '## The installer' }],
   removeLines: [{ file: 'README.md', text: 'packages/create-app' }],
@@ -98,6 +107,50 @@ async function createTemplate() {
 
   await mkdir(join(root, 'openspec/changes/bootstrap'), { recursive: true })
   await writeFile(join(root, 'openspec/changes/bootstrap/tasks.md'), '- [ ] a task\n')
+
+  /**
+   * The harness of the development, with the state that never travels.
+   */
+  await mkdir(join(root, '.claude-plugin'), { recursive: true })
+  await writeFile(
+    join(root, '.claude-plugin/marketplace.json'),
+    JSON.stringify(
+      {
+        name: 'dash-starter',
+        owner: { name: 'Dash' },
+        plugins: [{ name: 'dsh', source: './plugins/dsh' }],
+      },
+      null,
+      2
+    )
+  )
+
+  await mkdir(join(root, '.claude/worktrees/dsh-feature'), { recursive: true })
+  await writeFile(
+    join(root, '.claude/settings.json'),
+    '{"enabledPlugins": {"dsh@dash-starter": true}}\n'
+  )
+  await writeFile(join(root, '.claude/settings.local.json'), '{"permissions": {}}\n')
+  await writeFile(join(root, '.claude/dsh-allow'), 'env\n')
+  await writeFile(join(root, '.claude/worktrees/dsh-feature/state.txt'), 'work\n')
+
+  await mkdir(join(root, 'plugins/dsh/agents'), { recursive: true })
+  await mkdir(join(root, 'plugins/dsh/skills/feature'), { recursive: true })
+  await mkdir(join(root, 'plugins/dsh/scripts'), { recursive: true })
+  await mkdir(join(root, 'plugins/dsh/hooks'), { recursive: true })
+  await writeFile(join(root, 'plugins/dsh/package.json'), '{"name": "@dash/dsh"}\n')
+  await writeFile(join(root, 'plugins/dsh/agents/backend-dev.md'), '# backend-dev of Dash\n')
+  await writeFile(join(root, 'plugins/dsh/skills/feature/SKILL.md'), '# feature\n')
+  await writeFile(join(root, 'plugins/dsh/scripts/checks.mjs'), 'export const root = 1\n')
+  await writeFile(join(root, 'plugins/dsh/hooks/hooks.json'), '{"hooks": {}}\n')
+
+  await mkdir(join(root, 'docs'), { recursive: true })
+  await writeFile(join(root, 'CLAUDE.md'), '# Dash Starter\n')
+  await writeFile(join(root, 'docs/architecture.md'), '# Architecture of Dash\n')
+  await writeFile(join(root, 'docs/harness.md'), '# The harness of Dash\n')
+
+  await mkdir(join(root, '.githooks'), { recursive: true })
+  await writeFile(join(root, '.githooks/pre-commit'), '#!/bin/sh\nexit 0\n')
 
   await mkdir(join(root, '.github/workflows'), { recursive: true })
   await writeFile(
@@ -260,6 +313,91 @@ test('no placeholder of the template survives in the project', async () => {
       )
     }
   }
+})
+
+test('the harness of the development travels with the project', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+
+  await run(
+    [
+      target,
+      '--template',
+      template,
+      '--name',
+      'Acme AI',
+      '--slug',
+      'acme-ai',
+      '--yes',
+      '--no-install',
+      '--no-boot',
+      '--no-git',
+    ],
+    {
+      manifest,
+      version: '0.1.0',
+      log: () => {},
+      run: async () => ({ code: 0, output: '', error: null }),
+    }
+  )
+
+  for (const file of [
+    'plugins/dsh/package.json',
+    'plugins/dsh/agents/backend-dev.md',
+    'plugins/dsh/skills/feature/SKILL.md',
+    'plugins/dsh/scripts/checks.mjs',
+    'plugins/dsh/hooks/hooks.json',
+    '.claude-plugin/marketplace.json',
+    '.claude/settings.json',
+    'CLAUDE.md',
+    'docs/architecture.md',
+    'docs/harness.md',
+    '.githooks/pre-commit',
+  ]) {
+    await readFile(join(target, file), 'utf8')
+  }
+
+  /**
+   * The state of the machine of the developer never travels.
+   */
+  await assert.rejects(() => readFile(join(target, '.claude/settings.local.json'), 'utf8'))
+  await assert.rejects(() => readFile(join(target, '.claude/dsh-allow'), 'utf8'))
+  await assert.rejects(() =>
+    readFile(join(target, '.claude/worktrees/dsh-feature/state.txt'), 'utf8')
+  )
+
+  /**
+   * The plugin keeps its name and the marketplace takes the one of the
+   * project, so the two names change together.
+   */
+  const marketplace = await readFile(join(target, '.claude-plugin/marketplace.json'), 'utf8')
+  const settings = await readFile(join(target, '.claude/settings.json'), 'utf8')
+
+  assert.match(marketplace, /"name": "acme-ai"/)
+  assert.match(marketplace, /"name": "dsh"/)
+  assert.match(settings, /"dsh@acme-ai"/)
+})
+
+test('the repository of the project uses the gate of the commit', async () => {
+  const template = await createTemplate()
+  const workspace = await mkdtemp(join(tmpdir(), 'create-app-project-'))
+  const target = join(workspace, 'acme-ai')
+  const commands = []
+
+  await run([target, '--template', template, '--yes', '--no-install', '--no-boot'], {
+    manifest,
+    version: '0.1.0',
+    log: () => {},
+    run: async (command, args) => {
+      commands.push(`${command} ${args.join(' ')}`)
+
+      return { code: 0, output: '', error: null }
+    },
+  })
+
+  assert.equal(commands.includes('git config core.hooksPath .githooks'), true)
+  await readFile(join(target, '.githooks/pre-commit'), 'utf8')
 })
 
 test('the installer and the history of the change do not travel', async () => {

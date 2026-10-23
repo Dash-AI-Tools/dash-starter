@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
+import './support/env'
+
 /**
  * The origin the web app is published on. The suite drives the browser, so
  * the API is only reached through the proxy of the dev server.

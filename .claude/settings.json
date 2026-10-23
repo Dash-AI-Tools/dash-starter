@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "dash-starter": {
+      "source": {
+        "source": "directory",
+        "path": "./"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "dsh@dash-starter": true
+  }
+}

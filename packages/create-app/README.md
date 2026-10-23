@@ -6,7 +6,7 @@ Creates a new AI SaaS product from the [Dash Starter](https://github.com/Dash-AI
 npx create-dash-starter my-product
 ```
 
-The installer downloads the release of the template that matches its own version, rebrands every placeholder, writes the `.env` files with fresh secrets, initializes git and — optionally — creates a private repository in GitHub and boots the stack.
+The installer downloads the release of the template that matches its own version, rebrands every placeholder, writes the `.env` files with fresh secrets, initializes git with the commit gate of `.githooks` and — optionally — creates a private repository in GitHub and boots the stack.
 
 ## Flags
 

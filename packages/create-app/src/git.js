@@ -29,6 +29,12 @@ export async function initRepository(dir, { run, identity }) {
 
   const final = await run('git', ['log', '-1', '--oneline'], { cwd: dir, silent: true })
 
+  /**
+   * The gate of the commit of the project: the one of the template, so a
+   * commit of a generated project passes the same checks.
+   */
+  await run('git', ['config', 'core.hooksPath', '.githooks'], { cwd: dir })
+
   return { ok: final.code === 0, reason: final.output.trim() }
 }
 

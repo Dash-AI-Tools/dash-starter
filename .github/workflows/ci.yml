@@ -192,7 +192,25 @@ jobs:
         run: >
           node packages/create-app/bin/create-dash-starter.js "$RUNNER_TEMP/project"
           --template . --name "Acme AI" --slug acme-ai --locale es --palette forest
-          --yes --no-install --no-boot --no-git
+          --yes --no-install --no-boot
+
+      - name: Check the harness of the project
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          test -f plugins/dsh/package.json
+          test -f plugins/dsh/hooks/hooks.json
+          test -f .claude-plugin/marketplace.json
+          test -f .claude/settings.json
+          test -f CLAUDE.md
+          test -f docs/architecture.md
+          test -f docs/harness.md
+          test -f .githooks/pre-commit
+          test ! -e .claude/settings.local.json
+          test ! -e .claude/dsh-allow
+          test ! -e .claude/worktrees
+          grep -q '"dsh@acme-ai"' .claude/settings.json
+          grep -q '"name": "dsh"' .claude-plugin/marketplace.json
+          test "$(git config core.hooksPath)" = ".githooks"
 
       - name: Check the palette and the demo mode of the project
         working-directory: ${{ runner.temp }}/project

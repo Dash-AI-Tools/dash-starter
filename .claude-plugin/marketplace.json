@@ -1,0 +1,14 @@
+{
+  "name": "dash-starter",
+  "description": "Plugins for the dash-starter template",
+  "owner": {
+    "name": "Dash"
+  },
+  "plugins": [
+    {
+      "name": "dsh",
+      "source": "./plugins/dsh",
+      "description": "Development harness for the dash-starter template: specialist agents, scoped commands and guardrail hooks."
+    }
+  ]
+}

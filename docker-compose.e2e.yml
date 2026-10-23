@@ -4,37 +4,37 @@
 # both can run at the same time on the same machine. The suite only talks to
 # the web origin: the dev server proxies `/api` and `/mcp` to the API, so the
 # browser never leaves a single origin.
-name: dash-e2e
+name: ${E2E_COMPOSE_PROJECT_NAME:-dash-e2e}
 
 services:
   db:
     # The list of the ports replaces the one of the development stack, it is
     # not appended to it.
     ports: !override
-      - '5434:5432'
+      - '${E2E_DB_HOST_PORT:-5434}:5432'
 
   mailpit:
     ports: !override
-      - '8026:8025' # web UI and the API of the catcher
-      - '1026:1025' # SMTP
+      - '${E2E_MAILPIT_HOST_PORT:-8026}:8025' # web UI and the API of the catcher
+      - '${E2E_SMTP_HOST_PORT:-1026}:1025' # SMTP
 
   api:
     environment:
       # The links that travel by email have to open the ports the host
       # publishes, not the ones of the container.
-      APP_URL: http://localhost:3334
+      APP_URL: http://localhost:${E2E_API_HOST_PORT:-3334}
       # The origin of the web app travels in the emails, and the session of
       # the user has to travel with them, so the stack takes the origin the
       # suite drives.
-      WEB_URL: ${E2E_WEB_URL:-http://localhost:5174}
+      WEB_URL: ${E2E_WEB_URL:-http://localhost:${E2E_WEB_HOST_PORT:-5174}}
       # The secret the suite signs the webhooks of the payment provider with.
-      CREEM_WEBHOOK_SECRET: e2e-webhook-secret
+      CREEM_WEBHOOK_SECRET: ${E2E_CREEM_WEBHOOK_SECRET:-e2e-webhook-secret}
       # The suite creates several accounts from the same address, so the
       # budget of the auth endpoints has to be bigger than the one of the
       # product.
       AUTH_IP_REQUESTS: 1000
     ports: !override
-      - '3334:3333'
+      - '${E2E_API_HOST_PORT:-3334}:3333'
 
   web:
     environment:
@@ -43,4 +43,4 @@ services:
       # suite reads the same variable.
       VITE_DEMO_MODE: ${E2E_DEMO_MODE:-true}
     ports: !override
-      - '5174:5173'
+      - '${E2E_WEB_HOST_PORT:-5174}:5173'

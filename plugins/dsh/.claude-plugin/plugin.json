@@ -1,0 +1,8 @@
+{
+  "name": "dsh",
+  "description": "Development harness for the dash-starter template: specialist agents, scoped commands and guardrail hooks.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Dash"
+  }
+}

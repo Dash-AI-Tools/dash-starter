@@ -7,8 +7,11 @@ build
 .adonisjs/
 .DS_Store
 *.log
-.claude/
-.claude/.headroom_wrap_*.json
+# Claude Code: the shared settings are tracked, the personal state is not
+.claude/settings.local.json
+.claude/worktrees/
+.claude/dsh-allow
+.claude/.headroom*
 .serena/
 .opencode/
 test-results

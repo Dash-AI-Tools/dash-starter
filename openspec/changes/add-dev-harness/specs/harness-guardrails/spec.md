@@ -30,7 +30,7 @@ Before an agent session ends after editing code, the harness SHALL typecheck and
 
 #### Scenario: Database-backed tests
 - **WHEN** a touched workspace's tests need the database
-- **THEN** the stop check runs only its database-free unit suite, and the full suite runs in `/dsh:review`
+- **THEN** the stop check runs only the checks that need no database, and the full suite runs in `/dsh:review`
 
 ### Requirement: Protected files
 The harness SHALL block agent edits to environment and secret files (`.env`, `.env.*` except `*.example`, keys and certificates) and to lockfiles (`package-lock.json`) unless the developer explicitly allowed it for the session.

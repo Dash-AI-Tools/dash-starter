@@ -1,0 +1,10 @@
+{
+  "name": "@dash/dsh",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Development harness of the template: specialist agents, scoped commands, guardrail hooks and worktree tooling.",
+  "scripts": {
+    "test": "node --test \"scripts/*.test.mjs\""
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "description": "Guardrails of the harness: protected files, format and lint after an edit, checks before the session stops.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/protect-files.mjs"],
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/format-lint.mjs"],
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/stop-check.mjs"],
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  }
+}

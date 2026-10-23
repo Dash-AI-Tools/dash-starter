@@ -34,8 +34,9 @@ test('the repository is initialized and committed', async () => {
   assert.equal(result.ok, true)
   assert.deepEqual(
     calls.map((call) => call.args[0]),
-    ['init', 'add', 'commit', 'log']
+    ['init', 'add', 'commit', 'log', 'config']
   )
+  assert.deepEqual(calls[4].args, ['config', 'core.hooksPath', '.githooks'])
 })
 
 test('a machine without a git identity still commits', async () => {
