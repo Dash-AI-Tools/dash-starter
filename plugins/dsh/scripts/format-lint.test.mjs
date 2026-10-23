@@ -34,10 +34,12 @@ test('the formatter rewrites the file it is given', async () => {
 
 test('a file with a lint error is reported', async () => {
   const dir = repoRoot()
-  const file = join(dir, 'apps/web/src/lib/dsh-lint-probe.ts')
+  // The probe sits outside `src`, where the linter still reads it but no
+  // typecheck does: a typecheck that runs meanwhile never sees it.
+  const file = join(dir, 'apps/web/dsh-lint-probe.ts')
   writeFileSync(file, 'export function probe() {\n  const unused = 1\n}\n')
   try {
-    const result = await lintFile('apps/web/src/lib/dsh-lint-probe.ts', dir)
+    const result = await lintFile('apps/web/dsh-lint-probe.ts', dir)
     assert.equal(result.ok, false)
     assert.match(result.output, /unused/)
   } finally {
