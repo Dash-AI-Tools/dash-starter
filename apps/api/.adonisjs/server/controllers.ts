@@ -6,8 +6,10 @@
 export const controllers = {
   ApiKey: () => import('#controllers/api_key_controller'),
   Billing: () => import('#controllers/billing_controller'),
+  BulkImport: () => import('#controllers/bulk_import_controller'),
   Chat: () => import('#controllers/chat_controller'),
   CreemWebhook: () => import('#controllers/creem_webhook_controller'),
+  Dashboard: () => import('#controllers/dashboard_controller'),
   EmailChange: () => import('#controllers/email_change_controller'),
   EmailVerification: () => import('#controllers/email_verification_controller'),
   Health: () => import('#controllers/health_controller'),

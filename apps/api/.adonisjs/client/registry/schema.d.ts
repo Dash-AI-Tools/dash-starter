@@ -384,6 +384,19 @@ export interface Registry {
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/member_controller').default['leave']>>>
     }
   }
+  'dashboard.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/dashboard'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dashboard_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dashboard_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/dashboard_controller').default['show']>>>
+    }
+  }
   'invitation.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/orgs/:orgSlug/invitations'
@@ -421,6 +434,32 @@ export interface Registry {
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
       rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/invitation_controller').default['destroy']>>>
+    }
+  }
+  'bulk_import.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/orgs/:orgSlug/imports'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { orgSlug: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['store']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['store']>>>
+    }
+  }
+  'bulk_import.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/orgs/:orgSlug/imports/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue, ParamValue]
+      params: { orgSlug: ParamValue; id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['show']>>>
+      rawResponse: ExtractRawResponse<Awaited<ReturnType<import('#controllers/bulk_import_controller').default['show']>>>
     }
   }
   'invitation.show': {

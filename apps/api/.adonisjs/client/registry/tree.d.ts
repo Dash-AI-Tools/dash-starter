@@ -53,12 +53,19 @@ export interface ApiDefinition {
     destroy: typeof routes['member.destroy']
     leave: typeof routes['member.leave']
   }
+  dashboard: {
+    show: typeof routes['dashboard.show']
+  }
   invitation: {
     index: typeof routes['invitation.index']
     store: typeof routes['invitation.store']
     destroy: typeof routes['invitation.destroy']
     show: typeof routes['invitation.show']
     accept: typeof routes['invitation.accept']
+  }
+  bulkImport: {
+    store: typeof routes['bulk_import.store']
+    show: typeof routes['bulk_import.show']
   }
   onboarding: {
     show: typeof routes['onboarding.show']

@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
+import { UserRoundIcon } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { AreaChartCard, type ChartDatum } from '@/components/patterns/charts'
+import { EmptyState } from '@/components/patterns/empty-state'
 import { PageHeader } from '@/components/patterns/page-header'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -14,7 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useI18n } from '@/lib/i18n'
+import { useDashboard, type DashboardActivity } from '@/lib/dashboard'
+import { useI18n, type TranslationKey } from '@/lib/i18n'
 import { canAccess, orgPath } from '@/lib/nav'
 import { useConversations } from '@/lib/chat'
 import { useBilling } from '@/lib/billing'
@@ -22,32 +25,18 @@ import { useMembers, useOrganization } from '@/lib/organizations'
 import { useCurrentUser } from '@/lib/session'
 
 /**
- * The numbers of the cards and the chart are examples, so the dashboard can
- * be replaced by the real metrics of the product.
+ * The value a card shows while the metrics load.
  */
-const KPI = {
-  members: 12,
-  aiCredits: 1240,
-  mcpCalls: 320,
-  seats: 2,
-}
+const PLACEHOLDER = '—'
 
-const USAGE: ChartDatum[] = [
-  { label: 'Mon', value: 42 },
-  { label: 'Tue', value: 58 },
-  { label: 'Wed', value: 51 },
-  { label: 'Thu', value: 73 },
-  { label: 'Fri', value: 66 },
-  { label: 'Sat', value: 24 },
-  { label: 'Sun', value: 31 },
-]
-
-const ACTIVITY = [
-  { who: 'Ada Lovelace', what: 'joined the organization', when: '2026-01-08T09:12:00.000Z' },
-  { who: 'Grace Hopper', what: 'created an API key', when: '2026-01-07T16:40:00.000Z' },
-  { who: 'Alan Turing', what: 'sent an invitation', when: '2026-01-07T11:05:00.000Z' },
-  { who: 'Ada Lovelace', what: 'changed the plan', when: '2026-01-06T18:22:00.000Z' },
-]
+/**
+ * The sentence that describes each type of activity.
+ */
+const ACTIVITY_SENTENCES = {
+  member_joined: 'activityMemberJoined',
+  invitation_sent: 'activityInvitationSent',
+  api_key_created: 'activityApiKeyCreated',
+} as const satisfies Record<DashboardActivity['type'], TranslationKey>
 
 /**
  * The home of an organization: the numbers of the workspace, the usage of
@@ -55,8 +44,9 @@ const ACTIVITY = [
  * the setup.
  */
 export default function DashboardPage() {
-  const { t } = useI18n()
+  const { t, locale, formatDate, formatNumber } = useI18n()
   const { orgSlug = '' } = useParams()
+  const { data: dashboard } = useDashboard(orgSlug)
   const { data: organization } = useOrganization(orgSlug)
   const { data: members = [] } = useMembers(orgSlug)
   const { data: user } = useCurrentUser()
@@ -111,12 +101,61 @@ export default function DashboardPage() {
     [members.length, orgSlug, t, user?.avatarPath, conversations.length, billing, managesBilling]
   )
 
+  /**
+   * What is left of a limit of the plan: never below zero, and "Unlimited"
+   * when the plan has no limit.
+   */
+  const left = (quota: { used: number; limit: number }) =>
+    quota.limit < 0 ? t('kpiUnlimited') : formatNumber(Math.max(0, quota.limit - quota.used))
+
   const cards = [
-    { label: t('kpiMembers'), value: KPI.members, hint: t('kpiMembersHint') },
-    { label: t('kpiAiCredits'), value: KPI.aiCredits, hint: t('kpiAiCreditsHint') },
-    { label: t('kpiMcpCalls'), value: KPI.mcpCalls, hint: t('kpiMcpCallsHint') },
-    { label: t('kpiSeats'), value: KPI.seats, hint: t('kpiSeatsHint') },
+    {
+      id: 'members',
+      label: t('kpiMembers'),
+      value: dashboard ? formatNumber(dashboard.members) : PLACEHOLDER,
+      hint: t('kpiMembersHint'),
+    },
+    {
+      id: 'aiCredits',
+      label: t('kpiAiCredits'),
+      value: dashboard ? left(dashboard.aiCredits) : PLACEHOLDER,
+      hint: t('kpiAiCreditsHint'),
+    },
+    {
+      id: 'mcpCalls',
+      label: t('kpiMcpCalls'),
+      value: !dashboard
+        ? PLACEHOLDER
+        : dashboard.mcpCalls.enabled
+          ? left(dashboard.mcpCalls)
+          : t('kpiNotInPlan'),
+      hint: t('kpiMcpCallsHint'),
+    },
+    {
+      id: 'seats',
+      label: t('kpiSeats'),
+      value: dashboard
+        ? t('kpiUsedOf', {
+            used: formatNumber(dashboard.seats.used),
+            limit:
+              dashboard.seats.limit < 0 ? t('kpiUnlimited') : formatNumber(dashboard.seats.limit),
+          })
+        : PLACEHOLDER,
+      hint: t('kpiSeatsHint'),
+    },
   ]
+
+  /**
+   * The credits of each of the last days, labelled with the short weekday in
+   * the language of the interface. The days are UTC dates, so they are read
+   * in UTC to keep the weekday of the server.
+   */
+  const usage: ChartDatum[] = (dashboard?.usage ?? []).map((day) => ({
+    label: formatDate(day.date, { weekday: 'short', timeZone: 'UTC' }),
+    value: day.credits,
+  }))
+
+  const activity = dashboard?.activity ?? []
 
   return (
     <div className="space-y-6 p-6">
@@ -128,10 +167,10 @@ export default function DashboardPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <Card key={card.label}>
+          <Card key={card.id}>
             <CardHeader>
               <CardDescription>{card.label}</CardDescription>
-              <CardTitle className="text-3xl">{card.value.toLocaleString()}</CardTitle>
+              <CardTitle className="text-3xl">{card.value}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">{card.hint}</CardContent>
           </Card>
@@ -144,7 +183,7 @@ export default function DashboardPage() {
             <CardTitle>{t('usageTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <AreaChartCard data={USAGE} seriesName={t('usageTitle')} />
+            <AreaChartCard data={usage} locale={locale} seriesName={t('usageTitle')} />
           </CardContent>
         </Card>
 
@@ -174,38 +213,51 @@ export default function DashboardPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-medium">{t('activityTitle')}</h2>
 
-        <div className="overflow-hidden rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('activityColumnWho')}</TableHead>
-                <TableHead>{t('activityColumnWhat')}</TableHead>
-                <TableHead>{t('activityColumnWhen')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {ACTIVITY.map((entry) => (
-                <TableRow key={`${entry.who}-${entry.when}`}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar size="sm">
-                        <AvatarFallback>
-                          {entry.who
-                            .split(' ')
-                            .map((part) => part[0])
-                            .join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      {entry.who}
-                    </div>
-                  </TableCell>
-                  <TableCell>{entry.what}</TableCell>
-                  <TableCell>{new Date(entry.when).toLocaleDateString()}</TableCell>
+        {dashboard && activity.length === 0 ? (
+          <EmptyState title={t('activityEmpty')} />
+        ) : (
+          <div className="overflow-hidden rounded-lg border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('activityColumnWho')}</TableHead>
+                  <TableHead>{t('activityColumnWhat')}</TableHead>
+                  <TableHead>{t('activityColumnWhen')}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {dashboard ? (
+                  activity.map((entry, index) => (
+                    <TableRow key={`${entry.type}-${entry.at}-${index}`}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Avatar size="sm">
+                            <AvatarFallback>
+                              {entry.actor ? (
+                                entry.actor.initials
+                              ) : (
+                                <UserRoundIcon aria-hidden="true" className="size-3" />
+                              )}
+                            </AvatarFallback>
+                          </Avatar>
+                          {entry.actor ? entry.actor.fullName : t('activityFormerMember')}
+                        </div>
+                      </TableCell>
+                      <TableCell>{t(ACTIVITY_SENTENCES[entry.type])}</TableCell>
+                      <TableCell>{formatDate(entry.at)}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell>{PLACEHOLDER}</TableCell>
+                    <TableCell>{PLACEHOLDER}</TableCell>
+                    <TableCell>{PLACEHOLDER}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </section>
     </div>
   )

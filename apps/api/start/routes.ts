@@ -77,6 +77,16 @@ router
       .use([middleware.auth(), middleware.org()])
 
     /**
+     * The metrics of the dashboard home. Every member of the organization
+     * reads them: the response carries no email and no key name.
+     */
+    router
+      .group(() => {
+        router.get('orgs/:orgSlug/dashboard', [controllers.Dashboard, 'show'])
+      })
+      .use([middleware.auth(), middleware.org()])
+
+    /**
      * The invitations of an organization need a confirmed email address from
      * the inviter.
      */
@@ -89,16 +99,6 @@ router
       .use([middleware.auth(), middleware.org(), middleware.verified()])
 
     /**
-     * The page that accepts an invitation reads the details of the
-     * invitation with the token, so it works without an account.
-     */
-    router.get('invitations/:token', [controllers.Invitation, 'show'])
-
-    router
-      .post('invitations/:token/accept', [controllers.Invitation, 'accept'])
-      .use(middleware.auth())
-
-    /**
      * The bulk import of invitations. The file is read in the request and
      * every row becomes an invitation; the state of the import stays in the
      * history of the organization.
@@ -109,6 +109,16 @@ router
         router.get('orgs/:orgSlug/imports/:id', [controllers.BulkImport, 'show'])
       })
       .use([middleware.auth(), middleware.org(), middleware.verified()])
+
+    /**
+     * The page that accepts an invitation reads the details of the
+     * invitation with the token, so it works without an account.
+     */
+    router.get('invitations/:token', [controllers.Invitation, 'show'])
+
+    router
+      .post('invitations/:token/accept', [controllers.Invitation, 'accept'])
+      .use(middleware.auth())
 
     /**
      * The setup of the first organization of the user: the progress is saved

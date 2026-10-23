@@ -180,6 +180,12 @@ const routes = {
     tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"leave"]],
     types: placeholder as Registry['member.leave']['types'],
   },
+  'dashboard.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/dashboard',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"dashboard"]],
+    types: placeholder as Registry['dashboard.show']['types'],
+  },
   'invitation.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/orgs/:orgSlug/invitations',
@@ -197,6 +203,18 @@ const routes = {
     pattern: '/api/v1/orgs/:orgSlug/invitations/:id',
     tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"invitations"],[1,"id"]],
     types: placeholder as Registry['invitation.destroy']['types'],
+  },
+  'bulk_import.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/orgs/:orgSlug/imports',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"imports"]],
+    types: placeholder as Registry['bulk_import.store']['types'],
+  },
+  'bulk_import.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/orgs/:orgSlug/imports/:id',
+    tokens: [[0,"api"],[0,"v1"],[0,"orgs"],[1,"orgSlug"],[0,"imports"],[1,"id"]],
+    types: placeholder as Registry['bulk_import.show']['types'],
   },
   'invitation.show': {
     methods: ["GET","HEAD"],
