@@ -10,7 +10,7 @@ Features: `$ARGUMENTS`
 ## 1. Overlap analysis (before anything is created)
 
 - Read the tasks and the design of every change in `openspec/changes/<change-id>/` and collect the paths each one names.
-- Add the contract classes: the routes in `apps/api/start/routes.ts` and the transformers in `apps/api/app/transformers/` that `apps/web/src/lib/` consumes, the migrations in `apps/api/database/migrations/`, `apps/api/app/tools/registry.ts` and `apps/api/app/tools/main.ts`, the catalogs in `apps/api/resources/lang/` and `apps/web/src/locales/`, and the tokens in `apps/web/src/styles/palettes.css`.
+- Add the contract classes: the routes in `apps/api/start/routes.ts` and the transformers in `apps/api/app/transformers/` that `apps/web/src/lib/` consumes, the migrations in `apps/api/database/migrations/`, `apps/api/app/tools/registry.ts` and `apps/api/app/tools/main.ts`, the catalogs in `apps/api/resources/lang/` and `apps/web/src/locales/`, and the tokens in `packages/ui/src/styles/palettes.css` and `packages/ui/src/styles/index.css`.
 - Report a table: one row per change, one column per shared area, the files in common and the conflict (the same file, the same migration, the same locale key, the same route).
 - A change that touches `apps/api/app/tools/registry.ts` is a contract change: it is planned, implemented and merged first, alone.
 

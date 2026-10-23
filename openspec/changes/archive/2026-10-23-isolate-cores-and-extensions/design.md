@@ -101,7 +101,9 @@ The installer writes both after replacements, pruning, locale/palette selection 
 
 `packages/ui/package.json` is core because UI dependencies belong to the UI package and teams do not edit it. Root and app manifests are user-owned; the updater prints a manifest diff report and `npm install` when the release changes them. Core code must therefore avoid needing new app-level dependencies; new primitive dependencies go into `packages/ui`.
 
-**Update flow** (`core:update`, `core:check`, `--dry-run`, `--to <version|ref>`):
+**Local source.** `--source <dir>` uses a checkout of the template on the machine as the release instead of a download; the recorded version becomes the `version` of its `package.json` unless `--to` names one. The template's CI generates a project from the checkout it tests, so only a local source can prove `core:check` reports no changes: a published release is always older than the change under review. It also lets a project update offline.
+
+**Update flow** (`core:update`, `core:check`, `--dry-run`, `--to <version|ref>`, `--source <dir>`):
 
 1. Read `.dash/core.json` and `.dash/install.json`.
 2. Resolve the target: `--to`, or the latest GitHub release of the recorded repository.
@@ -138,6 +140,18 @@ Registries are edited through marker comments (`// features:imports`, `// featur
 `make:component` creates `packages/ui/src/custom/<name>.tsx`, `<name>.test.tsx`, `<name>.stories.tsx`, and appends the export to the user-owned `src/custom/index.ts` through an `// exports` marker. The component is imported as `@dash/ui/custom`; Storybook discovers it through its normal stories glob. The story uses the component's main props; the test renders it.
 
 Alternative rejected: a generator that only prints snippets. The request is a supported extension path, and a working scaffold plus tests is the acceptance bar.
+
+**Marker contract** (shared by the registries, the generators, the removal command and their fixtures). Every marker is a whole line, indentation aside; the generators insert their line directly above the marker, so the marker always stays last:
+
+| File | Markers |
+| --- | --- |
+| `apps/api/app/features/index.ts` | `// features:imports` (top level), `// features:register` (inside `registerFeatureRoutes`) |
+| `apps/web/src/features/index.ts` | `// features:imports` (top level), `// features:routes` (inside `featureRoutes`), `// features:nav` (inside `featureNav`) |
+| `packages/ui/src/custom/index.ts` | `// exports` |
+| `apps/web/src/main.tsx` | `// showcase:start` and `// showcase:end` around the dev route block |
+| `apps/web/src/locales/{en,es}/index.ts` | each showcase line (import, catalog entry, spread) ends with `// showcase:line` |
+
+**Token immunity.** The installer's token map rewrites `dash`, `Dash` and `@dash/` in every text file, so the core tools' own source would otherwise read `.acme-ai/core.json`. The installer and the updater both leave `packages/core-tools/**` out of token replacement (a `preserve` list in `template.json`, replayed by the updater), the metadata directory is always `.dash/`, and the tool's entry point is `packages/core-tools/bin/core.js`, a name no token matches. Root scripts call that path directly instead of a workspace name, because the root `package.json` is rebranded.
 
 ### 5. Showcase removal
 

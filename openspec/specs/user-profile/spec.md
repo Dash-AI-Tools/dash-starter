@@ -32,11 +32,18 @@ A user SHALL be able to change their password by providing the current one, and 
 - **THEN** the change is rejected with a localized error
 
 ### Requirement: Preferences
-A user SHALL be able to set their preferred locale and theme (light, dark, system), and the choice SHALL apply immediately and persist across devices.
+
+A user SHALL be able to set their preferred locale, theme (light, dark, system) and palette (one of the six presets), and the choice SHALL apply immediately and persist across devices.
 
 #### Scenario: Switch to Spanish
+
 - **WHEN** a user selects Spanish in preferences
 - **THEN** the dashboard re-renders in Spanish and later emails to that user are in Spanish
+
+#### Scenario: Palette across devices
+
+- **WHEN** a user picks the Ember palette in the dashboard on one device and signs in on another
+- **THEN** the second device renders Ember, and the profile of the user returns Ember as the saved palette
 
 ### Requirement: Delete account
 A user SHALL be able to delete their account after confirming their password; deletion SHALL be refused while they are the sole owner of any organization that has other members or an active paid subscription.

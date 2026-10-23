@@ -1,8 +1,8 @@
 ---
 type: Guide
 title: Customizing
-description: Rename the product, change the palette and the locales, drop what you do not need and add the first feature.
-tags: [customize, branding, palette, locales, features]
+description: Rename the product, change the palette and the locales, drop what you do not need, remove the showcase and add the first feature.
+tags: [customize, branding, palette, locales, features, showcase]
 status: stable
 generated: { by: opencode/deepseek-v4.1-flash-free, at: 2026-10-23T00:00:00Z }
 ---
@@ -27,7 +27,8 @@ Keep the copyright and the legal pages consistent with the address of the compan
 ## Choose the palette
 
 The product ships six palettes: `line`, `ink`, `ocean`, `forest`, `plum` and `ember`,
-each with light and dark tokens in `apps/web/src/styles/palettes.css`.
+each with light and dark tokens in `packages/ui/src/styles/palettes.css`, the stylesheet of
+the UI kit that the web app and Storybook both read.
 
 - Set the default in `apps/web/src/lib/palettes.ts` (`DEFAULT_PALETTE`), or pass
   `--palette <id>` to the installer. An unknown id fails the typecheck.
@@ -69,6 +70,33 @@ routes, the pages, the services, the migrations and the tests that cover them.
 Removing a layer is a change like any other: update `docs/architecture.md`, the
 README and the tests in the same commit.
 
+## Remove the showcase
+
+The component showcase is a development page at `/app/:orgSlug/dev/components`. Once the
+product has its own screens, remove it with one command:
+
+```bash
+npm run remove:showcase
+```
+
+| Deletes                                                                                                                                                                                                  | Edits                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web/src/pages/ShowcasePage.tsx`, `apps/web/src/pages/showcase.test.tsx`, `apps/web/src/pages/showcase.build.test.ts`, `apps/web/src/locales/en/showcase.ts`, `apps/web/src/locales/es/showcase.ts` | `apps/web/src/main.tsx` (the route block between its showcase markers), `apps/web/src/locales/en/index.ts` and `apps/web/src/locales/es/index.ts` (the showcase lines) |
+
+- It keeps the Home page, the dashboard, the layouts, the app shell, the patterns, the UI
+  kit (`packages/ui`) and Storybook (`npm run storybook`). Those paths are protected: the
+  command never deletes them.
+- It checks everything first. A missing marker, or a reference to the showcase in any
+  other web source, stops it with the reason and no change.
+- It is safe to run twice: on a project without the showcase it prints
+  `The showcase is already removed: nothing changed.` and exits 0.
+- In a generated project it records the removal in the update metadata, so a later
+  `npm run core:update` never brings the showcase back ([updating](./updating.md)). In
+  a clone of the template it removes the showcase and says the removal was not recorded.
+- After it, `VITE_ENABLE_SHOWCASE` has nothing left to enable.
+
+Run `npm run lint && npm run typecheck && npm test` afterwards, and commit the result.
+
 ## Add the first feature
 
 1. Read [architecture](../architecture.md). It names the file to imitate for every
@@ -77,11 +105,38 @@ README and the tests in the same commit.
    design and tasks with a layer tag (`[backend]`, `[frontend]`, `[ai]`, `[mcp]`,
    `[e2e]`, `[docs]`).
 3. Validate it with `openspec validate <id> --strict`.
-4. Implement, and cover every scenario with a test.
+4. Scaffold the feature outside the core, then implement it, and cover every scenario
+   with a test:
+
+   ```bash
+   npm run make:feature -- invoices
+   npm run make:component -- data-card     # when the feature needs its own component
+   cd apps/api && node ace codegen
+   ```
+
 5. Archive it with `openspec archive <id>` when it ships.
 
 The [harness](../harness.md) automates this loop when you use Claude Code, but the
 loop is the repository's, not the plugin's.
+
+### Where a new feature lives
+
+The generators put a feature in folders the core update never writes
+([extending](./extending.md)). For `npm run make:feature -- invoices`:
+
+| Piece                              | Path                                                                                               |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| API routes, controller and service | `apps/api/app/features/invoices/` (`routes.ts`, `invoices_controller.ts`, `invoices_service.ts`)   |
+| API functional test                | `apps/api/tests/functional/features/invoices.spec.ts`                                              |
+| API registration                   | `apps/api/app/features/index.ts`                                                                   |
+| Web page, its test, routes and nav | `apps/web/src/features/invoices/` (`invoices-page.tsx`, `invoices-page.test.tsx`, `routes.tsx`)    |
+| Web registration                   | `apps/web/src/features/index.ts`                                                                   |
+| A component of the product         | `packages/ui/src/custom/`, imported from `@dash/ui/custom` (`npm run make:component -- <name>`)    |
+| Strings                            | `apps/web/src/locales/{en,es}/` and `apps/api/resources/lang/{en,es}/`, by hand, in both languages |
+
+The endpoint is `GET /api/v1/orgs/:orgSlug/invoices` and the page is
+`/app/:orgSlug/invoices`. Editing a core file instead works, but every core update to a
+release that changed that file keeps your version and reports it for a merge by hand.
 
 ## Keep the conventions
 
@@ -91,5 +146,9 @@ loop is the repository's, not the plugin's.
 - The web app never talks to the database; it uses the typed client generated from the
   API registry (`node ace codegen`).
 - A new dependency needs a reason; the harness scripts are plain Node.
+- Product code goes into the feature folders and `packages/ui/src/custom/`, not into
+  the core, so `npm run core:update` can keep replacing the core.
+- UI primitives come from `@dash/ui`; the components of the product from
+  `@dash/ui/custom`.
 - A change that adds, removes or moves a workspace, a layer or a shared contract
   updates `docs/architecture.md`.

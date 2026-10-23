@@ -8,14 +8,16 @@ Use it as the starting point for your next AI product.
 
 ## What is inside
 
-| Path                  | What it is                                                       |
-| --------------------- | ---------------------------------------------------------------- |
-| `apps/api`            | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks    |
-| `apps/web`            | React 19 SPA: public site, dashboard, admin, chat, design system |
-| `packages/create-app` | The `create-dash-starter` installer                              |
-| `e2e`                 | Playwright end-to-end journeys against the running stack         |
-| `plugins/dsh`         | The development harness: Claude Code agents, commands and hooks  |
-| `docs`                | The OKF documentation bundle: guides and reference               |
+| Path                  | What it is                                                                  |
+| --------------------- | --------------------------------------------------------------------------- |
+| `apps/api`            | AdonisJS 7 API: auth, orgs, billing, email, AI, MCP, webhooks               |
+| `apps/web`            | React 19 SPA: public site, dashboard, admin, chat                           |
+| `packages/ui`         | The UI kit (`@dash/ui`): primitives, design tokens, local Storybook         |
+| `packages/core-tools` | The core update, the feature and component generators, the showcase removal |
+| `packages/create-app` | The `create-dash-starter` installer                                         |
+| `e2e`                 | Playwright end-to-end journeys against the running stack                    |
+| `plugins/dsh`         | The development harness: Claude Code agents, commands and hooks             |
+| `docs`                | The OKF documentation bundle: guides and reference                          |
 
 Every external integration has a local fallback, so the whole product boots and the whole test suite passes **with zero third-party keys**:
 
@@ -38,6 +40,8 @@ The documentation is an [OKF v0.2](https://github.com/GoogleCloudPlatform/knowle
 | [Getting started](docs/guides/getting-started.md)                                            | From a fresh clone to a signed-in account.                         |
 | [Configuration](docs/guides/configuration.md)                                                | The environment files, mail, payments, AI, storage and secrets.    |
 | [Customizing](docs/guides/customizing.md)                                                    | Name, palette, locales, removing features and the first change.    |
+| [Extending](docs/guides/extending.md)                                                        | The feature registries, the generators and Storybook.              |
+| [Updating](docs/guides/updating.md)                                                          | The update metadata, `core:check` and `core:update`.               |
 | [Testing](docs/guides/testing.md)                                                            | The suites, the test database and the end-to-end stack.            |
 | [Deployment](docs/guides/deployment.md)                                                      | The production images, secrets, migrations and TLS.                |
 | [Troubleshooting](docs/guides/troubleshooting.md)                                            | The failures a new checkout hits first.                            |
@@ -119,16 +123,50 @@ cd apps/api && NODE_ENV=test node ace migration:run --force
 
 Run at the repository root; each one fans out to every workspace.
 
-| Command                | What it does                                       |
-| ---------------------- | -------------------------------------------------- |
-| `npm run dev`          | Start the API and the web app with hot reload      |
-| `npm run build`        | Build the API and the web app                      |
-| `npm run lint`         | Lint every workspace                               |
-| `npm run format`       | Format every workspace with Prettier               |
-| `npm run format:check` | Check formatting without writing                   |
-| `npm run typecheck`    | Type-check every workspace                         |
-| `npm test`             | Run the test suite of every workspace              |
-| `npm run test:e2e`     | Run the Playwright suite against the running stack |
+| Command                            | What it does                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| `npm run dev`                      | Start the API and the web app with hot reload                             |
+| `npm run build`                    | Build the API and the web app                                             |
+| `npm run lint`                     | Lint every workspace                                                      |
+| `npm run format`                   | Format every workspace with Prettier                                      |
+| `npm run format:check`             | Check formatting without writing                                          |
+| `npm run typecheck`                | Type-check every workspace                                                |
+| `npm test`                         | Run the test suite of every workspace                                     |
+| `npm run test:e2e`                 | Run the Playwright suite against the running stack                        |
+| `npm run storybook`                | Serve the stories of the UI kit on http://localhost:6006 (local only)     |
+| `npm run make:feature -- <name>`   | Scaffold a feature in the API and the web app, outside the core           |
+| `npm run make:component -- <name>` | Scaffold a component, its test and its story in `packages/ui/src/custom/` |
+| `npm run remove:showcase`          | Remove the in-app component showcase                                      |
+| `npm run core:check`               | Report what a core update would change, without writing                   |
+| `npm run core:update`              | Update the core files from a template release                             |
+
+The core tools take their arguments after `--`, for example `npm run core:check -- --to 0.2.0`. Each prints its options with `--help`.
+
+### Features, components and the showcase
+
+```bash
+npm run make:feature -- invoices        # GET /api/v1/orgs/:orgSlug/invoices and the page /app/:orgSlug/invoices
+npm run make:component -- data-card     # import { DataCard } from '@dash/ui/custom'
+cd apps/api && node ace codegen         # the typed client learns the new endpoint
+```
+
+The generators write only to the folders the product owns (`apps/api/app/features/`, `apps/web/src/features/`, `packages/ui/src/custom/`) and register the feature through `apps/api/app/features/index.ts` and `apps/web/src/features/index.ts`. [Extending](docs/guides/extending.md) lists every file.
+
+`npm run remove:showcase` deletes the development showcase at `/app/:orgSlug/dev/components`: its page and tests in `apps/web/src/pages/`, its catalogs `apps/web/src/locales/{en,es}/showcase.ts`, and its route and catalog lines in `apps/web/src/main.tsx` and `apps/web/src/locales/{en,es}/index.ts`. Home, the dashboard, the UI kit and Storybook stay. A second run changes nothing and exits 0. In a generated project the removal is recorded, so a core update never brings the showcase back.
+
+### Updating the core
+
+A project generated by the installer can take in newer template releases. The update replaces the core files the project has not modified, reapplies the name, locale and palette of the product, keeps and reports the core files the team edited, and never writes the feature folders, the env files, the docs or the manifests.
+
+```bash
+npm run core:check                                # what an update would change
+npm run core:update -- --dry-run                  # the same, as an update preview
+npm run core:update                               # apply the latest release
+npm run core:update -- --to 0.2.0                 # apply a given release
+npm run core:check -- --source ../dash-starter    # compare with a local checkout, offline
+```
+
+[Updating](docs/guides/updating.md) covers the metadata, the report, the exit codes and how to resolve a kept file.
 
 ---
 
@@ -204,7 +242,7 @@ See `docs/ai.md`, `docs/billing.md` and `docs/mcp.md` for the details of each in
 
 ## Color palettes
 
-The product ships six palettes: `line` (the default), `ink`, `ocean`, `forest`, `plum` and `ember`. Each one is a full set of design tokens for light and dark mode in `apps/web/src/styles/palettes.css`; components only read tokens, so a palette re-colours everything without code changes.
+The product ships six palettes: `line` (the default), `ink`, `ocean`, `forest`, `plum` and `ember`. Each one is a full set of design tokens for light and dark mode in `packages/ui/src/styles/palettes.css`, the stylesheet of the UI kit (`@dash/ui/styles.css`); components only read tokens, so a palette re-colours everything without code changes.
 
 **Choose the palette of the product.** Every visitor sees one default palette. The installer asks for it (`--palette <id>`); to change it later, edit one line in `apps/web/src/lib/palettes.ts`:
 
@@ -228,7 +266,9 @@ An id that does not exist fails `npm run typecheck`.
 npx create-dash-starter my-product
 ```
 
-The installer downloads the template release matching its own version, rebrands every placeholder, writes the `.env` files with fresh secrets, initializes git with the commit gate of `.githooks` and — optionally — creates a GitHub repository and boots the stack.
+The installer downloads the template release matching its own version, rebrands every placeholder, writes the `.env` files with fresh secrets, writes the update metadata in `.dash/`, initializes git with the commit gate of `.githooks` and — optionally — creates a GitHub repository and boots the stack.
+
+The generated project keeps `packages/ui` and `packages/core-tools`; the installer itself and `openspec/changes` are left out.
 
 Flags (all optional, all work with `--yes` for a non-interactive run):
 
@@ -247,6 +287,20 @@ Flags (all optional, all work with `--yes` for a non-interactive run):
 --github               Create a private GitHub repository with `gh`
 ```
 
+### The update metadata
+
+The installer writes two files once the project has its final bytes:
+
+| File                 | What it holds                                                                                                                       |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `.dash/install.json` | The identity of the product, the token map of the rebrand, the template removals, the locale, the palette and `removedCapabilities` |
+| `.dash/core.json`    | The upstream repository, the installed version, the core and product globs, and a SHA-256 checksum of every core file               |
+
+- `.dash/` holds no secret: the keys live in the env files only.
+- It belongs in git. The installer's first commit includes it; `core:update` rewrites `.dash/core.json`, and `remove:showcase` rewrites both files.
+- It is what makes `npm run core:update` and `npm run core:check` work. Only projects generated from the release that introduced it onward can update; a clone of the template has none.
+- The directory is always `.dash`, whatever the product is called. The recorded repository is `DASH_TEMPLATE_REPO` when it is set at install time, `github:Dash-AI-Tools/dash-starter` otherwise.
+
 ### Releases
 
 The installer and the template are released together: the version of the installer is the version of the template, and the installer downloads the release tagged `v<version>`. To publish a new version, bump the version of the root `package.json`, the version of `packages/create-app/package.json` and the version of `packages/create-app/template.json`, then tag the commit:
@@ -257,7 +311,7 @@ git tag v0.2.0
 git push origin v0.2.0
 ```
 
-The tag is what the installer resolves, so a tag that does not exist makes the installer fail with a clear message instead of generating a project from an older release.
+The tag is what the installer resolves, so a tag that does not exist makes the installer fail with a clear message instead of generating a project from an older release. `npm run core:update` resolves the same tags: `--to 0.2.0` selects `v0.2.0`, and no `--to` takes the latest GitHub release.
 
 ---
 
@@ -278,16 +332,20 @@ The web app is then on http://localhost:8080.
 ```
 apps/api
   app/            controllers, models, services, tools, mails, middleware
+  app/features/   the features of the product (owned by the product)
   config/         app, auth, database, mail, limiter, drive, ai
   database/       migrations and seeders
   resources/lang/ en and es message catalogs
   start/          env, kernel, routes
   tests/          Japa unit and functional suites
 apps/web
-  src/components/ ui primitives and patterns
+  src/components/ patterns, app shell and feature components
+  src/features/   the features of the product (owned by the product)
   src/pages/      one page per route
   src/lib/        the typed API client and the hooks of each feature
   src/locales/    en and es translation catalogs
+packages/ui           the UI kit: primitives, styles, stories; src/custom/ is owned by the product
+packages/core-tools   core update, generators, showcase removal
 packages/create-app   the installer
 plugins/dsh           the development harness: agents, commands, guardrails
 e2e                   Playwright journeys and helpers

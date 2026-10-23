@@ -26,7 +26,13 @@ npx create-dash-starter my-product
 cd my-product
 ```
 
-Or from a clone of the template:
+The installer also writes the update metadata of the project: the release it came from,
+the identity it applied and a checksum of every core file. It holds no secret, the
+installer's first commit includes it, and it is what `npm run core:update` reads. Keep it
+committed; [updating](./updating.md) explains it.
+
+Or from a clone of the template (a clone has no update metadata, so it cannot run
+`npm run core:update`):
 
 ```bash
 git clone <your-repo> my-product
@@ -110,4 +116,5 @@ That needs the `dash_test` database. [Testing](./testing.md) creates it.
 - [What you get](./what-you-get.md): a tour of the product.
 - [Configuration](./configuration.md): mail, payments, AI, storage.
 - [Customizing](./customizing.md): name, palette, locales, features.
+- [Extending](./extending.md): features and components outside the core.
 - [Architecture](../architecture.md): read this before the first change.

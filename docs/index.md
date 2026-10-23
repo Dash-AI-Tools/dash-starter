@@ -18,7 +18,7 @@ running yet, or read [what you get](./guides/what-you-get.md) first.
 
 | Folder                      | What it holds                                                                                                                              |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Guides](./guides/index.md) | Install, configure, customize, test, deploy and troubleshoot the product.                                                                  |
+| [Guides](./guides/index.md) | Install, configure, customize, extend, update, test, deploy and troubleshoot the product.                                                  |
 | Reference                   | The internals: [architecture](./architecture.md), [AI](./ai.md), [billing](./billing.md), [MCP](./mcp.md) and the [harness](./harness.md). |
 
 Recent changes to this bundle are listed in the [change log](./log.md).
