@@ -1,7 +1,7 @@
 # invoices Specification
 
 ## Purpose
-TBD - created by archiving change add-invoices. Update Purpose after archive.
+Keeps the history of what each organization was billed: one invoice per paid or failed billing period, recorded from the events of the payment provider and listed to the roles that manage its billing.
 
 ## Requirements
 
