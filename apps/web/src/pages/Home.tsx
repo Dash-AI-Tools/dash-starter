@@ -125,7 +125,7 @@ function InstallCommand() {
       aria-label={t('heroCommandLabel')}
       className="flex w-full max-w-xl items-stretch overflow-hidden rounded-xl bg-command text-command-foreground ring-1 ring-command-foreground/10 shadow-[0_14px_30px_-18px_color-mix(in_oklch,var(--command)_80%,transparent)]"
     >
-      <code className="flex min-w-0 flex-1 items-center overflow-x-auto px-5 py-4 font-mono text-[0.95rem] whitespace-nowrap sm:text-base">
+      <code className="flex min-w-0 flex-1 items-center px-5 py-4 font-mono text-[0.95rem] break-all sm:text-base">
         <span aria-hidden className="mr-3 text-line select-none">
           $
         </span>
