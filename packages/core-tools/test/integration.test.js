@@ -55,12 +55,12 @@ test(
     const log = logger()
 
     assert.equal(
-      await main(['make:feature', 'invoices'], { cwd: root, log, error: log }),
+      await main(['make:feature', 'integration-probes'], { cwd: root, log, error: log }),
       0,
       log.text()
     )
     assert.equal(
-      await main(['make:component', 'data-card'], { cwd: root, log, error: log }),
+      await main(['make:component', 'probe-card'], { cwd: root, log, error: log }),
       0,
       log.text()
     )
@@ -72,18 +72,18 @@ test(
       'utf8'
     )
 
-    assert.match(registry, /pattern: '\/api\/v1\/orgs\/:orgSlug\/invoices'/)
+    assert.match(registry, /pattern: '\/api\/v1\/orgs\/:orgSlug\/integration-probes'/)
 
     const custom = await readFile(join(root, 'packages/ui/src/custom/index.ts'), 'utf8')
     const ui = JSON.parse(await readFile(join(root, 'packages/ui/package.json'), 'utf8'))
 
-    assert.match(custom, /^export \{ DataCard, type DataCardProps \} from '\.\/data-card'$/m)
+    assert.match(custom, /^export \{ ProbeCard, type ProbeCardProps \} from '\.\/probe-card'$/m)
     assert.ok(ui.exports['./custom'], 'the kit exports its custom entry')
     assert.ok(
-      (await readdir(join(root, 'packages/ui/src/custom'))).includes('data-card.stories.tsx')
+      (await readdir(join(root, 'packages/ui/src/custom'))).includes('probe-card.stories.tsx')
     )
     const original = await readFile(join(project, 'packages/ui/src/custom/index.ts'), 'utf8')
 
-    assert.equal(original.includes('data-card'), false, 'the original project is untouched')
+    assert.equal(original.includes('probe-card'), false, 'the original project is untouched')
   }
 )

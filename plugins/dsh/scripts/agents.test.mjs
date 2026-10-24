@@ -42,8 +42,8 @@ function read(path) {
   return readFileSync(join(ROOT, path), 'utf8')
 }
 
-// The paths an agent names in code spans. A placeholder, a glob or a
-// generated folder cannot be checked in a clean checkout.
+// The paths an agent names in code spans. A placeholder, a glob, a
+// generated folder or a local `.env` cannot be checked in a clean checkout.
 function namedPaths(text) {
   const paths = new Set()
   for (const [, span] of text.matchAll(/`([^`\n]+)`/g)) {
@@ -51,6 +51,7 @@ function namedPaths(text) {
     if (!PATH_ROOTS.test(token)) continue
     if (/[<>*{}\s$]/.test(token)) continue
     if (/(^|\/)(\.adonisjs|build|dist|node_modules)(\/|$)/.test(token)) continue
+    if (/(^|\/)\.env$/.test(token)) continue
     if (TEMPLATE_ONLY.some((dir) => token === dir || token.startsWith(`${dir}/`))) continue
     paths.add(token.replace(/[.,:;]+$/, ''))
   }

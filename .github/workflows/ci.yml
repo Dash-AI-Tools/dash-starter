@@ -37,6 +37,9 @@ jobs:
   lint-typecheck:
     name: Lint and type-check
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      DB_DATABASE: dash_test
     steps:
       - uses: actions/checkout@v4
 
