@@ -2,6 +2,7 @@ import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 
 import { assertRelative, assertSafePath, isText, listFiles, matches, readOrNull } from './files.js'
+import { alignMarkdownTables } from './markdown.js'
 import { DEFAULT_PRESERVE } from './metadata.js'
 import { SHOWCASE, materializeShowcaseRemoval } from './showcase.js'
 
@@ -219,9 +220,17 @@ export async function materialize(releaseDir, install) {
     if (!isText(buffer)) continue
 
     const text = buffer.toString('utf8')
-    const replaced = compiled.replace(text)
+    let replaced = compiled.replace(text)
 
-    if (replaced !== text) await writeFile(path, replaced)
+    if (replaced === text) continue
+
+    /**
+     * The installer aligns the Markdown tables the rebrand changed; the
+     * update does the same so both write the same bytes.
+     */
+    if (file.endsWith('.md')) replaced = alignMarkdownTables(replaced)
+
+    await writeFile(path, replaced)
   }
 
   for (const path of install.removePaths ?? []) {

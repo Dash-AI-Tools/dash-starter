@@ -3,6 +3,7 @@ import { join } from 'node:path'
 
 import { listFiles } from './files.js'
 import { isExcluded } from './glob.js'
+import { alignMarkdownTables } from './markdown.js'
 
 /**
  * Escapes the characters of a literal that have a meaning in a regular
@@ -79,9 +80,15 @@ export async function applyReplacements(root, { tokens, values, exclude = [], pr
     if (buffer.includes(0)) continue
 
     const text = buffer.toString('utf8')
-    const replaced = compiled.replace(text)
+    let replaced = compiled.replace(text)
 
     if (replaced === text) continue
+
+    /**
+     * A name of another length leaves the columns of a Markdown table out of
+     * line, and the project would fail its own format check.
+     */
+    if (file.endsWith('.md')) replaced = alignMarkdownTables(replaced)
 
     await writeFile(path, replaced)
     changed++

@@ -59,6 +59,17 @@ test('a project is generated from a local template', async () => {
   assert.equal(readme.includes('## The installer'), false)
   assert.equal(readme.includes('## Deployment'), true)
   assert.equal(readme.includes('# Acme AI'), true)
+  assert.ok(
+    readme.includes(
+      [
+        '| Package               | What it is |',
+        '| --------------------- | ---------- |',
+        '| `@acme-ai/ui`         | The kit    |',
+        '| `@acme-ai/core-tools` | The tools  |',
+      ].join('\n')
+    ),
+    'the table the rebrand changed is aligned again'
+  )
 
   const packageJson = await readFile(join(target, 'package.json'), 'utf8')
 
