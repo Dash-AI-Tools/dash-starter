@@ -23,6 +23,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  buttonVariants,
 } from '@dash/ui'
 import { client } from '@/lib/api'
 import { toApiFailure } from '@/lib/api-error'
@@ -179,9 +180,12 @@ export default function MembersPage() {
         actions={
           manages ? (
             <div className="flex items-center gap-2">
-              <Button variant="outline" render={<Link to={`/app/${orgSlug}/members/import`} />}>
+              <Link
+                to={`/app/${orgSlug}/members/import`}
+                className={buttonVariants({ variant: 'outline' })}
+              >
                 {t('importMembers')}
-              </Button>
+              </Link>
               <InviteDialog orgSlug={orgSlug} />
             </div>
           ) : null

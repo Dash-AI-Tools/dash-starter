@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router'
 import { ArrowRight, Check, Copy, Flag } from 'lucide-react'
-import { Button } from '@dash/ui'
+import { buttonVariants } from '@dash/ui'
 import { useI18n, type TranslationKey } from '@/lib/i18n'
 import { STATIONS, STATION_KEY_NAMES, stationColor, type StationId } from '@/lib/stations'
 import { usePublicPageMeta } from '@/lib/use-page-meta'
@@ -294,16 +294,21 @@ export default function Home() {
           <InstallCommand />
 
           <div className="flex flex-wrap items-center gap-3">
-            <Link to="/signup">
-              <Button size="lg" className="h-11 rounded-xl px-5 text-[0.95rem]">
-                {t('heroPrimary')}
-                <ArrowRight />
-              </Button>
+            <Link
+              to="/signup"
+              className={cn(buttonVariants({ size: 'lg' }), 'h-11 rounded-xl px-5 text-[0.95rem]')}
+            >
+              {t('heroPrimary')}
+              <ArrowRight />
             </Link>
-            <Link to="/pricing">
-              <Button size="lg" variant="outline" className="h-11 rounded-xl px-5 text-[0.95rem]">
-                {t('heroSecondary')}
-              </Button>
+            <Link
+              to="/pricing"
+              className={cn(
+                buttonVariants({ size: 'lg', variant: 'outline' }),
+                'h-11 rounded-xl px-5 text-[0.95rem]'
+              )}
+            >
+              {t('heroSecondary')}
             </Link>
           </div>
 
@@ -375,20 +380,24 @@ export default function Home() {
                 <p className="font-heading text-lg font-semibold">{t('pricingTitle')}</p>
                 <p className="mt-1 text-muted-foreground">{t('pricingSubtitle')}</p>
                 <div className="mt-5 flex flex-wrap gap-3">
-                  <Link to="/signup">
-                    <Button size="lg" className="h-11 rounded-xl px-5 text-[0.95rem]">
-                      {t('ctaButton')}
-                      <ArrowRight />
-                    </Button>
+                  <Link
+                    to="/signup"
+                    className={cn(
+                      buttonVariants({ size: 'lg' }),
+                      'h-11 rounded-xl px-5 text-[0.95rem]'
+                    )}
+                  >
+                    {t('ctaButton')}
+                    <ArrowRight />
                   </Link>
-                  <Link to="/pricing">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="h-11 rounded-xl px-5 text-[0.95rem]"
-                    >
-                      {t('pricingTeaserCta')}
-                    </Button>
+                  <Link
+                    to="/pricing"
+                    className={cn(
+                      buttonVariants({ size: 'lg', variant: 'outline' }),
+                      'h-11 rounded-xl px-5 text-[0.95rem]'
+                    )}
+                  >
+                    {t('pricingTeaserCta')}
                   </Link>
                 </div>
               </div>

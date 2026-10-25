@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Button } from '@dash/ui'
+import { buttonVariants } from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 
 /**
@@ -13,7 +13,9 @@ export function NotFoundContent() {
       <p className="text-sm font-medium text-muted-foreground">{t('notFound')}</p>
       <h1 className="text-3xl font-semibold tracking-tight">{t('pageNotFound')}</h1>
       <p className="max-w-md text-muted-foreground">{t('pageNotFoundHint')}</p>
-      <Button render={<Link to="/" />}>{t('goHome')}</Button>
+      <Link to="/" className={buttonVariants()}>
+        {t('goHome')}
+      </Link>
     </div>
   )
 }

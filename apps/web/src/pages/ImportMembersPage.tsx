@@ -14,6 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  buttonVariants,
 } from '@dash/ui'
 import { toApiFailure } from '@/lib/api-error'
 import { useBulkImport } from '@/lib/imports'
@@ -67,9 +68,9 @@ export default function ImportMembersPage() {
         title={t('importTitle')}
         description={t('importDescription')}
         actions={
-          <Button variant="outline" render={<Link to={`/app/${orgSlug}/members`} />}>
+          <Link to={`/app/${orgSlug}/members`} className={buttonVariants({ variant: 'outline' })}>
             {t('membersTitle')}
-          </Button>
+          </Link>
         }
       />
 

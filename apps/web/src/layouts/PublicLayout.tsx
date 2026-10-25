@@ -4,7 +4,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { PalettePicker } from '@/components/palette-picker'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { useConsent } from '@/providers/consent-provider'
-import { Button } from '@dash/ui'
+import { buttonVariants } from '@dash/ui'
 import { useI18n } from '@/lib/i18n'
 import { useCurrentUser } from '@/lib/session'
 
@@ -48,8 +48,8 @@ export default function PublicLayout() {
             <span aria-hidden className="hidden h-5 w-px bg-border sm:block" />
 
             {user ? (
-              <Link to="/app">
-                <Button size="sm">{t('goDashboard')}</Button>
+              <Link to="/app" className={buttonVariants({ size: 'sm' })}>
+                {t('goDashboard')}
               </Link>
             ) : (
               <>
@@ -59,8 +59,8 @@ export default function PublicLayout() {
                 >
                   {t('signIn')}
                 </Link>
-                <Link to="/signup">
-                  <Button size="sm">{t('signUp')}</Button>
+                <Link to="/signup" className={buttonVariants({ size: 'sm' })}>
+                  {t('signUp')}
                 </Link>
               </>
             )}
