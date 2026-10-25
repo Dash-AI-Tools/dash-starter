@@ -45,7 +45,9 @@ export function toRelative(root, path) {
   return relative(root, resolve(path)).split('\\').join('/')
 }
 
-export function affectedWorkspaces(paths) {
+// A root file touches every workspace the checkout has: a generated project
+// has no installer package, so it is never checked.
+export function affectedWorkspaces(paths, root = repoRoot()) {
   const dirs = WORKSPACES.map((w) => w.dir)
   const found = new Set()
   for (const path of paths) {
@@ -58,7 +60,7 @@ export function affectedWorkspaces(paths) {
     if (rel.includes('/')) continue
     if (ROOT_AFFECTING.has(rel)) found.add('*')
   }
-  if (found.has('*')) return dirs
+  if (found.has('*')) return dirs.filter((dir) => existsSync(join(root, dir, 'package.json')))
   return WORKSPACES.filter((w) => found.has(w.dir)).map((w) => w.dir)
 }
 

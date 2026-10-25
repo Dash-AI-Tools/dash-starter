@@ -42,6 +42,18 @@ test('a root file that every workspace depends on touches them all', () => {
   assert.ok(workspaces.length >= 4)
 })
 
+test('a root file leaves out a workspace the checkout does not have', () => {
+  const root = mkdtempSync(join(tmpdir(), 'dsh-root-'))
+  for (const dir of ['apps/api', 'apps/web', 'e2e', 'plugins/dsh']) {
+    mkdirSync(join(root, dir), { recursive: true })
+    writeFileSync(join(root, dir, 'package.json'), '{}')
+  }
+
+  const workspaces = affectedWorkspaces(['package-lock.json'], root)
+
+  assert.deepEqual(workspaces, ['apps/api', 'apps/web', 'e2e', 'plugins/dsh'])
+})
+
 test('the secret patterns refuse the env files, the keys and the lockfile', () => {
   assert.equal(isSecretPath('.env'), true)
   assert.equal(isSecretPath('apps/api/.env'), true)
